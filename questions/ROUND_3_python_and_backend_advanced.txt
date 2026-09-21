@@ -1,0 +1,237 @@
+=====================================================================
+ROUND 3 - ADVANCED PYTHON & BACKEND ENGINEERING
+"Can he build and operate hard backend systems, not just wire libraries?"
+Duration: 50 min assessment + 10 min general
+=====================================================================
+
+HOW TO RUN THIS ROUND
+- Pick ~10-12. Several of these are 8-10 minute questions - budget accordingly.
+- Sections J and K are debug/scenario questions. At least ONE should be in the set;
+  they separate 7-year engineers from 3-year engineers repeated 7 times.
+- Where a question says [WHITEBOARD/EDITOR], have him actually write it.
+- Sections F and G (Excel transpiler / rater engine) are hand-tailored to his Cellular
+  and Aurora work. These are the highest signal questions in this file - he cannot
+  bluff them if he actually built it, and he cannot answer them if he didn't.
+
+---------------------------------------------------------------------
+A. PYTHON RUNTIME & INTERNALS
+---------------------------------------------------------------------
+1.  Walk me through the MRO. What does C3 linearization solve, and when have you
+    actually needed to reason about it?
+2.  Metaclasses: what does Pydantic/SQLAlchemy use them for? Have you written one,
+    and would you?
+3.  `__getattr__` vs `__getattribute__` vs `__get__` (descriptors). Where does
+    `@property` fit?
+4.  What is a weakref and when have you needed one? How does it help a cache?
+5.  What happens when you `import` a module twice? Explain `sys.modules` and how you
+    would deliberately reload a module. What breaks when you do?
+6.  Circular imports - why do they happen and what are the three legitimate fixes?
+7.  Python 3.12/3.13 free-threaded (no-GIL) builds and sub-interpreters - what changes
+    for a backend service, and would you adopt it today?
+8.  What is `functools.lru_cache` doing internally? What's the danger of putting it on
+    a method?
+9.  How would you profile a Python service that is slow but not CPU-bound?
+    (cProfile, py-spy, yappi, memray - what does each give you?)
+10. You have a memory leak in a long-running FastAPI worker. How do you find it?
+11. What are `__init_subclass__` and `typing.Protocol` good for in real code?
+12. Explain how `dataclass`, `NamedTuple`, `TypedDict`, and Pydantic BaseModel differ
+    and when you'd use each.
+13. Type hints: what does `mypy --strict` catch that tests don't? Do you run it in CI?
+14. What are contextvars and why do they exist for async code? Where would you use one?
+    (Hint: request IDs / trace IDs.)
+
+---------------------------------------------------------------------
+B. ASYNC / CONCURRENCY (deep)
+---------------------------------------------------------------------
+15. Explain the event loop. What is a "blocking the loop" bug and how do you detect it
+    in production?
+16. `asyncio.gather` vs `TaskGroup` vs `as_completed` - differences in cancellation and
+    error semantics. Which do you reach for now?
+17. What is structured concurrency? Why is `TaskGroup`/anyio considered safer than
+    fire-and-forget `create_task`?
+18. What happens to a Task if nobody holds a reference to it?
+19. How do you cancel an in-flight async operation cleanly? What is `CancelledError`
+    and why should you never swallow it?
+20. [WHITEBOARD] Implement an async semaphore-bounded worker pool that fetches 10,000
+    URLs with max 50 concurrent, per-host rate limiting, retries with jitter, and a
+    global timeout.
+21. How would you run a CPU-heavy function inside an async service without stalling it?
+    Compare `run_in_executor`, a process pool, and a separate worker service.
+22. Backpressure in an async producer/consumer pipeline - how do you implement it?
+23. Threading: explain a race condition you actually debugged. What tool found it?
+
+---------------------------------------------------------------------
+C. API & SERVICE DESIGN
+---------------------------------------------------------------------
+24. Design the error model for a public API: error codes, shapes, correlation IDs,
+    and how the client distinguishes retryable from terminal failures.
+25. How do you implement request-scoped DB sessions in FastAPI without leaking
+    connections? Where do transactions begin and commit?
+26. Implement rate limiting three ways: fixed window, sliding window log, token bucket.
+    Which do you deploy at the edge vs in-app, and why?
+27. A client retries aggressively on 500s and amplifies an outage. Design the fix on
+    both sides. (Expect: exponential backoff + jitter, circuit breaker, load shedding.)
+28. Explain the circuit breaker pattern - closed/open/half-open. Have you implemented one?
+29. Graceful shutdown of a FastAPI service in K8s: SIGTERM arrives. Walk through
+    every step so no request is dropped. What is `terminationGracePeriodSeconds`
+    and `preStop`?
+30. How do you do a long-running job over HTTP? Compare polling with a job resource,
+    webhooks, and SSE. What did you do at Aventum for document generation?
+31. How do you design an API that returns a 200MB result set?
+32. Multi-tenancy: how do you isolate tenants at the API, service and DB layer?
+    Schema-per-tenant vs row-level vs DB-per-tenant. Insurance context - what did
+    Aventum use?
+33. Feature flags: how do you roll out a risky backend change to 1% of traffic?
+34. How do you design for replay/backfill? If a bug corrupted 3 days of processed
+    records, what does your system need to have had in place?
+
+---------------------------------------------------------------------
+D. DISTRIBUTED SYSTEMS CORRECTNESS
+---------------------------------------------------------------------
+35. Explain exactly-once processing in a pipeline that reads from Kafka and writes to
+    Postgres. Design it properly. (Looking for: transactional outbox, idempotency keys,
+    dedupe table, or offset-commit-after-write.)
+36. What is the transactional outbox pattern, and what problem does it solve that a
+    "write to DB then publish to Kafka" does not?
+37. What is the dual-write problem? Where have you had one without realizing it?
+38. Explain the saga pattern. Choreography vs orchestration - pick one for a quote ->
+    bind -> issue policy flow and defend it.
+39. Optimistic vs pessimistic locking. Implement optimistic locking in Postgres and
+    explain what the client does on conflict.
+40. Two workers pick the same job from a Postgres "jobs" table. Fix it. Now do it
+    without a distributed lock. (Expect: SELECT ... FOR UPDATE SKIP LOCKED.)
+41. What is the outbox vs CDC (Debezium) tradeoff?
+42. Clock skew: why can't you use wall-clock timestamps to order events across
+    services? What do you use instead?
+43. CAP - what does it actually say, and what does PACELC add? Where does your Jio
+    recommender sit?
+44. Idempotency at scale: where do you store the idempotency keys and how do you
+    expire them? What if the original request is still in flight?
+
+---------------------------------------------------------------------
+E. DATA LAYER, PERFORMANCE & SCALE
+---------------------------------------------------------------------
+45. A Postgres query got slow overnight with no code change. Give me your full
+    investigation path. (EXPLAIN ANALYZE, stats, plan flip, bloat, param sniffing.)
+46. How would you shard a Postgres table by tenant? What breaks first - joins,
+    sequences, or cross-shard transactions?
+47. Read replicas introduce replication lag and your users see stale data after a write.
+    How do you fix it without going back to a single primary?
+48. Design a schema for storing insurance quotes where the rating rules change over
+    time but you must be able to reproduce any historical quote exactly.
+    (Bitemporal / versioning question - very relevant to Aurora/Pulse.)
+49. How do you store an audit trail that satisfies "who changed what and when" without
+    killing write performance?
+50. You need to bulk-insert 50M rows into Postgres nightly. Fastest correct approach?
+51. Explain the difference between a materialized view, a summary table maintained by
+    triggers, and a scheduled aggregation job. Pick one for a dashboard - why?
+52. How would you implement soft deletes without destroying every index in the system?
+53. JSONB in Postgres: when is it right, and what index do you need for containment
+    queries? When does it become an anti-pattern?
+
+---------------------------------------------------------------------
+F. THE CELLULAR PROBLEM - EXCEL -> PYTHON TRANSPILER (tailored, high signal)
+---------------------------------------------------------------------
+54. Design it from scratch on the board: given an .xlsx rater workbook, produce a
+    Python module exposing `rate(inputs) -> outputs`. Cover: parsing, dependency graph,
+    codegen, and the public API.
+55. How do you build the cell dependency graph, and how do you evaluate it? Topological
+    sort vs lazy memoized evaluation - which and why?
+56. How do you handle circular references and Excel's iterative calculation setting?
+57. Excel's numeric semantics differ from Python's - 1900 leap year bug, float display
+    rounding, implicit type coercion of "" and TRUE, blank vs zero. How do you get
+    bit-identical outputs?
+58. How do you implement Excel error propagation (#N/A, #DIV/0!, #VALUE!) in Python
+    such that it flows through arithmetic the way Excel does?
+59. Array formulas / dynamic arrays / spill ranges - how do you model those?
+60. How do you represent a cell reference and a range so that functions taking
+    references (OFFSET, INDIRECT, VLOOKUP) still work after codegen?
+61. Codegen strategy: emit Python source, build an AST, or build an interpreter over
+    an IR? Argue all three, then pick.
+62. How do you test this? Design a differential-testing harness against real Excel /
+    LibreOffice across 500 workbooks. What's your pass criteria and how do you handle
+    floating point?
+63. Performance: a rater is called 10,000 times/minute with different inputs. What do
+    you precompute, cache, or JIT?
+64. A business user uploads a new version of the workbook. How do you version, diff,
+    validate, and roll out the regenerated module safely?
+65. Now the LLM-agent version: you replaced this with an agent. How do you keep
+    determinism and auditability when a regulator asks "why was this premium 4,312?"
+
+---------------------------------------------------------------------
+G. DOMAIN-SHAPED BACKEND DESIGN (from his actual work)
+---------------------------------------------------------------------
+66. Design the email-ingestion service for Orbit/Ayana: Graph/IMAP polling, dedupe,
+    attachment extraction, ordering, retries, and per-tenant isolation. What's the
+    hardest part?
+67. Design policy document generation at scale: templated PDFs, 50-page docs, spikes
+    at month end, must be reproducible and immutable once issued.
+68. Design the resume-ingestion pipeline from the Jio ATS again, but for 1M/day
+    instead of 100k. What changes?
+69. Design a crawler control plane (DataWeave): scheduling, politeness, proxy rotation,
+    dedupe, change detection, and "silently returning garbage" detection.
+70. Design the task claim/lock system from the RLHF dashboard properly, assuming
+    Redis can lose data. What are the correctness requirements and what do you give up?
+
+---------------------------------------------------------------------
+H. TESTING & QUALITY
+---------------------------------------------------------------------
+71. What is your actual testing pyramid for a FastAPI service? What percentage is unit?
+72. How do you test code that talks to Postgres - mocks, testcontainers, or a shared
+    test DB? Defend your choice.
+73. How do you test async code and code with timers/retries without sleeping?
+74. What is property-based testing (Hypothesis) and where would it have caught a bug
+    for you? (Strong fit for the Excel transpiler.)
+75. How do you test a Celery task end to end?
+76. Contract testing between services - have you done it? What problem does it solve
+    that integration tests don't?
+77. How do you write a test that reproduces a race condition deterministically?
+78. What does "good coverage" mean to you, and where is coverage a misleading metric?
+
+---------------------------------------------------------------------
+I. CODE & DESIGN JUDGEMENT
+---------------------------------------------------------------------
+79. Show me how you'd structure a FastAPI codebase for a 12-person team. Where do
+    domain logic, IO, and framework code live? What is your dependency direction?
+80. When do you introduce a repository/service layer, and when is it ceremony?
+81. What's your rule for when a module becomes a separate service? What's the cost of
+    getting it wrong in each direction?
+82. Review this mentally: a function with 6 boolean parameters and 200 lines. Walk me
+    through your refactor, step by step, safely, with no test coverage.
+83. Dependency injection in Python - `Depends`, containers, or plain constructor
+    passing? What do you prefer at scale?
+84. How do you handle configuration across 5 environments? What never goes in code?
+85. What is your stance on ORMs? SQLAlchemy 2.0 vs raw SQL vs query builder - and
+    where do you draw the line?
+
+---------------------------------------------------------------------
+J. DEBUG SCENARIOS (pick at least one - highest signal in this file)
+---------------------------------------------------------------------
+86. p99 latency on one endpoint jumped from 200ms to 9s. p50 is unchanged. CPU is flat.
+    Walk me through your diagnosis. What are the top 5 hypotheses in priority order?
+87. A service works fine for 6 days then falls over every 7th day at 3am. Where do you look?
+88. Requests intermittently hang for exactly 60 seconds then succeed. What's your first guess?
+89. Your Celery queue depth is growing but worker CPU is 20%. What's happening?
+90. After a deploy, error rate is fine but a downstream partner says they're getting
+    duplicate webhooks. How do you confirm and fix?
+91. Pods are being OOMKilled but your app's own memory profiler says usage is flat.
+    Explain how both can be true.
+92. Postgres connections are exhausted. Everything you can do in the next 10 minutes,
+    and everything you do in the next 10 days.
+93. A single tenant's traffic is degrading everyone else. Design the fix.
+94. Data corruption found in production, source unknown, 3 days old. What is your
+    order of operations? (Watch for: stop the bleeding, preserve evidence, comms,
+    then fix.)
+
+---------------------------------------------------------------------
+K. ENGINEERING PRACTICE / MODERN EXPECTATIONS
+---------------------------------------------------------------------
+95. What does your dev loop look like in 2026? Are you using AI coding agents, and
+    what do you refuse to let them do?
+96. How do you review a 2,000-line PR from a junior?
+97. What's your approach to writing a design doc? What sections are non-negotiable?
+98. How do you decide between building and buying? Give a real example where you
+    chose to buy.
+99. What technical debt are you carrying at Espire right now, and what's your plan for it?
+100. If you joined us on Monday and were handed a 4-year-old Python monolith with no
+     tests and 3 people who understand it, what do you do in weeks 1, 4 and 12?

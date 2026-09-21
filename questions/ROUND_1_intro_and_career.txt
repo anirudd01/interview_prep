@@ -1,0 +1,155 @@
+=====================================================================
+ROUND 1 - INTRO / PROJECTS / CAREER
+Candidate: Aniruddha K - Python Backend Developer (7+ yrs)
+Target role: Backend + DevOps + Cloud + AI
+Duration: 50 min assessment + 10 min general
+=====================================================================
+
+HOW TO RUN THIS ROUND
+- Pick ~12-15 questions. Depth over coverage.
+- Anchor on 2 projects he picks + 1 you pick (suggest: Cellular or Jio Recommendation Engine).
+- Red flags to probe gently: 3 job changes in ~2 years (Turing 6mo, CES 4mo, Espire 12mo)
+  after 3.4 yrs at DataWeave and 2.3 yrs at StatusNeo.
+- Watch for: does he say "we" for everything, or can he isolate his own contribution?
+
+---------------------------------------------------------------------
+A. WARM-UP / NARRATIVE (pick 2-3)
+---------------------------------------------------------------------
+1.  Walk me through your career in 5 minutes - not the resume, the arc. What
+    changed about the kind of problems you were solving from DataWeave to today?
+2.  Of everything on this resume, which single system are you proudest of, and
+    what would you rebuild differently if you started it today?
+3.  You've worked across ecommerce, news/media, HR tech, RLHF/AI tooling, geospatial,
+    and insurance. Is that breadth deliberate or circumstantial? What did each domain
+    teach you that the previous one didn't?
+4.  What does "backend developer" mean to you in 2026, given how much of the job is
+    now infra, cloud and AI plumbing?
+5.  Which of the four areas we're hiring for - backend, DevOps, cloud, AI - are you
+    weakest in, and what are you actively doing about it?
+
+---------------------------------------------------------------------
+B. CAREER / STABILITY / MOTIVATION (pick 2-3)
+---------------------------------------------------------------------
+6.  You had 3.4 years at DataWeave and 2.3 at StatusNeo, then Turing (6 mo),
+    CES (4 mo), Espire (12 mo). Talk me through those three moves.
+7.  CES IT was 4 months and you were building GeoStorm from scratch. What state
+    did you leave it in, and how do you feel about leaving something that early?
+8.  What would make you stay somewhere 4+ years again?
+9.  You've been Lead Engineer and Principal Software Engineer recently. Do you want
+    to keep going down the IC track or move to management? Be honest about why.
+10. What kind of engineering culture makes you productive, and what kills your output?
+11. Consultancy work (StatusNeo, Espire, CES) vs product work (DataWeave) - which do
+    you prefer and why? This role is <product/services - fill in>.
+12. What's your compensation expectation and what's driving that number?
+13. What are you looking for in the next 2 years that you couldn't get at Espire?
+
+---------------------------------------------------------------------
+C. ESPIRE / AVENTUM - ATOMX, Orbit-Ayana, Aurora-Pulse, Cellular
+---------------------------------------------------------------------
+14. Explain the insurance domain you worked in - what actually is a "rater",
+    a "quote", and "new business onboarding"? Teach it to me like I'm new.
+15. Orbit/Ayana ingests insurance agents' inboxes and does information extraction.
+    Walk me through the full pipeline from "email lands" to "onboarding record created".
+16. What was the accuracy bar for that extraction, how did you measure it, and what
+    happened when extraction was wrong? Was there a human-in-the-loop step?
+17. Cellular converts rater workbooks (Excel) into executable Python modules exposed
+    via APIs. This is essentially writing a transpiler. Explain the architecture.
+18. What were the hardest Excel constructs to translate - circular refs, volatile
+    functions, array formulas, named ranges, iterative calc? Give me a concrete one
+    that broke you and how you solved it.
+19. How did you validate that the generated Python module produced the same numbers
+    as the original workbook? What was your regression strategy across hundreds of
+    workbooks?
+20. You then "built an agent as an alternate to Cellular and its replacement."
+    Why replace a deterministic transpiler with an agent? What did you gain and
+    what did you give up? How did you convince stakeholders?
+21. Aurora/Pulse does dynamic rater + quote generation + policy documents.
+    Where were the latency hot spots and what was the p95?
+22. You used Azure Functions and Indexers. Why Functions over a container/AKS service
+    for this workload? What did cold starts cost you?
+23. You built an MCP server for the internal testing team. What tools did it expose,
+    who consumed it, and did it actually get adopted?
+24. Insurance = regulated. What compliance, audit-trail or data-residency constraints
+    shaped your design?
+25. As Lead Engineer, how big was your team, and what did you personally write vs review?
+
+---------------------------------------------------------------------
+D. CES IT - GeoStorm (SOC2, ArcGIS replacement)
+---------------------------------------------------------------------
+26. "SOC2 compliance in mind from day 1" - name five concrete engineering decisions
+    you made specifically because of SOC2 that you would NOT have made otherwise.
+27. Replacing ArcGIS with PostGIS - what did you actually have to rebuild, and what
+    did you discover ArcGIS was doing for you that you'd underestimated?
+28. You built SSO for multiple providers with OAuth2/OIDC. Which providers, and where
+    did they deviate from spec in ways that hurt?
+29. Describe your RBAC model. Roles vs permissions vs scopes - what was the data model,
+    and how did you handle row-level / geometry-level access?
+30. Why EC2 + SSM instead of ECS/EKS or Lambda for GeoStorm? Defend the choice.
+31. What was your test strategy with pytest on a greenfield project? Coverage target,
+    and what did you deliberately not test?
+
+---------------------------------------------------------------------
+E. TURING - RLHF evaluation dashboard
+---------------------------------------------------------------------
+32. Explain RLHF to a non-ML stakeholder, and where your dashboard sat in that loop.
+33. You used Redis for "task claim/unclaim locks". Walk me through that locking scheme.
+    What happened if an annotator's browser died mid-task?
+34. Why SSE and not WebSockets for streaming model responses? What broke at scale
+    (proxies, timeouts, buffering)?
+35. Why MongoDB for task data? What did the document model look like?
+36. You "directed a team of 7 annotators" - what was your role there, engineering
+    or operations? How did annotator feedback change the product?
+37. How did you handle inter-annotator disagreement or low-quality scoring in the data model?
+
+---------------------------------------------------------------------
+F. STATUSNEO - McKinsey OHI, Jio Recommendation Engine, Jio ATS
+---------------------------------------------------------------------
+38. McKinsey OHI: legacy SaaS -> serverless on AWS. What was the actual cost before
+    and after, and what was the migration strategy (strangler, big-bang, dual-run)?
+39. What workloads did you deliberately NOT move to Lambda, and why?
+40. You added multi-region support via Terraform. Multi-region for DR or for latency?
+    What was your RTO/RPO, and did you ever test a failover?
+41. Jio News recommender at 100M requests/day - break that number down. Peak RPS?
+    How many pods? What was the actual bottleneck when you load tested?
+42. "Led the project from inception to deployment single-handedly" - what does that
+    mean concretely, and what suffered because there was no second pair of eyes?
+43. In the recommender, what part was yours vs the data science team's? Were you
+    serving a model, or serving precomputed recommendations?
+44. Jio ATS: 100k resumes/day across RIL. What was the ingestion pipeline, and how did
+    you handle the long tail of bad PDFs/DOCs?
+45. You "enabled 10 data scientists for rapid prototyping". What platform/tooling did
+    you give them? Would you call that an ML platform role?
+46. Both Jio projects claim huge scale. Give me one number from each you can defend
+    with a dashboard screenshot in your head, and tell me how it was measured.
+
+---------------------------------------------------------------------
+G. DATAWEAVE - Digital Shelf Analytics 2.0, centralised crawler
+---------------------------------------------------------------------
+47. DSA 2.0 replaced a set of legacy SaaS tools. How did you sequence the replacement
+    without breaking existing customers?
+48. "Reduced manual effort of the delivery team by 60% in data ingestion" - how was
+    that measured, and what specifically did you automate?
+49. The centralised crawler: how did you deal with anti-bot measures, site layout
+    changes, and data quality at ecommerce scale? What was your alerting on
+    "the crawler is silently returning garbage"?
+50. Why Kafka AND RabbitMQ in the same product? What went on each?
+51. You trained juniors and helped grow a team from 15 to 100. What did your onboarding
+    or mentoring actually look like? Give me one person whose growth you're proud of.
+
+---------------------------------------------------------------------
+H. BEHAVIOURAL / OWNERSHIP (pick 2-3)
+---------------------------------------------------------------------
+52. Tell me about the worst production incident you personally caused. What happened,
+    how long was the impact, and what did you change afterwards?
+53. Tell me about a time you were technically right but lost the argument. What did
+    you do next?
+54. Describe a design decision you made that you later regretted and had to unwind.
+55. How do you handle a PM or client asking for something you believe is technically
+    the wrong solution - give a real example from Aventum or Jio.
+56. What's the largest amount of code you've deleted, and why?
+57. How do you decide when a system is "done enough" to ship?
+58. You've been the sole owner of critical systems multiple times. How do you protect
+    the org from your own bus factor?
+59. What is something you believe about software engineering that most of your peers
+    would disagree with?
+60. What questions do you have about this role, this team, or how we work?

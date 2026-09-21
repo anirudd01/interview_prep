@@ -1,0 +1,229 @@
+=====================================================================
+ROUND 5 - AI / LLM ENGINEERING
+Duration: 50 min assessment + 10 min general
+=====================================================================
+
+CONTEXT ON THE CANDIDATE
+Resume AI claims: Ollama, RAG, pgVector, ChromaDB, Groq; a RAG pipeline over org
+documents; an MCP server for a QA team; an "agent" replacing the Cellular Excel->Python
+transpiler; information extraction from insurance agent inboxes (Orbit/Ayana); Azure AI
+Search indexers; a resume-to-JD matching system (Jio ATS); and an RLHF evaluation
+platform (Turing).
+
+Calibration: he is an AI-adjacent BACKEND engineer, not an ML researcher. Do NOT
+grade him on transformer math or training theory. DO grade him hard on:
+  - RAG quality engineering (chunking, retrieval, evaluation) - not just "I used pgVector"
+  - Evaluation. If he has no eval methodology, that is the single biggest red flag.
+  - Cost, latency, and failure handling of LLM systems in production
+  - Agent/tool-calling design and its safety and determinism problems
+  - Knowing where NOT to use an LLM
+Sections A-D are the core. E-G are for depth if he's strong. H is the pass/fail section.
+
+---------------------------------------------------------------------
+A. FOUNDATIONS - ENOUGH TO BE DANGEROUS (rapid, 30-60s each)
+---------------------------------------------------------------------
+1.  What is a token? Why does token count matter for cost, latency AND accuracy?
+2.  Explain embeddings to a backend engineer. What does cosine similarity actually
+    measure, and when is it misleading?
+3.  What is the context window, and what actually happens when you exceed it?
+4.  Temperature, top_p, top_k, seed - what does each do and what do you set for a
+    data-extraction task vs a summarization task?
+5.  Why are LLM outputs non-deterministic even at temperature 0?
+6.  What is the "lost in the middle" problem in long contexts?
+7.  Base model vs instruct model vs reasoning model - when does each make sense?
+8.  What is a system prompt, and why does prompt order matter?
+9.  Explain prompt injection. Now explain indirect prompt injection via a retrieved
+    document. Which one applies to your Orbit/Ayana email pipeline?
+10. What is structured output / JSON mode / constrained decoding? How do you guarantee
+    a schema? What do you do when the model still returns invalid JSON?
+11. What is quantization (Q4, Q8, GGUF) and what do you lose? (Ties to his Ollama use.)
+12. What is a context-window KV cache and why does prompt caching cut cost so much?
+13. When is an LLM the WRONG tool? Give me three tasks from your own projects where a
+    regex, a classifier, or plain code beats an LLM.
+
+---------------------------------------------------------------------
+B. RAG - DESIGN AND QUALITY (his strongest claim; go deep)
+---------------------------------------------------------------------
+14. Draw your org-knowledge RAG pipeline from Espire end to end: ingestion, chunking,
+    embedding, storage, retrieval, reranking, prompt assembly, generation, citation.
+15. How did you chunk? Fixed size, recursive, semantic, or structure-aware? What chunk
+    size and overlap, and how did you arrive at those numbers rather than copying a blog?
+16. How do you chunk a 200-page insurance policy PDF with tables and nested clauses?
+    What does naive chunking destroy?
+17. Which embedding model did you use and why? How would you decide between two of them
+    for your domain?
+18. pgVector vs ChromaDB vs Azure AI Search vs a dedicated vector DB - you've used
+    several. Give me the real decision criteria, and where each falls over.
+19. pgVector index types (IVFFlat vs HNSW): explain the recall/latency/build-time
+    tradeoff and the parameters you'd tune.
+20. What is hybrid search? Why does BM25 still beat embeddings for some queries?
+    How do you combine them - and what is reciprocal rank fusion?
+21. What is a reranker, where does it sit, and what does it cost you in latency?
+    Did you use one? What improved?
+22. Your RAG answers a question wrong. Walk me through the debugging tree: is it a
+    retrieval failure, a chunking failure, a ranking failure, or a generation failure?
+    How do you tell them apart?
+23. How do you measure retrieval quality? (Looking for: recall@k, MRR, NDCG, and a
+    labelled golden set.) Do you have a golden set? Who built it?
+24. How do you measure answer quality? Faithfulness/groundedness, answer relevance,
+    context precision/recall. Have you used RAGAS or an LLM-as-judge? What are the
+    failure modes of LLM-as-judge?
+25. How do you stop hallucination when retrieval returns nothing relevant? How does the
+    system say "I don't know"?
+26. How do you do citations so a user can verify the answer? What's hard about that?
+27. Documents change. How do you handle incremental re-indexing, deletions, and stale
+    embeddings? What happens when you switch embedding models - full re-embed?
+28. Permissions in RAG: user A must not retrieve chunks from documents they can't see.
+    How do you enforce that at the vector-search layer, not after?
+29. Multi-tenant RAG: one index with a filter, or an index per tenant? Cost and
+    isolation tradeoffs.
+30. When is fine-tuning better than RAG, and when is neither the answer? What would
+    you fine-tune for in the insurance domain?
+31. What is GraphRAG / knowledge-graph RAG and when is it worth the complexity?
+32. Query rewriting, HyDE, multi-query expansion - which have you tried and did they
+    actually move a metric?
+
+---------------------------------------------------------------------
+C. AGENTS, TOOL CALLING & MCP (he built both)
+---------------------------------------------------------------------
+33. What is function/tool calling, mechanically? What does the model actually emit?
+34. What is MCP, what problem does it solve, and how is it different from just writing
+    an API wrapper? Explain tools vs resources vs prompts.
+35. Walk me through the MCP server you built for the Pulse QA team - what tools did it
+    expose, and how did you handle auth and blast radius?
+36. If an MCP tool can mutate production data, what guardrails do you build?
+    (Expect: read-only defaults, scoping, confirmation, audit logging, sandboxing.)
+37. How do you design a tool description so the model actually calls it correctly?
+    What happens when you have 40 tools? How do you scale tool selection?
+38. ReAct vs plan-and-execute vs a state-machine/graph workflow. Which did you use
+    for the Cellular replacement agent and why?
+39. Agent loops: how do you bound them? Max steps, budget caps, loop detection,
+    and what do you do when the agent gets stuck repeating a call?
+40. How do you handle a tool that fails or returns a huge payload that blows the
+    context window?
+41. Multi-agent systems - are they usually worth it, or is that mostly hype?
+    Argue the honest position.
+42. How do you make an agent's behaviour reproducible for debugging? What do you log
+    per step? (Expect: full trace of prompts, tool calls, args, outputs, token counts.)
+43. Your Cellular replacement agent: how do you prove to an auditor that the premium
+    it computed is correct and repeatable? If you can't, why did you ship it?
+44. Where should determinism live in an agentic system? (Looking for: LLM decides
+    routing, deterministic code does the math.)
+45. How would you evaluate an agent, as opposed to a single LLM call?
+    (Trajectory eval, tool-selection accuracy, end-task success rate.)
+46. What is human-in-the-loop approval design, and where did you need it?
+
+---------------------------------------------------------------------
+D. AI IN PRODUCTION - THE BACKEND/DEVOPS SIDE (core of this role)
+---------------------------------------------------------------------
+47. Design the serving architecture for an LLM feature: streaming, timeouts, retries,
+    rate limits from the provider, fallback models, and cost caps. What's the p95?
+48. Provider rate-limits you at peak (429s with a TPM limit). Every mitigation you know,
+    in order.
+49. How do you stream tokens to a client through a load balancer and Nginx? What breaks?
+    (Ties to his SSE work - `proxy_buffering off`.)
+50. How do you handle a 40-second LLM call in an HTTP API? Compare streaming, async
+    job + polling, and webhooks.
+51. Semantic caching - what is it, when does it help, and when is it dangerous?
+52. How do you control and attribute LLM cost per tenant/feature? What do you track?
+53. Self-hosted (Ollama/vLLM) vs API providers (Azure OpenAI, Groq): give me the real
+    decision framework - cost curve, latency, data residency, ops burden.
+54. What is vLLM doing that makes it fast? (PagedAttention, continuous batching -
+    conceptually is enough.)
+55. Groq is on your resume - what's the actual use case for that kind of latency, and
+    did it change your product design?
+56. How do you version prompts? Where do they live, how are they reviewed, and how do
+    you roll back a bad prompt change?
+57. How do you A/B test a prompt or model change in production safely?
+58. What does observability look like for an LLM system? (Traces, token counts, cost,
+    latency per step, retrieval hits, user feedback signals. LangSmith/Langfuse/
+    OTel GenAI semconv?)
+59. A model provider deprecates the model version you depend on in 30 days.
+    What is your plan, and what should you have built earlier?
+60. Model outputs regress after a provider silently updates the model. How would you
+    even detect that?
+61. How do you build a regression test suite for LLM behaviour in CI? What's the
+    pass/fail criterion when outputs are non-deterministic?
+62. PII and data governance: what leaves your network, what gets logged, what gets
+    redacted, and how does that interact with SOC2 and insurance regulation?
+63. Guardrails: input filtering, output validation, jailbreak detection, toxicity.
+    What did you actually implement vs what do you know exists?
+64. How do you handle the "agent did something expensive/destructive" scenario -
+    budget limits, kill switches, and blast radius?
+
+---------------------------------------------------------------------
+E. DOCUMENT AI / EXTRACTION (his Orbit/Ayana + ATS work)
+---------------------------------------------------------------------
+65. Design an information-extraction pipeline for insurance submission emails:
+    attachments, scanned faxes, tables, handwriting. Where do OCR, layout models,
+    and LLMs each fit?
+66. How do you extract structured data with confidence scores from an LLM? Can you
+    trust logprobs? What else can you use as a confidence proxy?
+67. How do you decide the threshold at which a document goes to a human reviewer?
+    How do you tune it against business cost?
+68. How do you measure extraction accuracy per field, and how do you catch degradation
+    on a new document format you've never seen?
+69. Tables in PDFs are notoriously hard. What did you actually use, and what still fails?
+70. How do you handle a 200-page document where the answer needs 3 pages from
+    different sections?
+71. Resume-to-JD matching (Jio ATS): embeddings alone will rank badly. What actually
+    works, and how do you make ranking explainable to a recruiter?
+72. How do you deal with bias and fairness in an automated candidate-shortlisting system?
+    What would you refuse to build?
+
+---------------------------------------------------------------------
+F. EVALUATION & DATA (from his RLHF exposure - underrated section)
+---------------------------------------------------------------------
+73. Explain RLHF, DPO and RLAIF at a high level. Where does a reward model come from?
+74. From the Turing project: what makes annotation data high quality? How do you detect
+    a lazy or adversarial annotator?
+75. How do you build a golden eval set for a domain like insurance with 3 SMEs and no
+    budget? How many examples is enough?
+76. Offline eval says the new prompt is better; online metrics say it's worse.
+    What do you do?
+77. What are the failure modes of LLM-as-a-judge, and how do you mitigate them?
+    (Position bias, verbosity bias, self-preference.)
+78. How do you close the loop from production failures back into your eval set?
+79. What is data drift for an LLM feature, and how would you detect it without labels?
+80. How would you build a feedback mechanism (thumbs up/down) that is actually useful
+    rather than noise?
+
+---------------------------------------------------------------------
+G. FORWARD-LOOKING / OPINION (good 10-min closers)
+---------------------------------------------------------------------
+81. What has changed in your approach to building AI features over the last 18 months?
+    What did you believe in 2024 that you no longer believe?
+82. Long-context models keep growing. Is RAG dying? Argue both sides.
+83. Where do you think agents genuinely work today, and where are they still a demo?
+84. How do you use AI coding agents in your own workflow? What do you never let them do,
+    and how has it changed your code review?
+85. If we gave you 3 months and 2 engineers to add AI to our product, how would you pick
+    the first use case? What would make you say "not yet"?
+86. What's the most overhyped thing in AI engineering right now?
+87. What AI paper, tool or technique did you learn in the last 3 months, and how?
+88. Build vs buy for AI infra - vector DB, orchestration framework, observability.
+    Where do you buy?
+89. LangChain / LlamaIndex / Semantic Kernel / raw SDK - what do you actually use in
+    production and why? (No wrong answer; listen for reasoning about abstraction cost.)
+90. What would you do differently if you rebuilt your Espire RAG pipeline today?
+
+---------------------------------------------------------------------
+H. PASS/FAIL PROBES - ask at least 3 of these
+---------------------------------------------------------------------
+91. Give me one number that shows your RAG pipeline worked. Any metric. How was it
+    measured, by whom, and against what baseline?
+       -> No number and no methodology = he built a demo, not a system.
+92. Tell me about an AI feature you built that failed or was killed. Why?
+       -> Everyone's had one. If he hasn't, he hasn't shipped enough.
+93. What did the LLM get wrong most often in your extraction pipeline, and what was
+    the fix - prompt, model, retrieval, or code?
+94. What is the single hardest engineering problem you hit that was specific to AI
+    (not backend)?
+95. Convince me NOT to use an LLM for a problem where a stakeholder demanded one.
+    Real example.
+96. How much did your AI features cost per month, and what did you do to reduce it?
+97. What's in your prompt that most people wouldn't think to put there, and why?
+98. What breaks first when you 10x an LLM-backed feature's traffic?
+99. If I said "your RAG system is hallucinating in 5% of answers, fix it by Friday" -
+    what are the first three things you do?
+100. Teach me something about AI engineering that I probably don't know.

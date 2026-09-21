@@ -1,0 +1,90 @@
+Aniruddha K
+Python Backend Developer
++91-8884160161    |    anirudd01@gmail.com    |    Bengaluru, KA, India 
+
+
+SUMMARY
+A seasoned Backend Developer with 7+ years of experience specializing in Python, Infra and Cloud. Expertise in a broad range of open source tools & cloud services, with a proven track record of developing & deploying robust distributed and scalable applications and ensuring high performance.
+SKILLS
+
+Language: Python
+Web: FastAPI, Flask, gRPC, WebSockets, SSE
+Database: PostgreSql, MongoDB, CosmosDB
+Container & Orchestration: Docker, Kubernetes
+Messaging Queues: RabbitMq, Kafka, SQS, SNS, GCP pub-sub
+Caching layer: Redis, Memcached
+Monitoring: Prometheus, Grafana, Sentry, EFK, CloudWatch
+Scheduler: Celery, Cron, FastApi BackgroundTask, AP Scheduler
+Cloud: GCP, Azure, AWS
+CI/CD: Azure devops, BitBucket Pipelines
+Architecture: Microservice, Distributed, Event driven, Serverless (lambda)
+Exposure: Nginx, MVC framework, Webhooks, Terraform, pgVector, Streamlit, Railway, MS-SQL server, MySql, Athena, Qubole, locustio
+AI: Ollama, RAG, pgVector, chroma db, groq ai
+
+
+EXPERIENCE
+
+
+
+Espire Infolabs
+        ||  Lead Engineer 					       09/2025 - 09/2026 (12 months)
+Worked for Aventum Group and its ATOMX platform.
+Worked for orbit/ayana products, which manages insurance agents inboxes and workflow which generates new business onboarding based on information extraction
+Worked for Aurora/Pulse products, which manages dynamic rater and quote generation along with policy documents. 
+Worked on Cellular, which converts rater workbooks to python executable modules. These modules are further exposed via APIs
+Built via Python, Azure (blob, functions, indexers, ADO Pipelines)
+Built a RAG pipeline for users within the org to search org info and offerings, with any prompts or question
+Built a MCP for Pulse for internal testing team’s requirements.
+Built an agent as an alternate to cellular and its replacement.
+
+
+CES IT
+        ||  Principal Software Engineer				       06/2025 - 09/2025 (4 months)
+Building backend for GeoStorm from scratch with SOC2 compliance in mind from day 1.
+Primarily to move away from ArcGIS, a 3rd party SaaS dependency.
+Used Python, FastApi, postgreSQL (postGIS), AWS (Ec2, SSM, ECR, RDS), Docker, OAuth2/OIDC, BitBucket Pipelines, pytest.
+Implemented SSO auth layer for various providers via OAuth2 & OIDC and RBAC system for end user authorization.
+
+ Turing 
+       || Contractor - Python Developer				Sept 2024 - Feb 2025 (6 months)
+Developed backend for RLHF evaluation dashboard with task workflows, response comparison, and scoring, used by annotators. 
+Enabled real-time model response streaming with SSE for smooth workflows. 
+Optimized data handling with Python, MongoDB (task data) and Redis (high level stats, task claim/unclaim locks).
+Directed a team of 7 on model evaluation, ensuring ease of use for annotators.
+
+
+ StatusNeo
+
+      ||  Consultant						      Mar 2022 - May 2024 (2.3 yrs)
+	McKinsey - Project: Org Health Index - Employee Engagement domain 
+Led the migration of a legacy SaaS product into a modern, serverless architecture on AWS, focusing on cost efficiency, enhanced performance & scalability.
+Used Python, AWS lambda, SQS, EC2, S3, ECR, CloudWatch, migrated the on-prem database to AWS RDS.
+Added multi region support for infrastructure via Terraform.
+Jio - Project: Recommendation Engine for Jio News - Entertainment domain
+Engineered a highly scalable distributed backend for a news recommendation engine on GCP, achieving scalability to handle 100M daily requests. Led the project from inception through to deployment single handedly.
+Used Python, Kubernetes (GKE), FastAPI, Redis, PostgreSQL, MongoDB and pub-sub in google cloud.
+	Jio - Project: ATS for RIL’s People First Platform - HR domain
+Led the design and implementation of a backend for an advanced ATS tool, which handled 100k resumes a day across RIL group, the platform dramatically reduced manual shortlisting and matching efforts, transforming weeks of work into a few hours and boosting overall recruitment process
+Used Python, FastAPI, Celery, MongoDB, Redis, Azure Blob Storage, Docker & Kubernetes (AKS) on Azure, Prometheus, Grafana.
+My role involved helping a team of 10 data scientists to enable rapid prototyping & development, owning complete backend, infrastructure and scaling all their requirements related ML R&D. 
+
+ DATAWEAVE							         Sept 2018 - Jan 2022 (3.4 yrs)
+
+      ||  Senior Backend Developer						  Jan 2021 - Jan 2022
+	Project: Digital Shelf Analytics 2.0 - Ecommerce domain
+Built a data intensive analytical heavy SaaS product replacing the existing umbrella of legacy SaaS solutions. Used Python, FastAPI, PostgreSQL, celery, rabbitMQ, kafka, Docker, kubernetes in Azure.
+Used Prometheus, Grafana for monitoring and Webhooks for alerts.
+Was responsible for reducing manual effort of the delivery team by 60% in the data ingestion process.
+      ||  Python Developer							 Nov 2018 - Dec 2020
+Built centralised crawler for DaaS projects which helped the delivery team land multiple clients and prospects.
+Used Python, AWS services like S3, Athena, kafka, lambda, Qubole, EFK stack, MySql.
+Built internal tools and web apps enhancing data handling capabilities, this solution fueled our existing SaaS solutions.
+Trained juniors & interns and helped in growing a 15 member team to 100 strong.
+Optimized backend processes, automating critical tasks, reducing manual efforts and significantly improving delivery timelines.
+      ||  Intern									Sept 2018 - Oct 2018
+Education
+National College Basavanagudi (Autonomous)				        Bengaluru, India
+Bachelor of Computer Application  - 7.77 GPA (A+)			    		    2015 - 2018
+Built a web app using .Net MVC & C# for our 100 year old institute to manage day to day activity, including exam scheduling, report card generating, daily attendance etc.
+Reduced time taken to announce results & generate report cards from 2 months to 10 days.
+Replaced manual process & legacy product usage with zero cost.

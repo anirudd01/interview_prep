@@ -1,0 +1,165 @@
+=====================================================================
+ROUND 4 - SYSTEM DESIGN (incl. Cloud & DevOps architecture)
+Duration: 50 min assessment + 10 min general
+=====================================================================
+
+HOW TO RUN THIS ROUND
+- Pick ONE main design (35-40 min) + 2-3 short "deep dive"/rapid questions (10-15 min).
+- Do NOT pick more than one big design. Depth beats coverage here.
+- Recommended pairings for this candidate:
+    * Strongest signal:  Q21 (rating/quoting engine) or Q24 (document intake) - his domain
+    * Fair + hard:       Q11 (news recommender) - he claims 100M/day, make him defend it
+    * Neutral classic:   Q1 or Q3 - if you want an unfamiliar-domain baseline
+    * DevOps-flavoured:  Q31 or Q33 - directly tests the ops half of the role
+- Expect from a 7-year candidate: clarifying questions FIRST, explicit non-functional
+  requirements, back-of-envelope numbers, a clean box diagram, then depth on 2 components,
+  then failure modes and cost. If he starts drawing boxes in minute one, that's a flag.
+
+SCORING RUBRIC (use per design)
+  [ ] Clarified scope & asked about constraints before designing
+  [ ] Stated NFRs: RPS, latency target, data volume, consistency, availability
+  [ ] Did back-of-envelope math and it was roughly right
+  [ ] API / data model before infrastructure
+  [ ] Justified datastore choice with a reason, not a preference
+  [ ] Identified the actual bottleneck unprompted
+  [ ] Handled failure: retries, idempotency, partial failure, DLQ, degradation
+  [ ] Talked about deployment, rollout, observability, and cost without being asked
+  [ ] Named the tradeoffs he chose against, not just the ones he chose
+  [ ] Knew what he'd build v1 vs what he'd defer
+
+=====================================================================
+PART 1 - CLASSIC / BLANKET DESIGNS (domain-neutral baseline)
+=====================================================================
+1.  Design a URL shortener. Then: 100k writes/sec, custom aliases, analytics, and
+    link expiry. Where does it stop being trivial?
+2.  Design a parking lot system. (Start OO/API design, then push to distributed:
+    500 lots, real-time availability, reservations, and payments.)
+3.  Design a rate limiter as a shared service used by 200 microservices.
+4.  Design a distributed job scheduler (cron-as-a-service) with at-least-once
+    execution, 1M jobs, and per-second granularity.
+5.  Design a notification service: email, SMS, push, in-app. Templating, preferences,
+    quiet hours, dedupe, and delivery guarantees.
+6.  Design a file upload + processing service (S3/Blob, 5GB files, resumable,
+    virus scan, transcode, webhook on complete).
+7.  Design an idempotent payment/transaction ledger. Double-entry, no lost money,
+    reconciliations.
+8.  Design a feature flag service - low latency reads, global, with instant kill switch.
+9.  Design a real-time collaborative dashboard (many readers, live updates, 50k
+    concurrent connections).
+10. Design an audit log service that is append-only, tamper-evident, queryable, and
+    retains 7 years of data cheaply.
+
+=====================================================================
+PART 2 - DESIGNS DRAWN FROM HIS OWN RESUME (make him defend his claims)
+=====================================================================
+11. Design a news recommendation serving system for 100M requests/day.
+    Push on: peak RPS, candidate generation vs ranking, precomputed vs online,
+    cold start for new users AND new articles, feature store, cache hit ratio,
+    freshness vs cost, and how you A/B test ranking changes.
+12. Same system, now: the ML team wants to ship a new model twice a day, and you must
+    support shadow traffic and instant rollback. Design the model serving layer.
+13. Design an ATS resume-processing pipeline at 1M resumes/day: ingestion from many
+    sources, parsing (PDF/DOC/scanned), dedupe of the same candidate across sources,
+    embedding + matching against JDs, and ranking explainability.
+14. Design a large-scale ecommerce crawler platform: 10k sites, daily, politeness,
+    proxies/anti-bot, dynamic JS pages, schema drift detection, and a data-quality
+    gate before customers see anything.
+15. Design the Digital Shelf Analytics backend: multi-tenant, heavy analytical queries
+    over billions of rows, sub-3s dashboards, daily ingestion. OLTP vs OLAP split,
+    pre-aggregation strategy, and how you keep per-tenant cost visible.
+16. Design a geospatial platform to replace ArcGIS (GeoStorm): store and query millions
+    of features, spatial joins, tile serving, and SOC2-grade access control down to
+    geometry level.
+17. Design an RLHF annotation platform: task assignment, claim/expiry locks, streaming
+    model outputs, multi-annotator agreement, quality scoring of annotators, and
+    export to a training pipeline.
+18. Design a serverless migration of a legacy monolithic SaaS. Strangler plan, what
+    stays on VMs, cost model, and how you prove parity before cutting over.
+19. Design a multi-region active-active deployment for a Python API + Postgres.
+    What's genuinely hard? (Expect: write conflicts, data residency, session affinity,
+    failover testing.) When is active-passive the correct, boring answer?
+20. Design the infrastructure for a 10-person data science team so they can go from
+    notebook to production endpoint without you. What do you own vs what do they own?
+
+=====================================================================
+PART 3 - INSURANCE / DOCUMENT AI DESIGNS (his current domain, highest signal)
+=====================================================================
+21. Design a dynamic rating & quoting engine. Requirements: business users author
+    rating logic in Excel; 2,000 quotes/min; every quote must be reproducible years
+    later; rules change weekly; multiple products and jurisdictions.
+    Push on: versioning of rules, deterministic replay, caching, and rollout of a
+    rule change without breaking in-flight quotes.
+22. Extend it: rating rules must now be A/B tested, and an actuary must be able to see
+    exactly which rule version produced a number. Design the lineage/audit model.
+23. Design the quote -> bind -> issue policy workflow as a distributed transaction
+    across 5 services, where one downstream (a carrier API) is slow and flaky.
+24. Design an insurance submission intake system: agents email documents; extract
+    structured data; route to underwriters; SLA of 15 minutes; must handle 200-page
+    PDFs, scanned faxes, and duplicate submissions of the same risk.
+25. Design the human-in-the-loop review layer for that extraction: how do you decide
+    what needs review, how do you measure model quality over time, and how do you
+    feed corrections back?
+26. Design a policy document generation service: 100k documents/day at month end,
+    templated, versioned, immutable once issued, retrievable for 10 years, and
+    regionally compliant.
+27. Design a system where an LLM agent replaces a deterministic rating engine, but
+    the business needs deterministic, auditable, regulator-defensible outputs.
+    Is this even the right architecture? Argue against your own resume.
+
+=====================================================================
+PART 4 - CLOUD & DEVOPS ARCHITECTURE (the ops half of this role)
+=====================================================================
+28. Design the full AWS (or Azure) landing zone for a new product: accounts/subscriptions,
+    networking, identity, secrets, logging, cost allocation, and guardrails. Day 1 vs
+    day 100.
+29. Design CI/CD for 30 microservices in a monorepo. Selective builds, shared libs,
+    versioning, environment promotion, and how long a deploy takes.
+30. Design a zero-downtime deployment strategy for a service that holds long-lived
+    connections and has a stateful in-memory cache.
+31. We are on AKS, our cloud bill doubled in 3 months, and nobody knows why.
+    Walk me through your investigation and the levers you'd pull, in order of
+    effort vs saving.
+32. Design a secrets management + rotation strategy across dev/stage/prod and 3 clouds.
+    Include: what happens the day a prod DB credential leaks publicly.
+33. Design the observability stack for a 40-service platform on a fixed budget.
+    What do you sample, what do you keep, what do you drop, and what are the 6 alerts
+    that page a human at 3am?
+34. Design a disaster recovery plan for your most critical service. Define RTO/RPO,
+    then tell me how you'd actually prove it works.
+35. Design a self-service internal developer platform: a new service goes from
+    "git repo created" to "running in prod with monitoring" with no platform-team
+    ticket. What are the golden paths?
+36. Design blue/green + canary for a service whose deploy includes a backward-
+    incompatible DB migration. Sequence it precisely.
+37. Design multi-tenant infrastructure isolation for an insurance SaaS with clients who
+    demand data residency in EU, UK and US, and one client who demands a dedicated stack.
+38. Design an autoscaling strategy for a workload with a 20x spike every day at 9am
+    that lasts 20 minutes. Compare HPA, KEDA, scheduled scaling, and overprovisioning
+    on cost.
+39. Design the incident response process end to end - detection, paging, triage,
+    comms, mitigation, postmortem. What is your definition of a blameless postmortem?
+40. You inherit infrastructure with no IaC, 200 hand-built resources, and no one who
+    remembers why. How do you get to Terraform without an outage?
+41. Design a compliance-ready (SOC2) logging & access-review system: who accessed what
+    customer data, when, retained for how long, and how you produce an auditor report.
+42. Design the migration of a stateful Postgres workload from on-prem to cloud with
+    under 5 minutes of downtime.
+
+=====================================================================
+PART 5 - RAPID DEEP-DIVE PROBES (10-15 min filler, use after main design)
+=====================================================================
+43. In your design, exactly where can data be lost? Name every point.
+44. Where is the single point of failure you've accepted, and why is it acceptable?
+45. Traffic goes 10x tomorrow with no warning. What breaks first, second, third?
+46. Cut the cost of this design by 60%. What do you sacrifice?
+47. Now build the same thing with a 2-person team in 6 weeks. What do you throw away?
+48. Which component here would you buy instead of build, and what's the lock-in risk?
+49. How do you migrate this design from v1 to v2 with live traffic and no downtime?
+50. What would you monitor to know this system is healthy - give me the 5 dashboards
+    and 5 alerts, no more.
+51. Where in this design does eventual consistency become visible to a user, and is
+    that acceptable?
+52. If this system is down for 1 hour, what is the business impact, and does your
+    design match that impact?
+53. What part of your own design are you least confident about?
+54. What did you deliberately leave out, and when would you add it?

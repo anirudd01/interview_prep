@@ -1,0 +1,103 @@
+{
+  "meta": {
+    "created": "2026-09-21",
+    "last_updated": "2026-09-21",
+    "total_sessions": 0,
+    "total_minutes": 0,
+    "note": "Rolling assessment of Aniruddha's interview readiness by skill area. Updated by Claude after each voice/text prep session. See CLAUDE.md for update protocol."
+  },
+  "skill_areas": {
+    "career_narrative_behavioral": {
+      "label": "Career narrative, job-hop story, behavioral/ownership",
+      "source_round": "ROUND_1",
+      "level": "unrated",
+      "trend": "unrated",
+      "last_reviewed": null,
+      "sessions_covered": 0,
+      "notes": ""
+    },
+    "python_core": {
+      "label": "Python language fundamentals & internals (GIL, memory, decorators, MRO, descriptors)",
+      "source_round": "ROUND_2, ROUND_3-A",
+      "level": "unrated",
+      "trend": "unrated",
+      "last_reviewed": null,
+      "sessions_covered": 0,
+      "notes": ""
+    },
+    "async_concurrency": {
+      "label": "asyncio, threading, multiprocessing, structured concurrency",
+      "source_round": "ROUND_2-A, ROUND_3-B",
+      "level": "unrated",
+      "trend": "unrated",
+      "last_reviewed": null,
+      "sessions_covered": 0,
+      "notes": ""
+    },
+    "web_api_design": {
+      "label": "FastAPI/Flask/gRPC/SSE/WebSockets, API & service design patterns",
+      "source_round": "ROUND_2-B, ROUND_3-C",
+      "level": "unrated",
+      "trend": "unrated",
+      "last_reviewed": null,
+      "sessions_covered": 0,
+      "notes": ""
+    },
+    "databases": {
+      "label": "Postgres/Mongo/CosmosDB internals, indexing, transactions, migrations",
+      "source_round": "ROUND_2-C",
+      "level": "unrated",
+      "trend": "unrated",
+      "last_reviewed": null,
+      "sessions_covered": 0,
+      "notes": ""
+    },
+    "infra_devops_cloud": {
+      "label": "Docker/K8s, messaging (Kafka/RabbitMQ/SQS), CI/CD, Terraform, cloud (AWS/Azure/GCP)",
+      "source_round": "ROUND_2, ROUND_4 (DevOps-flavoured)",
+      "level": "unrated",
+      "trend": "unrated",
+      "last_reviewed": null,
+      "sessions_covered": 0,
+      "notes": ""
+    },
+    "system_design": {
+      "label": "End-to-end system design: NFRs, back-of-envelope, tradeoffs, failure handling",
+      "source_round": "ROUND_4",
+      "level": "unrated",
+      "trend": "unrated",
+      "last_reviewed": null,
+      "sessions_covered": 0,
+      "notes": ""
+    },
+    "ai_llm_rag": {
+      "label": "LLM foundations, RAG design/quality/eval, agents & tool-calling, prod LLM ops",
+      "source_round": "ROUND_5",
+      "level": "unrated",
+      "trend": "unrated",
+      "last_reviewed": null,
+      "sessions_covered": 0,
+      "notes": ""
+    },
+    "dsa_sql": {
+      "label": "Practical DSA and SQL (low priority for this role, tie-breaker only)",
+      "source_round": "DSA_SQL",
+      "level": "unrated",
+      "trend": "unrated",
+      "last_reviewed": null,
+      "sessions_covered": 0,
+      "notes": ""
+    },
+    "own_projects_deep_dive": {
+      "label": "Ability to defend own resume claims with real numbers/architecture (Cellular, Aurora/Pulse, GeoStorm, Jio recommender, Jio ATS, RLHF dashboard)",
+      "source_round": "ROUND_1 sections C-G, ROUND_4 Part 2",
+      "level": "unrated",
+      "trend": "unrated",
+      "last_reviewed": null,
+      "sessions_covered": 0,
+      "notes": ""
+    }
+  },
+  "level_scale": "unrated -> weak -> developing -> solid -> strong",
+  "trend_scale": "unrated -> declining -> flat -> improving"
+}

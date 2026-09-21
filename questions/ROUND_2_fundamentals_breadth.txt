@@ -1,0 +1,234 @@
+=====================================================================
+ROUND 2 - FUNDAMENTALS ACROSS HIS DECLARED STACK
+"Does he actually know the tools he listed, or has he only used them?"
+Duration: 50 min assessment + 10 min general
+=====================================================================
+
+HOW TO RUN THIS ROUND
+- This is a BREADTH round. Rapid fire. 30-90 seconds per answer.
+- Every question below maps to something he explicitly listed on the resume.
+- Scoring suggestion: pick 3 questions from each section. If he stalls on the first
+  two of a section, move on - that section is a "used it, doesn't know it".
+- Tell him upfront: "I'd rather you say 'I don't know' than guess."
+- Calibration signal: he lists 40+ technologies. Expect deep on Python/FastAPI/
+  Postgres/Redis/Docker/K8s/Celery. Shallow on Kafka internals, Terraform state,
+  Memcached, Athena is acceptable - but he should KNOW he's shallow there.
+
+---------------------------------------------------------------------
+A. PYTHON BASICS (resume: "Language: Python")
+---------------------------------------------------------------------
+1.  What is the GIL, and name two situations where it genuinely does not matter.
+2.  list vs tuple vs set vs dict - time complexity of membership check in each,
+    and when would you pick a tuple over a list for a real reason?
+3.  Mutable default arguments - why is `def f(x=[])` a bug? What's the fix?
+4.  Shallow vs deep copy - give an example where the difference caused a real bug.
+5.  What does a generator give you that a list doesn't? When is a generator the wrong choice?
+6.  `is` vs `==`. Why does `256 is 256` behave differently from `257 is 257`?
+7.  How does Python manage memory? Refcounting + generational GC - what does the
+    cycle collector actually do?
+8.  What is a context manager and how would you write one without contextlib?
+9.  Decorators: write (verbally) a decorator that retries a function 3 times with backoff.
+10. `__slots__` - what problem does it solve and what does it cost you?
+11. Difference between `async def`, a coroutine, a Task, and a Future.
+12. What happens if you call a blocking `requests.get()` inside an async FastAPI endpoint?
+13. multiprocessing vs threading vs asyncio - give one real workload for each from your own projects.
+14. What's the difference between `@staticmethod`, `@classmethod`, and a plain method?
+15. What are Python's dunder methods you've actually implemented in production code?
+
+---------------------------------------------------------------------
+B. WEB / API (resume: FastAPI, Flask, gRPC, WebSockets, SSE)
+---------------------------------------------------------------------
+16. FastAPI vs Flask - beyond "async", what architecturally differs? Where does
+    Pydantic fit and what does it cost at request time?
+17. What is ASGI vs WSGI? Why can't Flask (classic) do WebSockets natively?
+18. FastAPI `Depends` - how does dependency caching work within a request?
+19. Difference between `def` and `async def` path operations in FastAPI - what does
+    FastAPI do differently under the hood for each?
+20. gRPC vs REST - three concrete reasons to pick gRPC, and two reasons not to.
+21. What is protobuf backward/forward compatibility? What field changes are safe?
+22. SSE vs WebSockets vs long polling - decision table. Which did you use where and why?
+23. HTTP status codes: when do you return 400 vs 409 vs 422 vs 429? What does a
+    Retry-After header do?
+24. Idempotency in APIs - what is an idempotency key and how would you implement one?
+25. What is CORS, and what actually happens in a preflight request?
+26. REST pagination: offset vs cursor. Why does offset pagination break at scale?
+27. What is the N+1 problem in an API context and how do you detect it?
+28. API versioning strategies - URL, header, content negotiation. What did you use?
+
+---------------------------------------------------------------------
+C. DATABASES (resume: PostgreSQL, MongoDB, CosmosDB, MySQL, MS-SQL, pgVector, PostGIS)
+---------------------------------------------------------------------
+29. ACID - explain each letter with a real failure you've seen when one wasn't held.
+30. Postgres isolation levels. What is a phantom read, and does Postgres' REPEATABLE
+    READ allow it?
+31. B-tree vs GIN vs GiST vs BRIN vs HNSW - name a workload for each. (GiST/HNSW ties
+    directly to his PostGIS and pgVector work.)
+32. What is a covering index? What is index-only scan?
+33. Explain MVCC in Postgres. What is bloat, and what does VACUUM actually do?
+34. Connection pooling - why does Postgres need PgBouncer? Transaction vs session
+    pooling and what breaks in transaction mode.
+35. When would you deliberately choose MongoDB over Postgres in 2026? Defend it -
+    JSONB exists.
+36. MongoDB: what is a write concern and a read preference? What does `w:1` risk?
+37. CosmosDB: what is an RU, and how do you design a partition key? What is a hot
+    partition and how would you detect one?
+38. What's the difference between logical and physical replication in Postgres?
+39. Database migrations on a live table with 500M rows - how do you add a NOT NULL
+    column with a default without locking?
+40. Explain a deadlock. How do you reproduce one deliberately and how do you fix it?
+41. pgVector: what index types does it offer, and what's the recall/latency tradeoff?
+
+---------------------------------------------------------------------
+D. CACHING (resume: Redis, Memcached)
+---------------------------------------------------------------------
+42. Redis vs Memcached - when is Memcached still the right answer?
+43. Redis data structures beyond strings - name five and a real use case for each.
+44. Cache-aside vs write-through vs write-behind. Which did you use and why?
+45. What is a cache stampede / thundering herd, and three ways to prevent it?
+46. Redis eviction policies - what does allkeys-lru vs volatile-ttl mean and how do you choose?
+47. Is Redis single-threaded? What does that imply for a `KEYS *` command in prod?
+48. How would you implement a distributed lock in Redis? What is Redlock and why is
+    it controversial? (He used Redis locks at Turing - go deep here.)
+49. Redis persistence: RDB vs AOF. What do you lose in a crash with each?
+50. How do you invalidate cache across multiple services? What is the hardest part?
+
+---------------------------------------------------------------------
+E. MESSAGING (resume: RabbitMQ, Kafka, SQS, SNS, GCP Pub/Sub)
+---------------------------------------------------------------------
+51. Kafka vs RabbitMQ in one minute. What is fundamentally different about the model?
+52. Kafka: partition, offset, consumer group, rebalance - explain each and what
+    triggers a rebalance storm.
+53. How do you guarantee ordering in Kafka? What does that cost you in parallelism?
+54. At-most-once / at-least-once / exactly-once - which is real, which is a marketing
+    term, and how do you achieve effective exactly-once?
+55. RabbitMQ: exchange types (direct, topic, fanout, headers) - one use case each.
+56. What is a dead letter queue and what do you do with the messages in it?
+57. SQS standard vs FIFO. What is the visibility timeout and what breaks if it's too short?
+58. SNS + SQS fan-out pattern - draw it and say why you'd use it over SNS alone.
+59. GCP Pub/Sub: push vs pull subscriptions. When is push a trap?
+60. Consumer is slower than producer. Walk me through your options, in order.
+
+---------------------------------------------------------------------
+F. CONTAINERS & ORCHESTRATION (resume: Docker, Kubernetes, AKS, GKE)
+---------------------------------------------------------------------
+61. What is a container, actually? Namespaces and cgroups - what does each provide?
+62. Image layers - how do you cut a 1.2GB Python image down? Multi-stage build for
+    a FastAPI app - walk me through it.
+63. `CMD` vs `ENTRYPOINT`. `COPY` vs `ADD`. Why does `.dockerignore` matter?
+64. Why should a container run as non-root, and what's the minimal change to do it?
+65. K8s: Pod, ReplicaSet, Deployment, Service, Ingress - describe the chain in one pass.
+66. Liveness vs readiness vs startup probes. What happens if liveness is misconfigured
+    on a slow-starting app?
+67. Requests vs limits. What is QoS class, and what gets OOMKilled first?
+68. HPA - what metrics can it scale on? How would you scale on Kafka consumer lag?
+69. What is a rolling update, and how do you do a zero-downtime deploy of a service
+    that holds long-lived SSE/WebSocket connections?
+70. ConfigMap vs Secret. Are K8s Secrets encrypted? What do you actually use in prod?
+71. StatefulSet vs Deployment - when did you need a StatefulSet?
+72. Your pod is CrashLoopBackOff. Give me your exact debugging sequence of commands.
+73. What is a sidecar? Name one you've deployed.
+74. Namespace, ResourceQuota, NetworkPolicy - which have you actually configured?
+
+---------------------------------------------------------------------
+G. CLOUD - AWS / AZURE / GCP (all three on the resume)
+---------------------------------------------------------------------
+75. Map the equivalents across AWS/Azure/GCP: object storage, managed Postgres,
+    serverless functions, managed K8s, message queue, secret store.
+76. IAM: role vs policy vs principal. What is an assumed role and why is it better
+    than long-lived access keys?
+77. Azure: Managed Identity - system-assigned vs user-assigned. Where did you use it?
+78. S3 storage classes and lifecycle policies - how would you cut a storage bill 70%?
+79. VPC basics: public vs private subnet, NAT gateway, security group vs NACL.
+80. Lambda: cold start, concurrency limits, 15-min ceiling, /tmp size. Which of these
+    bit you on the McKinsey OHI project?
+81. Azure Functions: consumption vs premium vs dedicated plan. Which did you use at
+    Aventum and why?
+82. Azure Blob: what are access tiers, SAS tokens, and how do you do secure upload
+    from a browser without proxying through your API?
+83. Azure AI Search indexers (resume: "indexers") - what is an indexer, a skillset,
+    and a data source? What are the failure modes?
+84. What is the difference between an Application Gateway, a Load Balancer, and
+    Front Door in Azure?
+85. Cloud cost: name the three biggest surprise line items you've personally seen
+    on a bill and what caused them.
+86. How do you handle secrets in cloud? Key Vault / Secrets Manager / SSM Parameter
+    Store - rotation strategy?
+
+---------------------------------------------------------------------
+H. DEVOPS / CI-CD / IaC (resume: Azure DevOps, BitBucket Pipelines, Terraform, Nginx)
+---------------------------------------------------------------------
+87. Terraform: what is state, why is remote state necessary, and what is state locking?
+88. `terraform plan` shows a destroy you did not expect. What do you do?
+89. Module vs workspace vs environment folders - how did you structure multi-region
+    on the McKinsey project?
+90. What is drift, and how do you detect and prevent it?
+91. Terraform vs Bicep vs ARM vs CloudFormation vs Pulumi - which have you used, and
+    when is Terraform the wrong tool?
+92. Design a CI/CD pipeline for a Python FastAPI service on AKS. Stages, gates, and
+    what runs on PR vs on main.
+93. Blue/green vs canary vs rolling. Which have you actually run, and how did you
+    decide rollback?
+94. How do you manage DB migrations in a CD pipeline where deploys are automatic?
+95. What do you do about a flaky test in CI? Be specific.
+96. Nginx: reverse proxy vs load balancer. What is `proxy_buffering` and why does it
+    break SSE? (Direct hit on his Turing project.)
+97. Branching strategy - trunk-based vs gitflow. What did you use and would you change it?
+98. How do you version and promote a Docker image from dev to prod? Tag strategy?
+99. What is supply chain security in CI - SBOM, image scanning, signed images. Have
+    you done any of it?
+
+---------------------------------------------------------------------
+I. MONITORING / OBSERVABILITY (resume: Prometheus, Grafana, Sentry, EFK, CloudWatch)
+---------------------------------------------------------------------
+100. Metrics vs logs vs traces - what question does each answer?
+101. Prometheus: pull model - why? What is a counter vs gauge vs histogram vs summary?
+102. Why is averaging a latency metric a bad idea? How do you get a real p99 from a
+     histogram, and what is the error in `histogram_quantile`?
+103. What is cardinality explosion in Prometheus? Give an example label that caused it.
+104. What are the four golden signals / RED / USE methods?
+105. What is an SLI, SLO and error budget? Did you ever have one defined?
+106. Alert fatigue - how do you design an alert that's worth waking someone up for?
+107. What is distributed tracing? Have you used OpenTelemetry? What is a span and
+     trace context propagation?
+108. EFK stack - what does each letter do, and what's the cost problem with it at scale?
+
+---------------------------------------------------------------------
+J. SCHEDULING / BACKGROUND WORK (resume: Celery, Cron, APScheduler, FastAPI BackgroundTasks)
+---------------------------------------------------------------------
+109. Celery: broker vs result backend. Why is Redis a questionable broker choice?
+110. Celery `acks_late`, `prefetch_multiplier`, visibility timeout - what do they do
+     and what bug do you get if you set them wrong?
+111. A Celery task takes 3 hours. What's wrong with that and how do you restructure it?
+112. When would you use FastAPI BackgroundTasks vs Celery? What's the failure mode of
+     BackgroundTasks?
+113. APScheduler in a 5-replica deployment - what goes wrong, and how do you fix it?
+114. How do you make a scheduled job idempotent and safe to run twice?
+115. How do you handle a poison-pill task that keeps failing and retrying forever?
+
+---------------------------------------------------------------------
+K. SECURITY & AUTH (resume: OAuth2/OIDC, RBAC, SOC2)
+---------------------------------------------------------------------
+116. OAuth2 vs OIDC - what does OIDC add? What is the difference between an access
+     token and an ID token?
+117. Authorization code flow with PKCE - why is PKCE needed, and what attack does it stop?
+118. JWT: how do you revoke one? Where do you store it client-side and why is
+     localStorage debated?
+119. Refresh token rotation and reuse detection - explain.
+120. What is the difference between authentication, authorization, and RBAC vs ABAC?
+121. Name five items from the OWASP Top 10 and how you'd defend against each in FastAPI.
+122. How do you prevent SQL injection when you genuinely need dynamic SQL?
+123. What is SSRF and where would it show up in a system that fetches URLs (like a crawler)?
+124. How do you store and rotate secrets? What do you do when a key leaks into a git commit?
+125. PII handling - encryption at rest vs in transit vs field-level. What did SOC2
+     require of you at CES?
+
+---------------------------------------------------------------------
+L. NETWORKING / OS / GENERAL (spot checks)
+---------------------------------------------------------------------
+126. What happens, end to end, when you type a URL and hit enter? Stop at TLS handshake.
+127. TCP vs UDP, and where does HTTP/2 and HTTP/3 change things?
+128. What is head-of-line blocking and which protocol version fixed it?
+129. Explain DNS records: A, CNAME, and why TTL matters during a migration.
+130. A process is at 100% CPU on a prod box. What Linux commands do you run, in order?
+131. What is a file descriptor limit and how have you hit it?
+132. What is the difference between a load balancer's L4 and L7 mode?

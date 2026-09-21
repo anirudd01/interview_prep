@@ -1,0 +1,152 @@
+=====================================================================
+DSA + SQL QUESTION BANK  (LOW PRIORITY FOR THIS ROLE)
+Tags: (easy) / (mid) / (hard)
+=====================================================================
+
+PURPOSE
+Not a dedicated round. Use as:
+  - a 10-minute filler if a round finishes early
+  - a sanity check that he can still write code under mild pressure
+  - a tie-breaker if two candidates are close
+
+RECOMMENDATION FOR A 7-YEAR BACKEND/DEVOPS/CLOUD/AI HIRE
+  * Pick 1 (easy) + 1 (mid) DSA, and 1 (mid) SQL. That's enough.
+  * Grade on: clean code, edge cases, naming, testing instinct, and complexity
+    reasoning - NOT on whether he recalls a trick.
+  * Prefer the "PRACTICAL" section over LeetCode-style. It correlates far better
+    with the job.
+  * Do not ask (hard) unless he's coasting.
+
+=====================================================================
+PART A - DSA: PRACTICAL / BACKEND-FLAVOURED  (preferred set)
+=====================================================================
+1.  (easy) Given a list of log lines, return the top K most frequent endpoints.
+2.  (easy) Merge overlapping time intervals (maintenance windows, policy periods).
+3.  (easy) Flatten an arbitrarily nested dict into dotted keys, and write the inverse.
+4.  (easy) Given API response times, compute p50/p95/p99 without external libs.
+5.  (easy) Chunk an iterable into batches of N, lazily, for a bulk API.
+6.  (easy) Dedupe a stream of events by event_id, keeping the latest by timestamp.
+7.  (mid)  Implement an LRU cache with O(1) get/put.
+8.  (mid)  Implement a token bucket rate limiter class. Then make it thread-safe.
+9.  (mid)  Implement a sliding-window rate limiter, memory-efficient for 1M keys.
+10. (mid)  Given a set of tasks with dependencies, return a valid execution order and
+           detect cycles. (Topological sort - directly relevant to his Cellular work.)
+11. (mid)  Implement exponential backoff with jitter as a reusable decorator, with a
+           max total time budget.
+12. (mid)  Merge K sorted streams (log files) into one sorted output, memory-bounded.
+13. (mid)  Given 10GB of URLs on disk and 1GB RAM, find the duplicates.
+14. (mid)  Implement a simple in-memory pub/sub with topic wildcards (a.b.*).
+15. (mid)  Parse an Excel-style A1/AA10 cell reference to (row, col) and back.
+16. (mid)  Given a cell dependency graph, recompute only what's affected when one cell
+           changes. (Incremental evaluation.)
+17. (mid)  Implement a consistent hashing ring with virtual nodes.
+18. (mid)  Given a list of (start, end) request timestamps, find the peak concurrency
+           and when it occurred.
+19. (mid)  Implement a retry queue with per-item deadline and priority using a heap.
+20. (mid)  Write a function that safely truncates a string to N tokens (not chars)
+           without splitting a word. Then discuss why token != word.
+21. (hard) Implement a bounded async worker pool with per-host concurrency limits,
+           retries, and graceful shutdown. (Also in Round 3.)
+22. (hard) Design + implement a data structure supporting insert, delete, and
+           getRandom in O(1).
+23. (hard) Implement a tiny expression evaluator: tokenize, parse with precedence,
+           evaluate. Support +,-,*,/,(), and a function call like MAX(a,b).
+           (Very relevant to Cellular. High signal.)
+24. (hard) Given 1B events, approximate the number of unique users in constant memory.
+           (HyperLogLog - concept + why it's acceptable.)
+25. (hard) Implement a fixed-memory top-K over an unbounded stream (Count-Min Sketch
+           or Space-Saving). Discuss error bounds.
+
+=====================================================================
+PART B - DSA: CLASSIC / LEETCODE-STYLE  (use only if you must)
+=====================================================================
+26. (easy) Two Sum.
+27. (easy) Valid parentheses.
+28. (easy) Reverse a linked list.
+29. (easy) Best time to buy and sell stock.
+30. (easy) First non-repeating character in a string.
+31. (easy) Move zeroes / partition an array in place.
+32. (easy) Binary search + find first/last occurrence.
+33. (mid)  Longest substring without repeating characters.
+34. (mid)  Group anagrams.
+35. (mid)  Kth largest element in an array (heap vs quickselect - discuss).
+36. (mid)  Number of islands (BFS/DFS on a grid).
+37. (mid)  Course schedule I & II (cycle detection + topo sort).
+38. (mid)  Product of array except self.
+39. (mid)  Meeting rooms II (min conference rooms).
+40. (mid)  Validate a BST / lowest common ancestor.
+41. (mid)  Coin change (DP) - explain the state definition, not just the code.
+42. (mid)  Word break.
+43. (mid)  Rotting oranges / multi-source BFS.
+44. (hard) Median of a data stream.
+45. (hard) Sliding window maximum.
+46. (hard) Serialize and deserialize a binary tree.
+47. (hard) Word ladder.
+48. (hard) Trapping rain water.
+49. (hard) Alien dictionary (topo sort on characters).
+50. (hard) Design and implement a Trie with prefix search and wildcard support.
+
+=====================================================================
+PART C - SQL
+=====================================================================
+--- Query writing ---
+51. (easy) Count of orders per customer, including customers with zero orders.
+52. (easy) Second highest salary. Then: Nth highest, handling ties.
+53. (easy) Find duplicate rows by (email) and keep only the newest.
+54. (easy) Total revenue per month for the last 12 months, with months having zero
+           revenue shown as 0. (Generate_series.)
+55. (easy) All users who signed up but never placed an order (3 ways: NOT IN,
+           NOT EXISTS, LEFT JOIN NULL - and which is fastest and why).
+56. (mid)  Running total of revenue per customer ordered by date. (Window function.)
+57. (mid)  For each policy, get the most recent quote. (DISTINCT ON vs ROW_NUMBER.)
+58. (mid)  Month-over-month growth percentage per product.
+59. (mid)  7-day rolling average of daily active users.
+60. (mid)  Find users who performed event A then event B within 30 minutes.
+61. (mid)  Rank quotes within each broker by premium, dense_rank vs rank vs
+           row_number - explain the difference with a tie.
+62. (mid)  Sessionize an event stream: group events into sessions with a 30-minute
+           inactivity gap. (LAG + cumulative sum.)
+63. (mid)  Given a bitemporal table (valid_from, valid_to, recorded_at), get the value
+           "as known on date X for effective date Y". (Insurance-relevant.)
+64. (mid)  Pivot: revenue by product as columns, per month as rows.
+65. (mid)  Query a JSONB column: find all records where metadata->tags contains 'urgent',
+           and write the index that makes it fast.
+66. (hard) Find gaps and islands: consecutive days a user was active.
+67. (hard) Recursive CTE: full org hierarchy under a manager, with depth.
+68. (hard) Deduplicate 50M rows in place, keeping the earliest, without locking the
+           table for more than a few seconds.
+69. (hard) Given a table of interval-based rates, find overlapping intervals per product.
+70. (hard) Compute funnel conversion across 5 steps in a single pass.
+
+--- SQL reasoning / performance (higher signal than query writing) ---
+71. (easy) Difference between WHERE and HAVING. Between UNION and UNION ALL.
+72. (easy) All join types, with a case where LEFT vs INNER changed a business number.
+73. (easy) What does NULL do to =, IN, NOT IN, COUNT(col) vs COUNT(*), and aggregates?
+74. (mid)  Read this EXPLAIN ANALYZE output and tell me what's wrong.
+           (Bring a real seq-scan-instead-of-index-scan plan.)
+75. (mid)  Why did the planner choose a Seq Scan over your index? Name four reasons.
+76. (mid)  Composite index on (a,b,c): which queries can use it, which can't, and why
+           does column order matter?
+77. (mid)  What is a partial index and when is it dramatically better?
+78. (mid)  Hash join vs merge join vs nested loop - when does the planner choose each?
+79. (mid)  When does an index HURT you?
+80. (mid)  What is a correlated subquery and why can it be catastrophically slow?
+81. (mid)  CTE vs subquery in Postgres - what changed in PG12 with materialization?
+82. (mid)  How would you paginate 10M rows efficiently? Why is OFFSET 900000 slow?
+83. (mid)  Table partitioning: when do you reach for it, on what key, and what does it
+           break?
+84. (hard) A query is fast in staging and slow in prod with identical schema.
+           Give me six hypotheses.
+85. (hard) Design the indexes for a quotes table serving 5 known access patterns.
+           (Give him the 5 patterns.) Justify every index and its write cost.
+86. (hard) You must add a column with a computed default to a 500M-row table with zero
+           downtime. Write the plan.
+87. (hard) Explain how you'd detect and kill a query causing lock contention in prod,
+           right now, and then prevent it.
+
+=====================================================================
+QUICK-PICK SUGGESTION (if you only have 10 minutes)
+=====================================================================
+  DSA:  #10 (topological sort) - relevant to his own Cellular project
+  SQL:  #57 (latest row per group) + #75 (why seq scan) - separates real from resume
+  Bonus if strong: #23 (expression evaluator) - the single most on-point question here
