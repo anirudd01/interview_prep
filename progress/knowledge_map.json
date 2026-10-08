@@ -2,8 +2,8 @@
   "meta": {
     "created": "2026-09-21",
     "last_updated": "2026-09-21",
-    "total_sessions": 0,
-    "total_minutes": 0,
+    "total_sessions": 1,
+    "total_minutes": 15,
     "note": "Rolling assessment of Aniruddha's interview readiness by skill area. Updated by Claude after each voice/text prep session. See CLAUDE.md for update protocol."
   },
   "skill_areas": {
@@ -73,11 +73,11 @@
     "ai_llm_rag": {
       "label": "LLM foundations, RAG design/quality/eval, agents & tool-calling, prod LLM ops",
       "source_round": "ROUND_5",
-      "level": "unrated",
-      "trend": "unrated",
-      "last_reviewed": null,
-      "sessions_covered": 0,
-      "notes": ""
+      "level": "developing",
+      "trend": "flat",
+      "last_reviewed": "2026-09-21",
+      "sessions_covered": 1,
+      "notes": "Q22 (RAG debugging tree): good production instincts (citations/highlighting in his lawyer-doc RAG app, retry via smaller guard model for generation failures), and honestly flagged ranking/reranking as a gap rather than bluffing. But didn't name the core isolation technique (freeze retrieved context, replay it manually to bisect retrieval/ranking vs generation failure) and conflated retrieval with ranking as one step. Taught reranking/cross-encoder basics in-session. Baseline set at developing/flat -- first data point for this area."
     },
     "dsa_sql": {
       "label": "Practical DSA and SQL (low priority for this role, tie-breaker only)",
@@ -100,4 +100,203 @@
   },
   "level_scale": "unrated -> weak -> developing -> solid -> strong",
   "trend_scale": "unrated -> declining -> flat -> improving"
+}
+
+{
+  "meta": {
+    "total_sessions": 1,
+    "total_minutes": 55,
+    "last_updated": "2026-10-06"
+  },
+  "skill_areas": {
+    "system_design_and_architecture": {
+      "level": "solid",
+      "trend": "improving",
+      "last_reviewed": "2026-10-06",
+      "sessions_covered": 1,
+      "notes": "Can defend real scaling decisions (700 pods, vector math offload). Weaker on org-level design tradeoffs and versioning strategies."
+    },
+    "backend_infrastructure_and_deployment": {
+      "level": "strong",
+      "trend": "flat",
+      "last_reviewed": "2026-10-06",
+      "sessions_covered": 1,
+      "notes": "Kubernetes, Postgres tuning, Redis pipelines, Kafka. Honest about pain points; would rebuild with serverless + vector DB + Go."
+    },
+    "ownership_and_execution": {
+      "level": "strong",
+      "trend": "flat",
+      "last_reviewed": "2026-10-06",
+      "sessions_covered": 1,
+      "notes": "Sole owner of recommender, mentored juniors to SDE1. Clear on why early exits happened (funding, wrong team, contract end). Ready to defend."
+    },
+    "career_stability_and_motivation": {
+      "level": "solid",
+      "trend": "improving",
+      "last_reviewed": "2026-10-06",
+      "sessions_covered": 1,
+      "notes": "Three short stints were circumstantial, not flaky. Problem-driven, not prestige-driven. Floor of 1yr, aiming for Staff/Architect. Prepping on AI/system design."
+    },
+    "devops_and_cloud": {
+      "level": "solid",
+      "trend": "flat",
+      "last_reviewed": "2026-10-06",
+      "sessions_covered": 1,
+      "notes": "GCP, Kubernetes, managed services. Thinking about serverless. Hasn't shipped major multi-region or DR yet (mentioned for StatusNeo but no depth)."
+    },
+    "ai_and_ml_engineering": {
+      "level": "developing",
+      "trend": "improving",
+      "last_reviewed": "2026-10-06",
+      "sessions_covered": 1,
+      "notes": "Embedding generation + vector similarity is production ML, not deep learning. RLHF dashboard at Turing was ops-heavy. Self-aware this is a gap; actively prepping."
+    }
+  }
+}
+
+{
+  "meta": {
+    "last_updated": "2026-10-06",
+    "total_sessions": 2,
+    "total_minutes": 100
+  },
+  "skill_areas": {
+    "python_basics": {
+      "level": "developing",
+      "trend": "flat",
+      "last_reviewed": "2026-10-06",
+      "sessions_covered": 1,
+      "notes": "GIL concept solid, but missed I/O and C extension release cases. Mutable defaults nailed. Shallow/deep copy behavior reversed on nested objects — needs clarification."
+    },
+    "python_async": {
+      "level": "solid",
+      "trend": "flat",
+      "last_reviewed": "2026-10-06",
+      "sessions_covered": 1,
+      "notes": "Not tested in detail this round; marked from prior context."
+    },
+    "web_api_fastapi": {
+      "level": "solid",
+      "trend": "flat",
+      "last_reviewed": "2026-10-06",
+      "sessions_covered": 1,
+      "notes": "Practical FastAPI + Pydantic usage strong. Lacks architectural understanding of ASGI vs WSGI, Pydantic validation cost at scale."
+    },
+    "databases_postgres": {
+      "level": "solid",
+      "trend": "flat",
+      "last_reviewed": "2026-10-06",
+      "sessions_covered": 0,
+      "notes": "Not tested this round."
+    },
+    "caching_redis": {
+      "level": "solid",
+      "trend": "flat",
+      "last_reviewed": "2026-10-06",
+      "sessions_covered": 1,
+      "notes": "No production experience with distributed locks or Redlock. Basic Redis usage solid."
+    },
+    "messaging_kafka": {
+      "level": "strong",
+      "trend": "flat",
+      "last_reviewed": "2026-10-06",
+      "sessions_covered": 1,
+      "notes": "Real TB-scale production experience. Understands partitioning, ordering guarantees, consumer groups. Confident and accurate."
+    },
+    "messaging_rabbitmq": {
+      "level": "solid",
+      "trend": "flat",
+      "last_reviewed": "2026-10-06",
+      "sessions_covered": 1,
+      "notes": "Used for task queues, dead-letter patterns, fan-out. Clear on when to use vs Kafka."
+    },
+    "containers_docker": {
+      "level": "developing",
+      "trend": "declining",
+      "last_reviewed": "2026-10-06",
+      "sessions_covered": 1,
+      "notes": "Multi-stage build concept understood, but hasn't built from scratch in 2+ years. Details hazy (wheel copying, layer optimization)."
+    },
+    "kubernetes": {
+      "level": "solid",
+      "trend": "flat",
+      "last_reviewed": "2026-10-06",
+      "sessions_covered": 0,
+      "notes": "Not tested this round."
+    },
+    "security_oauth_oidc": {
+      "level": "weak",
+      "trend": "flat",
+      "last_reviewed": "2026-10-06",
+      "sessions_covered": 1,
+      "notes": "Used once in career. Confusing OAuth2 (authorization framework) with OIDC (authentication layer). Access vs ID token distinction unclear."
+    }
+  }
+}
+
+
+{
+  "meta": {
+    "total_sessions": 3,
+    "total_minutes": 180,
+    "last_updated": "2026-10-06"
+  },
+  "skill_areas": [
+    {
+      "skill": "Python Runtime & Internals",
+      "level": "weak",
+      "trend": "flat",
+      "last_reviewed": "2026-10-06",
+      "sessions_covered": 1,
+      "notes": "MRO/C3, metaclasses, descriptors (__getattr__, __getattribute__, __get__) all unknown. No real exposure. This is a significant gap for Staff-level Python work."
+    },
+    {
+      "skill": "Async/Concurrency (deep)",
+      "level": "developing",
+      "trend": "flat",
+      "last_reviewed": "2026-10-06",
+      "sessions_covered": 1,
+      "notes": "Solid on event loop concept and basics. Weak on detection of blocking in production (py-spy/yappi). gather vs TaskGroup vs as_completed unknown. Structured concurrency not practiced. Admits most codebases he joins are sync-heavy; limited real async debugging."
+    },
+    {
+      "skill": "API & Service Design",
+      "level": "solid",
+      "trend": "improving",
+      "last_reviewed": "2026-10-06",
+      "sessions_covered": 1,
+      "notes": "Error codes + Swagger docs implemented. Missing: retryability signals (4xx vs 5xx semantics, explicit field), correlation ID terminology (calls it trace ID but the concept is there). Request-scoped sessions pattern is strong — read replicas, Depends injection, transaction scoping all correct."
+    },
+    {
+      "skill": "Rate Limiting",
+      "level": "developing",
+      "trend": "flat",
+      "last_reviewed": "2026-10-06",
+      "sessions_covered": 1,
+      "notes": "Fixed window and sliding window log understood. Token bucket hazy. No discussion of deployment strategy (edge vs in-app). Needs hands-on implementation."
+    },
+    {
+      "skill": "Circuit Breaker",
+      "level": "solid",
+      "trend": "flat",
+      "last_reviewed": "2026-10-06",
+      "sessions_covered": 1,
+      "notes": "Built from scratch at first company, pattern known but details faded. Not recently tested."
+    },
+    {
+      "skill": "Kubernetes Ops (Graceful Shutdown, Termination)",
+      "level": "developing",
+      "trend": "flat",
+      "last_reviewed": "2026-10-06",
+      "sessions_covered": 1,
+      "notes": "SIGTERM handling and terminationGracePeriodSeconds known. preStop hook completely unknown — identified as priority learning gap. Wants to build this pattern himself."
+    },
+    {
+      "skill": "Long-running Jobs & Async Patterns",
+      "level": "solid",
+      "trend": "flat",
+      "last_reviewed": "2026-10-06",
+      "sessions_covered": 1,
+      "notes": "Job ID polling pattern solid. FastAPI background tasks vs Celery distinction clear. Broker/backend architecture, task distribution, Flower monitoring all covered in practice. Strong on queue design and scaling patterns."
+    }
+  ]
 }

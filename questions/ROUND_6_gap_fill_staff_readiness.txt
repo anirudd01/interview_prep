@@ -1,0 +1,320 @@
+=====================================================================
+ROUND 6 - GAP FILL & STAFF-LEVEL READINESS
+"What the other five rounds don't cover, but a Staff / Architect-track
+ Backend + DevOps + Cloud + AI interview will."
+Duration: 50 min assessment + 10 min general
+=====================================================================
+
+WHY THIS ROUND EXISTS
+Rounds 1-5 and DSA_SQL are heavily anchored on his resume. That's right for
+defending claims, but interviews at the next level also probe things he hasn't
+listed and may not have used. This bank deliberately avoids repeating questions
+already in Rounds 1-5 and covers the gaps:
+  A. Staff-level leadership & influence      (Round 1 behavioural is resume-bound)
+  B. Generic behavioural / STAR stories       (asked in almost every loop)
+  C. Distributed systems theory               (consensus, quorums, consistency models)
+  D. Architecture patterns & API styles       (DDD, CQRS, event sourcing, GraphQL)
+  E. Kubernetes & platform depth              (Round 2 only covers basics)
+  F. Linux, networking & TLS depth
+  G. Security engineering depth
+  H. Data engineering & event streaming
+  I. Performance, capacity & estimation drills
+  J. Modern Python & code reading
+  K. AI infrastructure & newer AI engineering (GPUs, fine-tuning, agent frameworks)
+  L. System designs not in Round 4
+
+HOW TO RUN THIS ROUND
+- Unlike other rounds, this is a ROTATING bank. Pick one or two sections per session
+  based on knowledge_map.json gaps, ~8-12 questions total.
+- Sections A and B: ask for a concrete story every time. "I would..." answers without
+  "I did..." are a flag at staff level. Push for scope, impact numbers, and what he
+  personally drove.
+- Sections C, E, F, I: rapid-fire is fine (60-120s each). Grade on precision, not recall
+  of trivia - "I don't know, here's how I'd reason about it" is acceptable.
+- Section J has code to read aloud. In voice mode, read the snippet slowly and ask
+  "what's wrong with this?" before giving any hint.
+- Section L designs follow the Round 4 rubric (clarify, numbers, API/data, architecture,
+  deep dives, failure modes, trade-offs). Pick at most one per session.
+
+RED FLAGS TO WATCH FOR
+- Staff questions answered purely as an individual contributor ("I wrote the code").
+- Theory answered with buzzwords and no mechanism (e.g. "Raft is for consensus" and stops).
+- Security answered as a checklist with no threat model.
+- AI infra answered only from the API-consumer side, with no idea what happens on a GPU.
+
+---------------------------------------------------------------------
+A. STAFF-LEVEL LEADERSHIP & INFLUENCE
+---------------------------------------------------------------------
+1.  In your own words, what is the difference between a senior engineer and a staff
+    engineer? Give an example of staff-level work you have done, or would do in your
+    first six months here.
+2.  You believe the team should move from X to Y (e.g. Celery to a workflow engine).
+    Walk me through getting buy-in from engineers, your manager and product, without
+    formal authority.
+3.  How do you run an RFC / design-review process so it is neither a bottleneck nor a
+    rubber stamp? What is an ADR, and when do you write one instead of an RFC?
+4.  You are asked to estimate a 6-month migration. How do you estimate, communicate
+    uncertainty, and re-plan when you are 40% over budget at month 2?
+5.  How do you decide which technical debt to pay down and which to live with? Make the
+    case to a product manager in business terms.
+6.  Two senior engineers strongly disagree on an architecture choice and it is blocking
+    the team. What do you do?
+7.  How do you grow a mid-level engineer into a senior? What do you actually do week to
+    week, and how do you know it is working?
+8.  Conway's law: how has team structure shaped a system you worked on? How would you
+    use the "inverse Conway manoeuvre" deliberately?
+9.  What are good engineering metrics? What do the DORA metrics measure, and how can they
+    be gamed or misused?
+10. How do you set technical direction for a team for the next 12 months? What goes into
+    a technical strategy document, and how do you keep it from going stale?
+
+---------------------------------------------------------------------
+B. GENERIC BEHAVIOURAL (STAR - situation, task, action, result)
+---------------------------------------------------------------------
+11. Tell me about a time you influenced a decision outside your own team.
+12. Tell me about a time you had to deliver bad news to a stakeholder or client (a missed
+    deadline, a failed approach, a cost overrun).
+13. Tell me about a time you made a high-stakes decision with incomplete information.
+14. Tell me about a time you received critical feedback. What did you change?
+15. Tell me about a time you said no to a senior stakeholder or client, and what happened.
+16. Tell me about a time you led work in a technology where you were not the expert.
+17. Tell me about a time you improved a process (not code) that made the whole team faster.
+18. Tell me about a time you traded quality for speed under deadline pressure. How did it
+    turn out, and would you make the same call again?
+
+---------------------------------------------------------------------
+C. DISTRIBUTED SYSTEMS THEORY
+---------------------------------------------------------------------
+19. Linearizability vs serializability vs sequential consistency vs eventual consistency:
+    explain each with an example. What does "strict serializable" mean?
+20. Explain Raft at a high level: terms, leader election, log replication. Why do you need
+    a majority quorum, and why are clusters usually 3 or 5 nodes?
+21. Quorum reads and writes (R + W > N): explain them. What anomalies can still happen even
+    when the inequality holds?
+22. Two-phase commit: how does it work, why does it block, and why do microservice
+    architectures avoid it?
+23. What is split-brain? How do leases and fencing tokens prevent it?
+24. What are CRDTs? Explain one (G-Counter, LWW-Register or OR-Set) and where you would use it.
+25. Tail latency at scale: why does a fan-out to 100 backends make p99 latency the common
+    case? Explain hedged requests and tied requests.
+26. Design the timeout budget for a request that calls three services in sequence with a
+    2-second SLA. What is deadline propagation, and what goes wrong without it?
+27. Gossip protocols and failure detection (e.g. phi-accrual): where are they used, and why
+    not just send heartbeats to a central server?
+28. What is a metastable failure? Why can a system stay down after the original trigger
+    is gone, and how do you design against it?
+
+---------------------------------------------------------------------
+D. ARCHITECTURE PATTERNS & API STYLES
+---------------------------------------------------------------------
+29. Domain-Driven Design: bounded context, aggregate, entity vs value object, ubiquitous
+    language. Map Aurora/Pulse (quote, policy, rater, broker) into bounded contexts.
+30. What is an aggregate's consistency boundary, and why should one transaction modify
+    only one aggregate? What do you do when a business rule spans two?
+31. CQRS: when is it worth it and when is it overkill? How does it change what the UI has
+    to deal with?
+32. Event sourcing: how does it work, what are snapshots, how do you evolve event schemas
+    (upcasting), and when would you refuse to use it?
+33. Commands vs domain events vs integration events: what is the difference, and how do you
+    name and version each?
+34. GraphQL: when would you pick it over REST? How do you deal with the N+1 problem
+    (DataLoader), caching, authorization per field, and query-cost limits?
+35. API gateway vs backend-for-frontend (BFF) vs service mesh: what does each own?
+36. How do you deprecate and remove a public API endpoint that external partners depend on?
+    Timeline, usage signals, communication, and the final switch-off.
+37. Synchronous vs asynchronous communication between services: decision criteria. What is
+    temporal coupling, and how do you spot it in an architecture diagram?
+38. Workflow engines (Temporal, Azure Durable Functions, Step Functions) vs a hand-rolled
+    state machine with a queue: when is the engine worth it? How does Temporal achieve
+    durable execution, and why must workflow code be deterministic?
+
+---------------------------------------------------------------------
+E. KUBERNETES & PLATFORM DEPTH
+---------------------------------------------------------------------
+39. What happens, component by component, when you run `kubectl apply` on a Deployment?
+    (API server, etcd, controllers, scheduler, kubelet, container runtime, kube-proxy.)
+40. Scheduling controls: node affinity, pod anti-affinity, taints and tolerations, topology
+    spread constraints. Design the placement of a highly available service across 3 zones.
+41. PodDisruptionBudgets: what do they protect against, and how can a badly configured PDB
+    block a cluster upgrade or node drain?
+42. Service types (ClusterIP, NodePort, LoadBalancer, headless): how does traffic actually
+    reach a pod via kube-proxy (iptables/IPVS) or an eBPF data plane like Cilium?
+43. Helm vs Kustomize: when do you use each? What are the pain points of Helm at scale?
+44. GitOps with Argo CD or Flux: how does reconciliation work, how are secrets handled, and
+    how do you promote a release between environments?
+45. Operators and CRDs: what is the operator pattern, and when would you write an operator
+    instead of shipping a Helm chart?
+46. Service mesh (Istio, Linkerd): which problems does it solve (mTLS, retries, traffic
+    splitting, telemetry), what does it cost, and when is it not worth it?
+47. Kubernetes RBAC: Role vs ClusterRole, ServiceAccounts, and how a pod gets a cloud
+    identity (AKS workload identity / EKS IRSA) without any stored secret.
+48. How do you upgrade a production AKS/EKS cluster with zero downtime? Control plane vs node
+    pools, surge settings, version skew, and deprecated API removals.
+49. Admission control: Pod Security Standards, OPA Gatekeeper, Kyverno. Which policies would
+    you enforce on day one, and how do you roll them out without breaking existing workloads?
+50. CoreDNS and `ndots:5`: why can DNS lookups from pods be slow or flaky, and how do you fix it?
+
+---------------------------------------------------------------------
+F. LINUX, NETWORKING & TLS DEPTH
+---------------------------------------------------------------------
+51. Walk through a TLS 1.3 handshake. What is SNI, how is the certificate chain validated,
+    and what changes with mutual TLS?
+52. A service intermittently fails with "connection reset by peer". List your hypotheses in
+    order (idle timeouts, keep-alive mismatch, conntrack table, load balancer behaviour...).
+53. Ephemeral port exhaustion and TIME_WAIT: when does a high-throughput client hit them,
+    and how do you fix it?
+54. Load-balancing algorithms: round robin, least connections, consistent hashing,
+    power-of-two-choices. When does each one behave badly?
+55. HTTP keep-alive and HTTP/2 multiplexing: why does gRPC load balancing break behind an L4
+    load balancer, and how do you fix it?
+56. strace, lsof, ss, tcpdump, perf: what does each tell you? Give a real debugging
+    situation for each.
+57. The Linux OOM killer: how does it pick a victim, and how does cgroup v2 memory
+    accounting relate to Kubernetes memory limits?
+58. What does a CDN actually do? Cache keys, TTL vs stale-while-revalidate, purging, and
+    cases where putting a CDN in front makes things worse.
+
+---------------------------------------------------------------------
+G. SECURITY ENGINEERING DEPTH
+---------------------------------------------------------------------
+59. Threat-model this feature with STRIDE: a broker portal where brokers upload documents
+    and receive an AI-generated summary.
+60. OWASP API Security Top 10: explain BOLA (broken object level authorization). How do you
+    prevent it systematically in a FastAPI codebase, not endpoint by endpoint?
+61. Envelope encryption with KMS / Key Vault: how does it work, why not encrypt data directly
+    with the master key, and how does key rotation work without re-encrypting everything?
+62. "Zero trust": what does it mean concretely for service-to-service calls inside a cluster?
+63. XSS, CSRF and clickjacking: which ones matter for a JSON API using cookie auth vs bearer
+    tokens? What do SameSite cookie settings change?
+64. Container hardening: minimal/distroless base images, read-only root filesystem, dropped
+    Linux capabilities, seccomp, non-root. What is your baseline for every service?
+65. JWT validation mistakes: algorithm confusion (`alg: none`, RS256 vs HS256), missing
+    `aud`/`iss` checks, clock skew, JWKS caching and key rotation. How do you validate tokens
+    correctly in a service?
+66. A penetration test reports 30 findings one week before launch. How do you triage, what
+    do you fix first, and what do you formally accept as risk?
+
+---------------------------------------------------------------------
+H. DATA ENGINEERING & EVENT STREAMING
+---------------------------------------------------------------------
+67. Batch vs streaming vs micro-batch: decision criteria. What are the Lambda and Kappa
+    architectures?
+68. Lakehouse basics: Parquet, Delta Lake, Apache Iceberg. What do table formats add over
+    plain Parquet files in S3/Blob (ACID, time travel, schema evolution)?
+69. Kafka log compaction, retention and tombstones: when do you use a compacted topic?
+70. Event schema evolution: Avro / Protobuf / JSON Schema with a schema registry. Explain
+    backward, forward and full compatibility, and which side (producer or consumer) needs which.
+71. Data contracts: what are they, and how do they stop an upstream team from silently
+    breaking your pipeline?
+72. Airflow / Dagster: DAGs, idempotent tasks, backfills, and why tasks should not pass large
+    data between each other through the orchestrator (e.g. Airflow XCom).
+73. Stream processing: event time vs processing time, watermarks, tumbling/sliding/session
+    windows, late data. Explain with "gross written premium per hour".
+74. Row vs columnar storage: why columnar compresses well and scans fast, and at what point
+    Postgres stops being enough for analytics.
+
+---------------------------------------------------------------------
+I. PERFORMANCE, CAPACITY & ESTIMATION DRILLS
+---------------------------------------------------------------------
+75. State Little's Law and use it: a service handles 500 RPS at 200ms average latency. How
+    many requests are in flight? How many uvicorn workers or threads do you need?
+76. Estimation drill: storage and monthly growth for 10 years of policy documents. 2M policies,
+    3 documents each at issue (avg 400KB), plus 2 endorsement documents per policy per year.
+    Then: cost in hot vs cool vs archive storage.
+77. Latency numbers every engineer should know: L1/L2 cache, RAM, SSD read, same-zone
+    network round trip, cross-region round trip. Rough orders of magnitude, and why they
+    matter in design.
+78. Amdahl's Law and the Universal Scalability Law: why doesn't adding replicas scale
+    throughput linearly?
+79. How do you design a load test that reflects production? Open vs closed workload models,
+    coordinated omission, ramp-up, realistic data and think time.
+80. Queueing intuition: why does latency explode as utilisation approaches 100%? What
+    utilisation do you target for a latency-sensitive service, and why?
+81. Capacity planning for next year: what data do you collect, how do you forecast, and how
+    much headroom do you keep?
+82. A performance regression appeared somewhere in the last 50 commits. How do you find it?
+    (git bisect, benchmark suites in CI, continuous profiling.)
+
+---------------------------------------------------------------------
+J. MODERN PYTHON & CODE READING
+---------------------------------------------------------------------
+83. Python packaging in 2026: pyproject.toml, wheels vs sdists, lockfiles, uv vs pip vs
+    Poetry. How do you guarantee reproducible builds in a Docker image?
+84. Typing beyond basics: TypeVar, Generic, ParamSpec (for typing decorators), Literal,
+    @overload, TypeIs/TypeGuard, Self. Where have you needed one in real code?
+85. Structural pattern matching (`match`/`case`): give a good use case and a misuse.
+86. What is wrong with this code?
+        async def fetch_all(urls):
+            tasks = []
+            for url in urls:
+                tasks.append(asyncio.create_task(fetch(url)))
+            return [t.result() for t in tasks]
+87. Read each snippet aloud. What is the bug?
+    (a) handlers = [lambda: i for i in range(3)]; print([h() for h in handlers])
+    (b) for key in config:
+            if config[key] is None: del config[key]
+    (c) premium = 0.1 + 0.2   # later: if premium == 0.3: apply_discount()
+    (d) session = Session()   # module level, shared by every request in a threaded server
+    (e) while True:
+            try: return call_api()
+            except Exception: pass
+88. Dates and timezones: naive vs aware datetimes, why `datetime.utcnow()` is deprecated,
+    DST transitions, and how you store and compare policy effective dates that start at
+    midnight local time in different countries.
+89. Money in Python: why float is wrong, `Decimal` contexts, rounding modes (ROUND_HALF_UP
+    vs ROUND_HALF_EVEN), `quantize`, and how this connects to matching Excel's ROUND.
+90. pandas vs Polars vs DuckDB: memory model, performance, and when you would reach for each
+    inside a backend service or a data job.
+
+---------------------------------------------------------------------
+K. AI INFRASTRUCTURE & NEWER AI ENGINEERING
+---------------------------------------------------------------------
+91. Serving open models on Kubernetes: GPU node pools, the NVIDIA device plugin, MIG vs
+    time-slicing, model load times, and autoscaling GPU workloads (scale-to-zero trade-offs).
+92. LoRA / QLoRA fine-tuning: what is actually trained, what memory it needs, and how you
+    serve many LoRA adapters on one base model.
+93. Distillation: using a large model to label data and train a small model for a narrow task
+    (e.g. classifying submission emails). Walk through the workflow and how you decide it is
+    worth it.
+94. Context engineering for long-running agents: what goes into the context window over a long
+    task - memory, compaction/summarisation, scratchpads, tool-result retrieval. How do you keep
+    the agent coherent after 200 steps?
+95. Agent frameworks and protocols: LangGraph, OpenAI Agents SDK, Claude Agent SDK, Semantic
+    Kernel / AutoGen, Pydantic AI; MCP vs A2A. What does each solve, and how do you choose?
+96. Vision-language models for documents: when do you send page images to a multimodal model
+    instead of running OCR and sending text? Cost, accuracy, and failure modes.
+97. Embedding 50M chunks: throughput under rate limits, cost estimate, idempotent resumable
+    jobs, and storage size (dimensions x float32 vs quantised or binary vectors).
+98. Real-time voice agent (speech-to-text -> LLM -> text-to-speech): build the latency budget.
+    Where does the time go, and how do you get the response under ~800ms?
+99. AI security beyond prompt injection: RAG corpus poisoning, model and tool supply chain
+    (malicious MCP servers, pickle-based model files), excessive agency. Walk through the
+    OWASP Top 10 for LLM applications.
+100. Responsible AI and regulation: EU AI Act risk tiers, why some insurance and hiring uses
+     count as "high-risk", and which engineering artefacts (logging, documentation, human
+     oversight, accuracy monitoring) you would build to comply.
+
+---------------------------------------------------------------------
+L. SYSTEM DESIGNS NOT COVERED IN ROUND 4 (use the Round 4 rubric)
+---------------------------------------------------------------------
+101. Design a multi-tenant, enterprise ChatGPT-style assistant: conversation storage,
+     streaming, context and history management, file uploads, per-tenant quotas, model
+     routing, and data isolation.
+102. Design a real-time chat system (1:1 and groups, 10M daily active users): delivery
+     guarantees, per-conversation ordering, presence, read receipts, offline sync, multi-device.
+103. Design search autocomplete for a broker portal (policies, clients, brokers) with p99
+     under 50ms, typo tolerance, and per-user permission filtering.
+104. Design a distributed in-memory cache from scratch (like Redis Cluster): partitioning,
+     replication, eviction, failover, and client routing.
+105. Design a metrics / time-series monitoring backend at scale: ingestion, compression,
+     downsampling, retention, query engine, and cardinality limits.
+106. Design a seat/ticket booking system for flash-sale traffic: no double booking, holds
+     with expiry, a fair waiting room, and payment timeouts.
+107. Design a secure execution sandbox for user-submitted code or formulas (e.g. Python or
+     Excel logic uploaded by business users): isolation (containers vs gVisor vs Firecracker),
+     resource limits, network egress control, multi-tenancy, and cold-start latency.
+108. Design a webhook delivery platform for 5,000 partner endpoints: retries, ordering,
+     signing, per-endpoint rate limits, a circuit breaker per endpoint, replay, and a partner
+     dashboard.
+109. Design an internal LLM evaluation and experimentation platform used by 10 product teams:
+     datasets, runs, LLM judges, human annotation queues, CI integration, and dashboards.
