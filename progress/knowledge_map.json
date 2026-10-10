@@ -1,302 +1,260 @@
 {
   "meta": {
     "created": "2026-09-21",
-    "last_updated": "2026-09-21",
-    "total_sessions": 1,
-    "total_minutes": 15,
-    "note": "Rolling assessment of Aniruddha's interview readiness by skill area. Updated by Claude after each voice/text prep session. See CLAUDE.md for update protocol."
+    "last_updated": "2026-10-10",
+    "total_sessions": 4,
+    "total_minutes": 165,
+    "note": "Rolling assessment of Aniruddha's interview readiness by skill area. ONE flat dict of skill_areas, one schema per entry. Updated by Claude after each voice/text prep session -- edit entries in place, never append a second JSON object. See CLAUDE.md for update protocol.",
+    "level_scale": "unrated -> weak -> developing -> solid -> strong",
+    "trend_scale": "unrated -> declining -> flat -> improving",
+    "rating_rule": "'unrated' means not yet tested in a session. Self-reported or resume-implied skill does not count as rated."
   },
   "skill_areas": {
-    "career_narrative_behavioral": {
-      "label": "Career narrative, job-hop story, behavioral/ownership",
-      "source_round": "ROUND_1",
-      "level": "unrated",
-      "trend": "unrated",
-      "last_reviewed": null,
-      "sessions_covered": 0,
-      "notes": ""
+
+    "career_narrative_stability": {
+      "label": "Career arc, job-hop story, motivation, what makes him stay",
+      "category": "career",
+      "source_round": "ROUND_1 A-B",
+      "level": "solid",
+      "trend": "improving",
+      "last_reviewed": "2026-10-06",
+      "sessions_covered": 1,
+      "notes": "Three short stints (Turing, CES, Espire) explained as circumstantial (funding, wrong team, contract end), not flaky. Problem-driven, not prestige-driven; states a 1-yr floor. Story is credible but rehearse a 60-second version."
     },
-    "python_core": {
-      "label": "Python language fundamentals & internals (GIL, memory, decorators, MRO, descriptors)",
-      "source_round": "ROUND_2, ROUND_3-A",
+    "ownership_execution": {
+      "label": "Ownership, mentoring, delivering end to end",
+      "category": "career",
+      "source_round": "ROUND_1 F, ROUND_6 B",
+      "level": "strong",
+      "trend": "flat",
+      "last_reviewed": "2026-10-06",
+      "sessions_covered": 1,
+      "notes": "Sole owner of Jio recommender; mentored juniors to SDE1. Genuine strength -- turn into 6-8 written STAR stories so it survives interview nerves."
+    },
+    "own_projects_deep_dive": {
+      "label": "Defending resume claims with real numbers/architecture (Cellular, Aurora/Pulse, GeoStorm, Jio recommender, Jio ATS, RLHF dashboard, DSA 2.0)",
+      "category": "career",
+      "source_round": "ROUND_1 C-G",
+      "level": "solid",
+      "trend": "improving",
+      "last_reviewed": "2026-10-06",
+      "sessions_covered": 1,
+      "notes": "Jio recommender: strong -- 100M/day, 33k peak RPS, p50 100ms / p95 200ms, <0.5% errors, named real bottlenecks (GIL, Postgres pooling, network), Kafka + split embedding/similarity services, 700-pod scaling. DataWeave DSA 2.0: partial -- no depth on crawler anti-bot or alerting. Espire (Cellular, Aurora/Pulse), GeoStorm, Jio ATS, RLHF dashboard not yet probed."
+    },
+    "staff_leadership_influence": {
+      "label": "Staff-level influence: design docs, driving decisions without authority, org-level tradeoffs",
+      "category": "staff",
+      "source_round": "ROUND_6 A",
       "level": "unrated",
       "trend": "unrated",
       "last_reviewed": null,
       "sessions_covered": 0,
-      "notes": ""
+      "notes": "Not tested. Round 1 surfaced a hint: thinks well at system level, less at org level (versioning strategy, cross-team tradeoffs)."
+    },
+
+    "python_core": {
+      "label": "Python fundamentals: GIL, data structures, mutable defaults, copy semantics",
+      "category": "python",
+      "source_round": "ROUND_2 A",
+      "level": "developing",
+      "trend": "flat",
+      "last_reviewed": "2026-10-06",
+      "sessions_covered": 1,
+      "notes": "GIL concept ok but missed the concrete release cases (blocking I/O, C extensions like numpy). Mutable defaults nailed. Shallow vs deep copy reversed on nested objects -- must fix. Big-O on containers solid; weak on real-world tuple usage."
+    },
+    "python_internals": {
+      "label": "Python runtime internals: MRO/C3, metaclasses, descriptors, attribute lookup",
+      "category": "python",
+      "source_round": "ROUND_3 A",
+      "level": "weak",
+      "trend": "flat",
+      "last_reviewed": "2026-10-06",
+      "sessions_covered": 1,
+      "notes": "MRO/C3, metaclasses, __getattr__ vs __getattribute__ vs __get__ all blanks -- no real exposure. Significant gap for a 'senior Python' bar. Learn via small runnable scripts tied to Pydantic/SQLAlchemy."
     },
     "async_concurrency": {
-      "label": "asyncio, threading, multiprocessing, structured concurrency",
-      "source_round": "ROUND_2-A, ROUND_3-B",
-      "level": "unrated",
-      "trend": "unrated",
-      "last_reviewed": null,
-      "sessions_covered": 0,
-      "notes": ""
+      "label": "asyncio, threading, multiprocessing, structured concurrency, blocking detection",
+      "category": "python",
+      "source_round": "ROUND_2 A, ROUND_3 B",
+      "level": "developing",
+      "trend": "flat",
+      "last_reviewed": "2026-10-06",
+      "sessions_covered": 1,
+      "notes": "Event loop concept solid. Unknown: gather vs TaskGroup vs as_completed, structured concurrency, detecting loop blocking in prod (asyncio debug mode, py-spy). Mostly worked in sync codebases. Refresher scripts added in scripts/async/ on 2026-10-10 -- retest R3 Q15-22 next."
     },
+
     "web_api_design": {
-      "label": "FastAPI/Flask/gRPC/SSE/WebSockets, API & service design patterns",
-      "source_round": "ROUND_2-B, ROUND_3-C",
-      "level": "unrated",
-      "trend": "unrated",
-      "last_reviewed": null,
-      "sessions_covered": 0,
-      "notes": ""
+      "label": "FastAPI/Flask/ASGI, API error models, request-scoped resources",
+      "category": "backend",
+      "source_round": "ROUND_2 B, ROUND_3 C",
+      "level": "solid",
+      "trend": "improving",
+      "last_reviewed": "2026-10-06",
+      "sessions_covered": 2,
+      "notes": "Practical FastAPI + Pydantic strong. Request-scoped DB sessions (Depends, read replicas, scoped writes) strong. Error model good (codes + Swagger) but missed an explicit retryability signal and calls correlation IDs 'trace IDs'. Gap: ASGI vs WSGI architecture, Pydantic validation cost at scale."
+    },
+    "resilience_patterns": {
+      "label": "Rate limiting, circuit breakers, retries/backoff, load shedding",
+      "category": "backend",
+      "source_round": "ROUND_3 C",
+      "level": "developing",
+      "trend": "flat",
+      "last_reviewed": "2026-10-06",
+      "sessions_covered": 1,
+      "notes": "Circuit breaker: built from scratch at first job, details faded. Rate limiting: fixed window + sliding log correct, token bucket hazy, no view on edge vs in-app placement. Implement a token bucket once in code."
+    },
+    "background_jobs_queues": {
+      "label": "Long-running jobs over HTTP, Celery/workers, job-resource pattern",
+      "category": "backend",
+      "source_round": "ROUND_3 C",
+      "level": "solid",
+      "trend": "flat",
+      "last_reviewed": "2026-10-06",
+      "sessions_covered": 1,
+      "notes": "Job-ID + polling solid; FastAPI BackgroundTasks vs Celery tradeoff clear; real experience with broker/backend split and Flower."
     },
     "databases": {
-      "label": "Postgres/Mongo/CosmosDB internals, indexing, transactions, migrations",
-      "source_round": "ROUND_2-C",
+      "label": "Postgres/Mongo/CosmosDB internals, indexing, transactions, isolation, migrations",
+      "category": "data",
+      "source_round": "ROUND_2 C",
+      "level": "unrated",
+      "trend": "unrated",
+      "last_reviewed": null,
+      "sessions_covered": 0,
+      "notes": "Not directly tested. Round 1 mentions real Postgres tuning/pooling pain at Jio scale, so expect solid -- but verify isolation levels, index types, EXPLAIN reading, zero-downtime migrations."
+    },
+    "caching_redis": {
+      "label": "Redis usage, cache patterns, distributed locks",
+      "category": "data",
+      "source_round": "ROUND_2 D",
+      "level": "developing",
+      "trend": "flat",
+      "last_reviewed": "2026-10-06",
+      "sessions_covered": 1,
+      "notes": "Everyday Redis (pipelines, caching) fine. Distributed locks / Redlock unknown (R2 Q48 weak). Learn SET NX PX + fencing tokens + why Redlock is contested."
+    },
+    "messaging_streaming": {
+      "label": "Kafka, RabbitMQ, SQS: models, ordering, consumer groups, DLQs",
+      "category": "data",
+      "source_round": "ROUND_2 E, ROUND_6 H",
+      "level": "strong",
+      "trend": "flat",
+      "last_reviewed": "2026-10-06",
+      "sessions_covered": 1,
+      "notes": "Real TB-scale Kafka. Partitioning, ordering, consumer groups accurate. RabbitMQ for task queues, DLQ, fan-out; clear on when to use which. Not yet tested: exactly-once semantics, schema evolution, CDC (R6 H)."
+    },
+
+    "containers_docker": {
+      "label": "Docker images, multi-stage builds, layer optimisation",
+      "category": "infra",
+      "source_round": "ROUND_2 F",
+      "level": "developing",
+      "trend": "declining",
+      "last_reviewed": "2026-10-06",
+      "sessions_covered": 1,
+      "notes": "Multi-stage concept understood but hasn't written a Dockerfile from scratch in 2+ years; wheel-copying and layer ordering hazy."
+    },
+    "kubernetes": {
+      "label": "K8s workloads and ops: probes, graceful shutdown, autoscaling, scheduling",
+      "category": "infra",
+      "source_round": "ROUND_3 C, ROUND_6 E",
+      "level": "developing",
+      "trend": "flat",
+      "last_reviewed": "2026-10-06",
+      "sessions_covered": 1,
+      "notes": "Ran 700-pod workloads in prod. Knows SIGTERM + terminationGracePeriodSeconds, but preStop hook (and why endpoints removal races SIGTERM) completely unknown. Wants to build a graceful-shutdown demo himself."
+    },
+    "cloud_devops": {
+      "label": "AWS/Azure/GCP, Terraform, CI/CD, multi-region, DR",
+      "category": "infra",
+      "source_round": "ROUND_2, ROUND_1",
+      "level": "solid",
+      "trend": "flat",
+      "last_reviewed": "2026-10-06",
+      "sessions_covered": 1,
+      "notes": "GCP + managed services in prod; leaning serverless. No depth yet on multi-region / DR despite StatusNeo Terraform multi-region claim on resume -- must be able to defend it (R1 Q40)."
+    },
+    "linux_networking_tls": {
+      "label": "Linux, TCP/HTTP, DNS, TLS handshake, load balancers",
+      "category": "infra",
+      "source_round": "ROUND_6 F",
       "level": "unrated",
       "trend": "unrated",
       "last_reviewed": null,
       "sessions_covered": 0,
       "notes": ""
     },
-    "infra_devops_cloud": {
-      "label": "Docker/K8s, messaging (Kafka/RabbitMQ/SQS), CI/CD, Terraform, cloud (AWS/Azure/GCP)",
-      "source_round": "ROUND_2, ROUND_4 (DevOps-flavoured)",
-      "level": "unrated",
-      "trend": "unrated",
-      "last_reviewed": null,
-      "sessions_covered": 0,
-      "notes": ""
+    "security_auth": {
+      "label": "OAuth2/OIDC, tokens, RBAC, secrets, AppSec",
+      "category": "security",
+      "source_round": "ROUND_2 K, ROUND_6 G",
+      "level": "weak",
+      "trend": "flat",
+      "last_reviewed": "2026-10-06",
+      "sessions_covered": 1,
+      "notes": "Conflates OAuth2 (authorization) with OIDC (authentication layer on top); access vs ID token unclear. Risky because resume claims multi-provider SSO at GeoStorm (R1 Q28)."
     },
+
     "system_design": {
-      "label": "End-to-end system design: NFRs, back-of-envelope, tradeoffs, failure handling",
-      "source_round": "ROUND_4",
+      "label": "End-to-end system design: NFRs, estimation, tradeoffs, failure handling",
+      "category": "design",
+      "source_round": "ROUND_4, ROUND_6 L",
+      "level": "unrated",
+      "trend": "unrated",
+      "last_reviewed": null,
+      "sessions_covered": 0,
+      "notes": "No full Round 4 design run yet (log once claimed URL shortener was 'covered in prior session' -- no such session exists). Round 1 shows good instincts defending his own scaling decisions; would rebuild recommender with vector DB + Go + serverless."
+    },
+    "distributed_systems_theory": {
+      "label": "CAP/PACELC, consistency models, consensus, idempotency, sagas",
+      "category": "design",
+      "source_round": "ROUND_6 C-D",
       "level": "unrated",
       "trend": "unrated",
       "last_reviewed": null,
       "sessions_covered": 0,
       "notes": ""
     },
+    "estimation_performance": {
+      "label": "Back-of-envelope estimation, capacity planning, profiling",
+      "category": "design",
+      "source_round": "ROUND_6 I, ROUND_3 A",
+      "level": "unrated",
+      "trend": "unrated",
+      "last_reviewed": null,
+      "sessions_covered": 0,
+      "notes": ""
+    },
+
     "ai_llm_rag": {
       "label": "LLM foundations, RAG design/quality/eval, agents & tool-calling, prod LLM ops",
+      "category": "ai",
       "source_round": "ROUND_5",
       "level": "developing",
       "trend": "flat",
-      "last_reviewed": "2026-09-21",
-      "sessions_covered": 1,
-      "notes": "Q22 (RAG debugging tree): good production instincts (citations/highlighting in his lawyer-doc RAG app, retry via smaller guard model for generation failures), and honestly flagged ranking/reranking as a gap rather than bluffing. But didn't name the core isolation technique (freeze retrieved context, replay it manually to bisect retrieval/ranking vs generation failure) and conflated retrieval with ranking as one step. Taught reranking/cross-encoder basics in-session. Baseline set at developing/flat -- first data point for this area."
+      "last_reviewed": "2026-10-06",
+      "sessions_covered": 2,
+      "notes": "R5 Q22 (RAG debugging): good prod instincts (citations/highlighting in lawyer-doc RAG, retry via smaller guard model) and honest about ranking gap, but missed the core technique (freeze retrieved context, replay to bisect retrieval vs ranking vs generation) and conflated retrieval with ranking. Reranking/cross-encoders taught in-session. R1 confirms production ML is embeddings + vector similarity, RLHF dashboard was ops-heavy. Only ~15 min of real AI questioning so far -- top priority given target title."
+    },
+    "ai_infrastructure": {
+      "label": "LLM serving, GPU inference, vector DBs at scale, AI gateways, eval infra",
+      "category": "ai",
+      "source_round": "ROUND_6 K",
+      "level": "unrated",
+      "trend": "unrated",
+      "last_reviewed": null,
+      "sessions_covered": 0,
+      "notes": ""
     },
     "dsa_sql": {
-      "label": "Practical DSA and SQL (low priority for this role, tie-breaker only)",
+      "label": "Practical DSA and SQL (low priority, tie-breaker only)",
+      "category": "dsa",
       "source_round": "DSA_SQL",
       "level": "unrated",
       "trend": "unrated",
       "last_reviewed": null,
       "sessions_covered": 0,
       "notes": ""
-    },
-    "own_projects_deep_dive": {
-      "label": "Ability to defend own resume claims with real numbers/architecture (Cellular, Aurora/Pulse, GeoStorm, Jio recommender, Jio ATS, RLHF dashboard)",
-      "source_round": "ROUND_1 sections C-G, ROUND_4 Part 2",
-      "level": "unrated",
-      "trend": "unrated",
-      "last_reviewed": null,
-      "sessions_covered": 0,
-      "notes": ""
-    }
-  },
-  "level_scale": "unrated -> weak -> developing -> solid -> strong",
-  "trend_scale": "unrated -> declining -> flat -> improving"
-}
-
-{
-  "meta": {
-    "total_sessions": 1,
-    "total_minutes": 55,
-    "last_updated": "2026-10-06"
-  },
-  "skill_areas": {
-    "system_design_and_architecture": {
-      "level": "solid",
-      "trend": "improving",
-      "last_reviewed": "2026-10-06",
-      "sessions_covered": 1,
-      "notes": "Can defend real scaling decisions (700 pods, vector math offload). Weaker on org-level design tradeoffs and versioning strategies."
-    },
-    "backend_infrastructure_and_deployment": {
-      "level": "strong",
-      "trend": "flat",
-      "last_reviewed": "2026-10-06",
-      "sessions_covered": 1,
-      "notes": "Kubernetes, Postgres tuning, Redis pipelines, Kafka. Honest about pain points; would rebuild with serverless + vector DB + Go."
-    },
-    "ownership_and_execution": {
-      "level": "strong",
-      "trend": "flat",
-      "last_reviewed": "2026-10-06",
-      "sessions_covered": 1,
-      "notes": "Sole owner of recommender, mentored juniors to SDE1. Clear on why early exits happened (funding, wrong team, contract end). Ready to defend."
-    },
-    "career_stability_and_motivation": {
-      "level": "solid",
-      "trend": "improving",
-      "last_reviewed": "2026-10-06",
-      "sessions_covered": 1,
-      "notes": "Three short stints were circumstantial, not flaky. Problem-driven, not prestige-driven. Floor of 1yr, aiming for Staff/Architect. Prepping on AI/system design."
-    },
-    "devops_and_cloud": {
-      "level": "solid",
-      "trend": "flat",
-      "last_reviewed": "2026-10-06",
-      "sessions_covered": 1,
-      "notes": "GCP, Kubernetes, managed services. Thinking about serverless. Hasn't shipped major multi-region or DR yet (mentioned for StatusNeo but no depth)."
-    },
-    "ai_and_ml_engineering": {
-      "level": "developing",
-      "trend": "improving",
-      "last_reviewed": "2026-10-06",
-      "sessions_covered": 1,
-      "notes": "Embedding generation + vector similarity is production ML, not deep learning. RLHF dashboard at Turing was ops-heavy. Self-aware this is a gap; actively prepping."
     }
   }
-}
-
-{
-  "meta": {
-    "last_updated": "2026-10-06",
-    "total_sessions": 2,
-    "total_minutes": 100
-  },
-  "skill_areas": {
-    "python_basics": {
-      "level": "developing",
-      "trend": "flat",
-      "last_reviewed": "2026-10-06",
-      "sessions_covered": 1,
-      "notes": "GIL concept solid, but missed I/O and C extension release cases. Mutable defaults nailed. Shallow/deep copy behavior reversed on nested objects — needs clarification."
-    },
-    "python_async": {
-      "level": "solid",
-      "trend": "flat",
-      "last_reviewed": "2026-10-06",
-      "sessions_covered": 1,
-      "notes": "Not tested in detail this round; marked from prior context."
-    },
-    "web_api_fastapi": {
-      "level": "solid",
-      "trend": "flat",
-      "last_reviewed": "2026-10-06",
-      "sessions_covered": 1,
-      "notes": "Practical FastAPI + Pydantic usage strong. Lacks architectural understanding of ASGI vs WSGI, Pydantic validation cost at scale."
-    },
-    "databases_postgres": {
-      "level": "solid",
-      "trend": "flat",
-      "last_reviewed": "2026-10-06",
-      "sessions_covered": 0,
-      "notes": "Not tested this round."
-    },
-    "caching_redis": {
-      "level": "solid",
-      "trend": "flat",
-      "last_reviewed": "2026-10-06",
-      "sessions_covered": 1,
-      "notes": "No production experience with distributed locks or Redlock. Basic Redis usage solid."
-    },
-    "messaging_kafka": {
-      "level": "strong",
-      "trend": "flat",
-      "last_reviewed": "2026-10-06",
-      "sessions_covered": 1,
-      "notes": "Real TB-scale production experience. Understands partitioning, ordering guarantees, consumer groups. Confident and accurate."
-    },
-    "messaging_rabbitmq": {
-      "level": "solid",
-      "trend": "flat",
-      "last_reviewed": "2026-10-06",
-      "sessions_covered": 1,
-      "notes": "Used for task queues, dead-letter patterns, fan-out. Clear on when to use vs Kafka."
-    },
-    "containers_docker": {
-      "level": "developing",
-      "trend": "declining",
-      "last_reviewed": "2026-10-06",
-      "sessions_covered": 1,
-      "notes": "Multi-stage build concept understood, but hasn't built from scratch in 2+ years. Details hazy (wheel copying, layer optimization)."
-    },
-    "kubernetes": {
-      "level": "solid",
-      "trend": "flat",
-      "last_reviewed": "2026-10-06",
-      "sessions_covered": 0,
-      "notes": "Not tested this round."
-    },
-    "security_oauth_oidc": {
-      "level": "weak",
-      "trend": "flat",
-      "last_reviewed": "2026-10-06",
-      "sessions_covered": 1,
-      "notes": "Used once in career. Confusing OAuth2 (authorization framework) with OIDC (authentication layer). Access vs ID token distinction unclear."
-    }
-  }
-}
-
-
-{
-  "meta": {
-    "total_sessions": 3,
-    "total_minutes": 180,
-    "last_updated": "2026-10-06"
-  },
-  "skill_areas": [
-    {
-      "skill": "Python Runtime & Internals",
-      "level": "weak",
-      "trend": "flat",
-      "last_reviewed": "2026-10-06",
-      "sessions_covered": 1,
-      "notes": "MRO/C3, metaclasses, descriptors (__getattr__, __getattribute__, __get__) all unknown. No real exposure. This is a significant gap for Staff-level Python work."
-    },
-    {
-      "skill": "Async/Concurrency (deep)",
-      "level": "developing",
-      "trend": "flat",
-      "last_reviewed": "2026-10-06",
-      "sessions_covered": 1,
-      "notes": "Solid on event loop concept and basics. Weak on detection of blocking in production (py-spy/yappi). gather vs TaskGroup vs as_completed unknown. Structured concurrency not practiced. Admits most codebases he joins are sync-heavy; limited real async debugging."
-    },
-    {
-      "skill": "API & Service Design",
-      "level": "solid",
-      "trend": "improving",
-      "last_reviewed": "2026-10-06",
-      "sessions_covered": 1,
-      "notes": "Error codes + Swagger docs implemented. Missing: retryability signals (4xx vs 5xx semantics, explicit field), correlation ID terminology (calls it trace ID but the concept is there). Request-scoped sessions pattern is strong — read replicas, Depends injection, transaction scoping all correct."
-    },
-    {
-      "skill": "Rate Limiting",
-      "level": "developing",
-      "trend": "flat",
-      "last_reviewed": "2026-10-06",
-      "sessions_covered": 1,
-      "notes": "Fixed window and sliding window log understood. Token bucket hazy. No discussion of deployment strategy (edge vs in-app). Needs hands-on implementation."
-    },
-    {
-      "skill": "Circuit Breaker",
-      "level": "solid",
-      "trend": "flat",
-      "last_reviewed": "2026-10-06",
-      "sessions_covered": 1,
-      "notes": "Built from scratch at first company, pattern known but details faded. Not recently tested."
-    },
-    {
-      "skill": "Kubernetes Ops (Graceful Shutdown, Termination)",
-      "level": "developing",
-      "trend": "flat",
-      "last_reviewed": "2026-10-06",
-      "sessions_covered": 1,
-      "notes": "SIGTERM handling and terminationGracePeriodSeconds known. preStop hook completely unknown — identified as priority learning gap. Wants to build this pattern himself."
-    },
-    {
-      "skill": "Long-running Jobs & Async Patterns",
-      "level": "solid",
-      "trend": "flat",
-      "last_reviewed": "2026-10-06",
-      "sessions_covered": 1,
-      "notes": "Job ID polling pattern solid. FastAPI background tasks vs Celery distinction clear. Broker/backend architecture, task distribution, Flower monitoring all covered in practice. Strong on queue design and scaling patterns."
-    }
-  ]
 }
