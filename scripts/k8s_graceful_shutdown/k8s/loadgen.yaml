@@ -1,0 +1,19 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: loadgen
+spec:
+  restartPolicy: Never
+  containers:
+    - name: loadgen
+      image: drain-demo:local
+      imagePullPolicy: Never
+      command:
+        - python
+        - loadgen.py
+        - --url
+        - http://drain-demo/work?ms=300
+        - --duration
+        - "60"
+        - --concurrency
+        - "20"

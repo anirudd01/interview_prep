@@ -1,0 +1,8 @@
+# One control-plane + two workers so pods spread across nodes and kube-proxy
+# routing between nodes is part of the picture.
+kind: Cluster
+apiVersion: kind.x-k8s.io/v1alpha4
+nodes:
+  - role: control-plane
+  - role: worker
+  - role: worker

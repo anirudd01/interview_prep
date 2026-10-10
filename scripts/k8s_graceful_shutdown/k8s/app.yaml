@@ -1,0 +1,76 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: drain-demo
+spec:
+  replicas: 3
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      # Never drop below 3 ready pods during a rollout, so any errors we see come
+      # from the shutdown race, not from missing capacity.
+      maxSurge: 1
+      maxUnavailable: 0
+  selector:
+    matchLabels:
+      app: drain-demo
+  template:
+    metadata:
+      labels:
+        app: drain-demo
+    spec:
+      # Hard ceiling from "pod marked Terminating" to SIGKILL. It INCLUDES the
+      # preStop time. Budget: preStop 10s + drain 25s + cleanup ~1s < 45s.
+      terminationGracePeriodSeconds: 45
+      containers:
+        - name: app
+          image: drain-demo:local
+          imagePullPolicy: Never          # image is side-loaded with `kind load`
+          ports:
+            - containerPort: 8000
+          env:
+            - name: POD_NAME
+              valueFrom:
+                fieldRef:
+                  fieldPath: metadata.name
+            - name: DRAIN_TIMEOUT_SECONDS
+              value: "25"
+          readinessProbe:                 # gates traffic: new pods get none until this passes
+            httpGet:
+              path: /readyz
+              port: 8000
+            periodSeconds: 2
+            failureThreshold: 1
+          livenessProbe:                  # restarts wedged containers; stays 200 during drain
+            httpGet:
+              path: /healthz
+              port: 8000
+            periodSeconds: 10
+            failureThreshold: 3
+          lifecycle:
+            preStop:
+              # Runs BEFORE SIGTERM is sent. The app keeps serving normally
+              # while endpoint removal propagates to kube-proxy / ingress / cloud
+              # LBs. Without this, SIGTERM and endpoint removal race, and
+              # requests land on a pod whose listener is already closed.
+              # (K8s 1.30+ also supports a native `sleep: {seconds: 10}` action,
+              # which avoids needing a `sleep` binary in the image.)
+              exec:
+                command: ["sleep", "10"]
+          resources:
+            requests:
+              cpu: 50m
+              memory: 64Mi
+            limits:
+              memory: 128Mi
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: drain-demo
+spec:
+  selector:
+    app: drain-demo
+  ports:
+    - port: 80
+      targetPort: 8000
