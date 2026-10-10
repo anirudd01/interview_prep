@@ -25,6 +25,8 @@ Most sessions are **voice mode**, ~30–60 min/day. That changes how you must re
   - `DSA_SQL.txt` — low priority, use as filler/tie-breaker only, prefer the "PRACTICAL" section over LeetCode-style
   - `ROUND_6_gap_fill_staff_readiness.txt` — topics the resume-anchored rounds miss (staff leadership, distributed systems theory, DDD/CQRS, K8s/networking/security depth, data engineering, estimation drills, modern Python, AI infra, extra designs). Rotating bank: pick 1-2 sections per session based on knowledge_map gaps
 
+- `scripts/` — runnable, heavily commented refresher scripts, one folder per topic (e.g. `scripts/async/`, indexed by its README). When a session exposes a gap that's best learned by running code, point him at the matching script or add one in the same style: stdlib-only, explanation in the module docstring, timestamped demo output, and the related question numbers.
+
 ## Progress tracking — read this before every session
 - `progress/knowledge_map.json` — the standing assessment, one entry per skill area (level: weak/developing/solid/strong, trend: declining/flat/improving). **Read it at the start of a session** to decide what to focus on, and **update it at the end** of every session — this is the thing he'll ask "what am I weak at / what improved" against, so keep it honest and current.
 - `progress/session_log.md` — append-only daily log. Add one entry per session: date, duration, which questions were asked (round + number) and whether each was covered / partial / weak, plus a one-line takeaway. Never delete old entries. Do not maintain a separate "pending questions" list — pending is just "not yet in the log."
