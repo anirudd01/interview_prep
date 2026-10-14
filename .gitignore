@@ -1,3 +1,4 @@
 # k8s demo output
 scripts/k8s_graceful_shutdown/loadgen_*.log
 __pycache__/
+notebooklm/

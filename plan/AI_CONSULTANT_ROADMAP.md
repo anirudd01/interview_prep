@@ -301,7 +301,7 @@ This is the layer engineers skip, and it's what makes someone a *consultant* rat
 - Scoping and statements of work: deliverables, assumptions, exclusions, acceptance criteria.
 - Pricing models: time & materials, fixed-price discovery, fixed-price PoC, retainer, value-based. Start with **fixed-price discovery sprints**; they're the easiest to sell.
 - Managing scope creep, change requests, and the conversation where you tell a client their idea won't work.
-- Legal and admin basics: contracts, IP ownership, liability caps, invoicing and tax. Check your employment contract's moonlighting and IP clauses before any side work.
+- Legal and admin basics: contracts, IP ownership, liability caps, invoicing and tax. Only relevant if you ever go independent; until then, learn it by watching how your employer's SOWs are written.
 
 ---
 
@@ -376,7 +376,7 @@ Dates assume you start the PREP_TODO on Mon 2026-10-19 at ~10–12 focused hours
 - **Work:**
   - Advise-level on governance, security, cost and build-vs-buy.
   - Insurance domain at Explain level.
-  - Run 2–3 discovery workshops, at work or pro bono for a small business or startup.
+  - Run 2–3 discovery workshops at work, with business teams that want AI help.
   - Give a talk at a Bengaluru meetup.
   - Build P5 (LLM gateway) and P6 (domain demo).
 - **Job move window:** AI Solutions Architect, FDE, Lead AI Engineer, or a GenAI practice at a consulting firm or GCC.
@@ -390,7 +390,7 @@ Dates assume you start the PREP_TODO on Mon 2026-10-19 at ~10–12 focused hours
 - **Goal:** paid advisory work, inside a firm or independently.
 - **Work:**
   - Package offers: *AI Readiness & Use-Case Discovery (2 weeks, fixed price)*, *Extraction PoC with eval harness (4–6 weeks)*, *Production hardening review for an existing AI app (1–2 weeks)*.
-  - Get 1–2 small paid engagements on the side (check employment terms first), or join a firm's AI practice.
+  - Move into a consulting-shaped role: a firm's AI practice, a vendor's solutions team, or an internal AI advisory role. No side work needed.
   - Build referral sources: past colleagues, insurance-market contacts, and AI vendors who need implementation partners.
 - **Exit criteria:** repeatable offers, 3+ client references, and an inbound lead now and then from your writing.
 
@@ -569,14 +569,14 @@ Senior Backend Engineer (AI products) · AI Engineer / Applied AI Engineer · Se
 
 ---
 
-## 13. Getting into consulting without betting your income
+## 13. Getting into consulting through role moves, not side work
 
 1. **Be the AI person at your current job.** You mostly already are. Make it visible: internal demos, write-ups, eval dashboards and guidance docs for other teams.
 2. **Internal consulting:** offer other teams or business units a 1-hour "is AI right for this?" session. This is discovery practice with zero sales risk.
-3. **Pro bono or cheap discovery** for a friend's business or an early-stage startup. You get a case study and a reference.
-4. **Paid side work** only after checking your employment contract. Start with fixed-price, tightly scoped work (e.g. a 2-week discovery or an eval-harness setup).
-5. **Join a firm's AI practice** if you want consulting exposure with a salary. It's a valid middle path.
-6. **Independent** only when you have a niche, 3+ references, and 6–12 months of runway.
+3. **Collect engagement-shaped stories at work:** discovery → recommendation → PoC → measured outcome. Write each one up (sanitised) in the Round 7 case format. These stories are what consulting interviews ask for.
+4. **Move internally** into an AI lead or architect role if one opens up. It's the cheapest way to get the title and the scope.
+5. **Move externally** to an AI Solutions Architect, FDE or GenAI-practice role at a consulting firm or vendor. It's consulting with a salary, and the main path in this plan.
+6. **Independent practice** stays an optional, far-future idea: only with a niche, 3+ client references, and 6–12 months of runway.
 
 ---
 
@@ -619,7 +619,7 @@ At the end of each quarter, answer these honestly. The voice agent can run this 
 - **Q4 2027 (end Dec):**
   - in an AI-titled role, or a clear path to one
   - 5+ write-ups
-  - first paid or pro-bono engagement story
+  - first full engagement-style story from work (discovery → outcome)
 
 If two quarters in a row miss most of their signals, the plan is too big for your available hours. Cut scope (drop P6/P7, slow the timeline). Don't just feel guilty.
 
@@ -648,6 +648,8 @@ interview/
 ```
 
 Concrete suggestions, in priority order:
+
+Status 2026-10-14: items 1, 2 (via PREP_TODO + teach/), 3, 4 and 6 are done; 5 has a builder script (`scripts/tools/build_week_pack.py`). Weekly infographics live in `teach/infographics/`.
 
 1. **Teacher mode needs lesson plans, not just question banks.** A voice teacher working from a Q&A bank will quiz you, not teach you. For each week in PREP_TODO, a short `teach/Wxx_topic.md` should list:
    - concepts in teaching order

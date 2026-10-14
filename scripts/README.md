@@ -6,3 +6,4 @@ These are runnable refreshers: read the docstring or README, run the code, then 
 | --- | --- | --- |
 | [async/](async/) | asyncio from the event loop to production patterns (8 scripts) | Python 3.11+ |
 | [k8s_graceful_shutdown/](k8s_graceful_shutdown/) | FastAPI + preStop + request draining on kind, with and without preStop | Docker, kind, kubectl |
+| [tools/](tools/) | Repo helpers: `build_week_pack.py` turns a `teach/` lesson plan into one NotebookLM source file | Python 3.10+ |

@@ -1,0 +1,268 @@
+=====================================================================
+ROUND 7 - AI CONSULTING & SOLUTIONS ARCHITECTURE (CASE ROUND)
+"Can he sit with a business owner, find where AI actually pays off,
+ design something that works, and say no when it doesn't?"
+Duration: 45 min case + 15 min rapid probes
+=====================================================================
+
+WHY THIS ROUND EXISTS
+Rounds 1-6 test whether he can BUILD. This round tests whether he can ADVISE: the
+skill that separates an AI engineer from an AI solutions architect, forward-deployed
+engineer or AI consultant (see plan/AI_CONSULTANT_ROADMAP.md, sections 2 and 5 Layer 3).
+Real interviews for these roles include a customer role-play or case: the interviewer
+plays a client with a vague AI wish, and the candidate has to run discovery, frame the
+problem, size it, propose a solution with risks and costs, and land a next step.
+
+Status: introduced 2026-10-14. Not expected to go well before Phase 1 of the roadmap
+(Feb 2027+). Use section G cases sparingly before then. Sections A-C and H are fair
+game earlier, as practice.
+
+HOW TO RUN THIS ROUND
+- Default format: ONE case from section G (30-45 min), then 4-6 rapid probes from
+  A-F or H (10-15 min).
+- In the case, YOU PLAY THE CLIENT. Stay in character. Be vague at first ("we want to
+  use AI in underwriting"). Only reveal facts (volumes, costs, systems, data, pain)
+  when he asks good discovery questions. If he jumps straight to architecture without
+  asking anything, let him, and then grade it down hard.
+- Have numbers ready to reveal when asked. Each case lists "facts to reveal on
+  request". Invent consistent extra numbers if he asks something not listed.
+- Push back like a real client: "that sounds expensive", "my CTO says we should just
+  buy Copilot", "can it be 100% accurate?", "we need it live in 6 weeks".
+- In voice mode, keep your client lines short. Let him drive.
+
+GRADING RUBRIC (score each 1-4: 1 = missing, 2 = shallow, 3 = solid, 4 = strong)
+  1. Discovery     - asked about users, current process, volumes, cost of errors,
+                     data, systems, constraints, success criteria BEFORE proposing
+  2. Framing       - restated the real problem in business terms with a baseline
+                     ("40 min per submission, 3 FTE, 30% rework")
+  3. Sizing        - did the value math AND the cost math (tokens, infra, people),
+                     even roughly, out loud
+  4. Solution      - proportionate design (not over-engineered); knew where AI is
+                     the wrong tool; human-in-the-loop where errors are expensive
+  5. Evaluation    - defined how success is measured: eval set, metrics, acceptance
+                     thresholds, BEFORE building
+  6. Risk          - security (prompt injection, data leakage), compliance, vendor
+                     lock-in, failure modes, what happens when the model is wrong
+  7. Delivery      - phased plan (discovery -> PoC -> pilot -> production), with
+                     decision gates and an honest timeline
+  8. Communication - structured (answer first), checked in with the client, handled
+                     pushback calmly, ended with a concrete next step
+Pass bar for an AI SA / FDE role: no score below 2, average >= 3.
+
+RED FLAGS
+- Proposes a solution in the first 2 minutes ("we'll build a RAG with an agent").
+- Never asks what an error costs, or never asks for the current baseline.
+- No evaluation plan, or "we'll test it with users" as the only plan.
+- Promises accuracy numbers without having seen the data.
+- Can't say when NOT to use an LLM.
+- Doesn't mention data access, permissions or PII until prompted.
+- Says yes to everything the client asks for, including impossible timelines.
+
+---------------------------------------------------------------------
+A. DISCOVERY & PROBLEM FRAMING
+---------------------------------------------------------------------
+1.  A client says "we want to use AI". What are the first ten questions you ask, and
+    in what order? Why that order?
+2.  How do you measure the baseline of a manual process before you build anything?
+    What happens to your project if you skip this?
+3.  Who do you need in the room for a discovery workshop, and what does each person
+    give you? What happens if the actual end users aren't there?
+4.  Walk me through how you'd map an underwriter's submission-handling process. What
+    artefact do you produce at the end?
+5.  The executive sponsor and the end users describe the problem differently. How do
+    you reconcile it, and whose version wins?
+6.  How do you tell a "needs AI" problem from a "needs a form / an API / a rules
+    engine / a process change" problem? Give two examples from your own work where
+    the right answer wasn't AI.
+7.  What does "the cost of being wrong" mean for an AI use case, and how does it
+    change your design? Compare email triage vs claims denial.
+
+---------------------------------------------------------------------
+B. USE-CASE PRIORITISATION & BUSINESS CASE
+---------------------------------------------------------------------
+8.  A client hands you a list of 15 AI ideas. How do you prioritise them? Show me
+    your scoring dimensions and how you'd weight them.
+9.  Build the business case out loud: 3 underwriting assistants spend 40% of their
+    time re-keying broker submissions into the rating system. Loaded cost is
+    GBP 55k/year each. What's the value, what's the cost, and what's the payback?
+10. Do the token cost math: 8,000 documents a day, an average of 6 pages each, about
+    700 tokens per page in and 1,500 tokens out per document. What's the monthly
+    model cost at roughly USD 3 per million input tokens and USD 15 per million
+    output tokens? What three levers cut it the most?
+11. Your PoC hit 85% field accuracy. The business case assumed 95%. Walk me through
+    what happens to the ROI and what you tell the sponsor.
+12. What costs do people forget when they build an AI business case? Name at least
+    five beyond model tokens.
+13. "Quick win" vs "strategic bet": give one of each for a specialty insurer, and
+    explain why you'd do them in that order.
+14. How do you measure value AFTER go-live? What do you instrument on day one?
+
+---------------------------------------------------------------------
+C. BUILD vs BUY vs PARTNER, AND ARCHITECTURE RECOMMENDATIONS
+---------------------------------------------------------------------
+15. The CTO says "just give everyone Microsoft Copilot / ChatGPT Enterprise". When
+    is that the right answer, and when isn't it?
+16. How do you evaluate an AI vendor that claims 98% extraction accuracy for
+    insurance documents? What do you ask for, and what test do you run?
+17. Build vs buy for document extraction: give me the decision criteria and the
+    point at which you'd switch from one to the other.
+18. Which model provider and hosting model would you recommend for a UK insurer with
+    data-residency concerns? What are the options, and the trade-offs of each?
+19. When do you recommend self-hosting an open-weight model? Give the numbers that
+    would tip the decision.
+20. Lock-in: how do you design an AI system so the client can switch model provider
+    in a week?
+21. A client wants a "multi-agent platform". What questions do you ask, and what do
+    you probably end up recommending instead?
+
+---------------------------------------------------------------------
+D. PoC -> PILOT -> PRODUCTION
+---------------------------------------------------------------------
+22. Why do most AI PoCs never reach production? Give five reasons and the
+    countermeasure for each.
+23. Define the success criteria for an extraction PoC before it starts. Be specific:
+    metrics, thresholds, dataset, and who signs off.
+24. How do you build an evaluation set with the client's subject-matter experts when
+    they have no time? How big does it need to be?
+25. Design a pilot for an underwriting assistant: which users, for how long, shadow
+    mode or live, what you measure, and what the go/no-go gate is.
+26. What's on your production-readiness checklist for an LLM feature? At least eight
+    items.
+27. The model provider silently updates the model and accuracy drops 6 points. How
+    would you have caught it, and what's the process now?
+
+---------------------------------------------------------------------
+E. GOVERNANCE, RISK & COMPLIANCE
+---------------------------------------------------------------------
+28. How does the EU AI Act classify AI used in insurance? Which uses are high-risk,
+    and what obligations follow? (Be honest about which dates and details you'd
+    re-check.)
+29. A UK insurer asks: "what do we need in place before we use AI in underwriting
+    decisions?" Give a practical answer: model inventory, risk assessment, human
+    oversight, explainability, monitoring, audit trail, Consumer Duty fair outcomes.
+30. NIST AI RMF and ISO/IEC 42001: what are they, and when would a client actually
+    need one?
+31. Personal data in prompts: what are the controls? Think vendor terms, retention,
+    redaction, residency, access logging.
+32. Indirect prompt injection in an inbox-processing agent (your Orbit/Ayana
+    pipeline): explain the risk to a non-technical risk committee in 60 seconds, then
+    give the mitigations.
+33. How do you design human oversight so it's real, and not a rubber stamp
+    ("automation bias")?
+34. A declined applicant asks why. What does your system need to have recorded to
+    answer that?
+
+---------------------------------------------------------------------
+F. STAKEHOLDERS, CHANGE & DIFFICULT CONVERSATIONS
+---------------------------------------------------------------------
+35. The sponsor wants it live in 6 weeks. You think it needs 4 months. How do you run
+    that conversation?
+36. Underwriters don't trust the AI summaries and keep redoing the work. Adoption is
+    20%. What do you do?
+37. Tell me about a time you told a stakeholder "no" or "not like that" and they
+    agreed. (STAR; push for a real story.)
+38. How do you present a PoC that partly failed? Structure the 10-minute readout.
+39. Write a one-paragraph executive summary, out loud, recommending NOT to proceed
+    with a use case.
+40. How do you hand over an AI system to a client team so it survives after you
+    leave?
+
+---------------------------------------------------------------------
+G. FULL CASES (pick ONE per session; interviewer plays the client)
+---------------------------------------------------------------------
+41. CASE: "AI for submissions." A Lloyd's MGA receives broker submissions by email.
+    They want "AI to speed up underwriting".
+    Facts to reveal on request:
+    - 1,200 submissions/month; about 35% are declined after a full review.
+    - Underwriting assistants spend about 45 min re-keying each submission.
+    - Formats: email body, PDF slips, Excel schedules of values, sometimes scans.
+    - Rating happens in an in-house rater; there's an API, but it's undocumented.
+    - Errors in limits or deductibles have caused mispriced risks before.
+    - Data sits in Outlook and SharePoint; IT is Azure-first; there's a 3-person
+      dev team.
+    Strong answer: triage first (decline faster), then extraction with human review
+    on money fields, eval set from historical submissions, Azure-hosted models,
+    phased plan, ROI from both time saved and faster declines.
+
+42. CASE: "Chat with our policies." A carrier wants staff to ask questions about
+    5,000 policy wordings and 300 underwriting guidelines.
+    Facts to reveal on request:
+    - 400 users, across 4 business units with different permissions.
+    - Documents are PDFs, many scanned, versioned, some superseded.
+    - Wrong answers on coverage could lead to a mis-sold policy.
+    - They already pay for Microsoft 365 E5.
+    Strong answer: question whether M365 Copilot/SharePoint search covers it first;
+    if building, permission-aware RAG, version filtering, citations and refusals,
+    an eval set written with underwriters, and a pilot with one business unit.
+
+43. CASE: "Replace our rater spreadsheets." (Your Cellular experience.) An insurer has
+    60 Excel raters that drive pricing. The CIO read about AI agents and wants "an
+    agent that prices risks".
+    Facts to reveal on request:
+    - Raters change quarterly; the actuaries own them.
+    - Regulators and auditors need reproducible prices.
+    - Two raters have macros; one has circular references.
+    Strong answer: pricing must be deterministic, so convert the raters to tested
+    code with output-equivalence tests; use LLMs only for the conversion assist,
+    explanations and data gathering, never for computing the price; plus a
+    governance and audit trail.
+
+44. CASE: "Claims FNOL." A personal-lines insurer wants AI to handle first
+    notification of loss by phone and web.
+    Facts to reveal on request:
+    - 20k claims/month; peaks of 5x after storms.
+    - 15% of claims are flagged for fraud review; the fraud model is a separate
+      gradient-boosted model.
+    - Vulnerable customers are a regulatory focus.
+    Strong answer: intake and structuring with AI, keep the fraud model, routing and
+    escalation for vulnerable customers, surge-capacity design, and a Consumer Duty
+    lens.
+
+45. CASE: "Bordereaux chaos." A syndicate receives monthly bordereaux spreadsheets
+    from 40 coverholders, each in a different format. Reconciliation takes 2 people
+    a full week each month.
+    Facts to reveal on request:
+    - Standards exist (e.g. Lloyd's coverholder reporting standards), but adoption
+      is uneven.
+    - Errors lead to wrong premium and claims reporting.
+    Strong answer: schema mapping per coverholder (LLM-assisted mapping, then
+    deterministic transforms), validation rules, anomaly flags, a human approval
+    workflow, and a learning loop that reuses mappings.
+
+46. CASE (generic, non-insurance): "Customer support AI." A SaaS company with 50k
+    tickets a month wants to "cut support costs by 50% with AI".
+    Strong answer: analyse the ticket mix first, deflect via self-serve and docs,
+    agent-assist before automation, measure resolution quality not just
+    deflection, and staged autonomy by ticket category.
+
+47. CASE (internal): "Our AI pilot is stuck." (Role-play the sponsor.) Your company
+    built a RAG assistant 6 months ago. Usage is low, nobody trusts it, and the
+    team wants a bigger model. Diagnose it and propose a turnaround plan.
+
+---------------------------------------------------------------------
+H. RAPID AI ESTIMATION & COST DRILLS (60-90s each, no calculator)
+---------------------------------------------------------------------
+48. 1M tokens is about how many English words, and about how many pages?
+49. A chatbot has 2,000 daily users x 10 messages x 3k tokens of context. What's the
+    daily token volume? What does prompt caching change?
+50. Embedding 5M chunks of 500 tokens each: total tokens, and a rough cost at about
+    USD 0.02 per million tokens?
+51. A GPU serves a 7B model at about 1,500 output tokens/sec aggregate. How many GPUs
+    do you need for 200 concurrent users, each expecting 30 tokens/sec?
+52. Human review costs GBP 2 per document and the model costs GBP 0.05. At what
+    straight-through rate does automation pay for its build cost of GBP 120k within
+    a year, on 100k documents/year?
+53. p95 latency budget of 4s for an assistant: allocate it across retrieval,
+    reranking, generation and network.
+
+---------------------------------------------------------------------
+I. PASS/FAIL PROBES (ask at least 2)
+---------------------------------------------------------------------
+54. Give me three AI use cases you would advise an insurer NOT to do right now, and
+    why.
+55. "Can you guarantee the AI won't make mistakes?" Answer as you would to the CEO.
+56. What is the single artefact that most increases an AI project's chance of
+    reaching production? (Expect: a labelled evaluation set agreed with the
+    business, or an equivalent answer, with reasons.)
+57. In two minutes: what do you bring to an AI engagement that a pure data scientist
+    or a pure management consultant doesn't?

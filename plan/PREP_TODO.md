@@ -43,7 +43,8 @@ Each week has a topic. Run it like this:
 
 ### Instructions for the voice agent (teacher + interviewer)
 
-- Read this file first and find the current week. Read `progress/knowledge_map.json` for weak spots.
+- Read this file first and find the current week. Read `progress/knowledge_map.json` for weak spots and `progress/misses.md` for open misses.
+- **If `teach/Wxx_*.md` exists for the current week, teach from it.** It has the concepts in order, analogies, project anchors, checks and the Friday quiz list. Otherwise teach from the week's Learn list below.
 - **Teacher mode (Mon/Tue):**
   - Teach the week's "Learn" list in order. Plain language first, then precise detail, then "how this shows up in an interview".
   - Anchor examples to his projects: Cellular, Aurora/Pulse, Orbit/Ayana, GeoStorm, Jio recommender, Jio ATS, Turing RLHF.
@@ -82,8 +83,9 @@ That lands M4 around **2027-01-17**. Expect more "partial" grades. Don't go belo
 ## Week 0: Setup (Wed 2026-10-14 → Sun 2026-10-18)
 
 - [ ] Read [AI_CONSULTANT_ROADMAP.md](AI_CONSULTANT_ROADMAP.md) once, fully. Mark anything you disagree with; we'll edit it.
-- [ ] Decide your real weekly hours. If it's less than 10, tell Claude to stretch the dates (don't silently fall behind).
-- [ ] Create `progress/misses.md`: one line per fumbled question, `date | round/Q | what I missed | the fix in one line`.
+- [x] Decide your real weekly hours. Confirmed 2026-10-14: 10–12 h/week is manageable.
+- [x] Create `progress/misses.md`. Done 2026-10-14, seeded with the 17 open misses from the session log.
+- [x] Lesson plans `teach/W01`–`W03` written (2026-10-14). Ask Claude for W04–W05 during W2.
 - [ ] Install the tools:
   - [ ] Python 3.12 venv
   - [ ] Docker Desktop
@@ -92,8 +94,8 @@ That lands M4 around **2027-01-17**. Expect more "partial" grades. Don't go belo
   - [ ] psql or a Postgres container
   - [ ] Redis container
   - [ ] An LLM API key (Anthropic or OpenAI) with a **spend limit** set
-- [ ] Set up NotebookLM: one notebook **per week** (not per round), holding only that week's answer sections. Build W1 and W2 now.
-- [ ] Configure the voice agent with this file's "Instructions for the voice agent" section, plus CLAUDE.md.
+- [ ] Set up NotebookLM: one notebook **per week**. Build the source file with `python scripts/tools/build_week_pack.py teach/W01_python_core.md` (and W02), then upload `notebooklm/W01_python_core_pack.md` as the only source.
+- [ ] Configure the voice agent with this file's "Instructions for the voice agent" section, CLAUDE.md, and `teach/README.md`.
 - [ ] Create an empty public GitHub repo for P1 (`insurance-intake-ai` or similar). README: one paragraph of intent.
 - [ ] Baseline self-rating (5 min): for each Phase 1 topic, mark 1–5 from gut feel. Compare at M1.
 
@@ -554,7 +556,7 @@ Main track drops to **3 sessions/week** to keep the base from decaying. The AI t
 - [ ] Wed: 1 system design (alternate classic and AI designs)
 - [ ] Fri: 1 Round 5 / AI-depth quiz or a teach session on a new AI topic
 - [ ] Sat + Sun: AI portfolio build (3–4 h)
-- [ ] Monthly: 1 full mock loop; 1 public write-up; re-read and edit the Roadmap's quarterly signals
+- [ ] Monthly: 1 full mock loop; 1 public write-up; flip through every infographic so far (10 min); re-read and edit the Roadmap's quarterly signals
 
 ### AI Phase 1 backlog (Feb → Jun 2027), in rough order
 
@@ -580,13 +582,15 @@ Main track drops to **3 sessions/week** to keep the base from decaying. The AI t
 - [ ] Update `progress/session_log.md` (one entry per voice session)
 - [ ] Update `progress/knowledge_map.json` for the areas covered (level, trend, last_reviewed, notes)
 - [ ] Add new misses to `progress/misses.md`; pick 5 for next week's spaced review
-- [ ] Prepare next week's NotebookLM notebook (that week's answer sections only)
+- [ ] Build next week's NotebookLM pack (`python scripts/tools/build_week_pack.py teach/Wxx_*.md`) and upload it
+- [ ] Infographic for the week just finished: write your own cheat sheet first, then ask Claude Code for `teach/infographics/Wxx_*.svg` (+ PNG), or compare with the existing one and ask for changes
+- [ ] Lesson plans: make sure `teach/` is 2 weeks ahead of you; if not, ask Claude Code to write the next ones
 - [ ] Check the Milestones table: on track? If not, shift dates now and log it below
 - [ ] Commit the repo
 
 ## Parking lot (ideas, not commitments)
 
-- `teach/` folder with per-week lesson plans for the voice teacher (Roadmap section 16, item 1). Ask Claude to generate W1–W3 first.
+- ~~`teach/` folder with per-week lesson plans~~ done 2026-10-14 (W01–W03); keep it 2 weeks ahead
 - `scripts/python_internals/`, `scripts/db_isolation/` (lost update, SKIP LOCKED), `scripts/resilience/` (circuit breaker, retry storm), `scripts/llm/` (structured output, async batch, eval harness)
 - A small `progress/status.py` that prints weak/unrated areas and the current week from this file
 - Mock interviews with real people (peers, paid platforms) once M3 is done; a voice agent can't fully simulate a sceptical human
@@ -596,3 +600,4 @@ Main track drops to **3 sessions/week** to keep the base from decaying. The AI t
 | Date | Change |
 | --- | --- |
 | 2026-10-14 | File created. Plan start 2026-10-19, M4 target 2027-02-21, at ~10–12 h/week. |
+| 2026-10-14 | Hours confirmed. Added teach/ W01–W03, misses.md, NotebookLM pack builder, infographics step, Round 7 bank, and 10 AI/consulting areas in the knowledge map. |

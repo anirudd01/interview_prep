@@ -24,16 +24,20 @@ Most sessions are **voice mode**, ~30–60 min/day. That changes how you must re
   - `ROUND_5_ai.txt` — RAG/LLM/agent engineering, his weakest-documented area historically — go deep here
   - `DSA_SQL.txt` — low priority, use as filler/tie-breaker only, prefer the "PRACTICAL" section over LeetCode-style
   - `ROUND_6_gap_fill_staff_readiness.txt` — topics the resume-anchored rounds miss (staff leadership, distributed systems theory, DDD/CQRS, K8s/networking/security depth, data engineering, estimation drills, modern Python, AI infra, extra designs). Rotating bank: pick 1-2 sections per session based on knowledge_map gaps
+  - `ROUND_7_ai_consulting_case.txt` — AI consulting / solutions-architect case round: you play the client, he runs discovery → sizing → solution → risks. Rubric in its header. Mostly for after Feb 2027 (roadmap Phase 1)
 
 - `scripts/` — runnable, heavily commented refresher scripts, one folder per topic (e.g. `scripts/async/`, indexed by its README). When a session exposes a gap that's best learned by running code, point him at the matching script or add one in the same style: stdlib-only, explanation in the module docstring, timestamped demo output, and the related question numbers.
 - `plan/` — `PREP_TODO.md` is the running week-by-week to-do (current week = first one not marked done); follow its "Instructions for the voice agent": teach the week's topics before quizzing on them. `AI_CONSULTANT_ROADMAP.md` is the long-term career strategy (backend → AI engineer → AI solutions architect → consultant); review it quarterly.
+- `teach/` — weekly lesson plans for teacher mode (`Wxx_topic.md`): concepts in teaching order with analogies, his project anchors, explain-it-back checks, the Friday quiz list, and a `pack` block of answer questions. Teach from these; keep them ~2 weeks ahead of his current week (write new ones in the same format when asked). `teach/infographics/` holds a one-page SVG + PNG recap per finished week (make it after he writes his own cheat sheet; render with headless Edge and look at the PNG before committing).
+- NotebookLM: `python scripts/tools/build_week_pack.py teach/Wxx_*.md` writes `notebooklm/<week>_pack.md` (git-ignored) = lesson plan + exactly that week's answers, for him to upload.
 
 ## Progress tracking — read this before every session
 - `progress/knowledge_map.json` — the standing assessment, one entry per skill area (level: weak/developing/solid/strong, trend: declining/flat/improving). **Read it at the start of a session** to decide what to focus on, and **update it at the end** of every session — this is the thing he'll ask "what am I weak at / what improved" against, so keep it honest and current.
 - `progress/session_log.md` — append-only daily log. Add one entry per session: date, duration, which questions were asked (round + number) and whether each was covered / partial / weak, plus a one-line takeaway. Never delete old entries. Do not maintain a separate "pending questions" list — pending is just "not yet in the log."
+- `progress/misses.md` — spaced-review list. Every partial/weak/gap answer becomes a row with a one-line fix; quiz 2–3 open misses each Friday; a miss is cleared after two correct answers on different days a week apart.
 
 ### End-of-session update checklist
-1. Append a dated entry to `session_log.md` covering what was asked and how it went.
+1. Append a dated entry to `session_log.md` covering what was asked and how it went. Add every partial/weak/gap to `progress/misses.md`; bump `Hits` on misses he answered correctly.
 2. Update the relevant `skill_areas` entries in `knowledge_map.json`: bump `level`/`trend`, set `last_reviewed` to today's date, increment `sessions_covered`, update `notes` with a short honest reason (e.g. "solid on asyncio basics, shaky on TaskGroup cancellation semantics").
 3. Bump `meta.total_sessions`, add to `meta.total_minutes`, set `meta.last_updated`.
 4. If he asks "what should I focus on" or "what am I good at now," answer from `knowledge_map.json`, not from vibes — and be direct about weak areas, including ones that used to be weak and are now better.

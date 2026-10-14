@@ -1,0 +1,165 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="1680" viewBox="0 0 1200 1680" font-family="Segoe UI, Inter, Helvetica, Arial, sans-serif">
+  <style>
+    .bg { fill: #f6f7fb; }
+    .panel { fill: #ffffff; stroke: #d8deea; stroke-width: 1.5; }
+    .title { font-size: 21px; font-weight: 700; fill: #1b2540; }
+    .sub { font-size: 14px; fill: #5b6578; font-style: italic; }
+    .h { font-size: 13px; font-weight: 700; fill: #5b6578; letter-spacing: 0.6px; }
+    .t { font-size: 14.5px; fill: #263048; }
+    .s { font-size: 13px; fill: #263048; }
+    .b { font-weight: 700; }
+    .mono { font-family: Consolas, "Cascadia Mono", Menlo, monospace; font-size: 13.5px; fill: #1b2540; }
+    .blue { fill: #2457d6; } .green { fill: #138a43; } .red { fill: #c62828; } .amber { fill: #b45309; }
+    .rule { stroke: #e6eaf2; stroke-width: 1; }
+    .num { font-size: 15px; font-weight: 800; fill: #ffffff; }
+  </style>
+
+  <rect class="bg" width="1200" height="1680"/>
+
+  <!-- HEADER -->
+  <rect x="0" y="0" width="1200" height="110" fill="#1b2540"/>
+  <text x="40" y="52" font-size="32" font-weight="800" fill="#ffffff">Async &amp; Concurrency, on one page</text>
+  <text x="40" y="84" font-size="16" fill="#b9c4dc">W03 · Python asyncio for backend interviews · R3 Q14–23, R2 Q11–13/19 · run scripts/async/01–08</text>
+  <text x="1160" y="52" font-size="15" fill="#8fa3cc" text-anchor="end">teach/W03_async.md</text>
+
+  <!-- ROW 1 LEFT: pick the tool -->
+  <rect class="panel" x="40" y="135" width="545" height="300" rx="12"/>
+  <text class="title" x="60" y="168">1 · Pick the right tool</text>
+  <text class="h" x="60" y="200">WORKLOAD</text><text class="h" x="290" y="200">USE</text><text class="h" x="425" y="200">WHY</text>
+  <line class="rule" x1="60" y1="210" x2="565" y2="210"/>
+  <text class="t" x="60" y="238">Many I/O waits, async libs</text><text class="t b blue" x="290" y="238">asyncio</text><text class="s" x="425" y="238">waiting is free</text>
+  <line class="rule" x1="60" y1="252" x2="565" y2="252"/>
+  <text class="t" x="60" y="280">I/O, only sync libraries</text><text class="t b blue" x="290" y="280">to_thread</text><text class="s" x="425" y="280">GIL freed on I/O</text>
+  <line class="rule" x1="60" y1="294" x2="565" y2="294"/>
+  <text class="t" x="60" y="322">CPU-heavy pure Python</text><text class="t b blue" x="290" y="322">processes</text><text class="s" x="425" y="322">GIL blocks threads</text>
+  <line class="rule" x1="60" y1="336" x2="565" y2="336"/>
+  <text class="t" x="60" y="364">CPU inside C (NumPy, hashlib)</text><text class="t b blue" x="290" y="364">threads OK</text><text class="s" x="425" y="364">C drops the GIL</text>
+  <text class="s" x="60" y="404">Long or heavy work → <tspan class="b">separate worker service behind a queue</tspan></text>
+  <text class="s" x="60" y="424">(independent scaling + retries; web pods stay responsive)</text>
+
+  <!-- ROW 1 RIGHT: one thread timeline -->
+  <rect class="panel" x="615" y="135" width="545" height="300" rx="12"/>
+  <text class="title" x="635" y="168">2 · One thread, switching only at await</text>
+  <text class="sub" x="635" y="190">concurrent, not parallel</text>
+  <text class="s" x="635" y="225">Task A</text><text class="s" x="635" y="260">Task B</text><text class="s" x="635" y="295">Task C</text><text class="s" x="635" y="330">Task D</text>
+  <!-- A -->
+  <rect x="720" y="211" width="50" height="20" rx="3" fill="#2457d6"/>
+  <rect x="770" y="211" width="130" height="20" rx="3" fill="none" stroke="#2457d6" stroke-dasharray="5 4"/>
+  <rect x="900" y="211" width="40" height="20" rx="3" fill="#2457d6"/>
+  <!-- B -->
+  <rect x="770" y="246" width="50" height="20" rx="3" fill="#138a43"/>
+  <rect x="820" y="246" width="120" height="20" rx="3" fill="none" stroke="#138a43" stroke-dasharray="5 4"/>
+  <rect x="940" y="246" width="40" height="20" rx="3" fill="#138a43"/>
+  <!-- C -->
+  <rect x="820" y="281" width="40" height="20" rx="3" fill="#b45309"/>
+  <rect x="860" y="281" width="120" height="20" rx="3" fill="none" stroke="#b45309" stroke-dasharray="5 4"/>
+  <rect x="980" y="281" width="40" height="20" rx="3" fill="#b45309"/>
+  <!-- D blocking -->
+  <rect x="1020" y="316" width="120" height="20" rx="3" fill="#c62828"/>
+  <text x="1080" y="331" font-size="12" font-weight="700" fill="#ffffff" text-anchor="middle">time.sleep / CPU</text>
+  <line x1="720" y1="350" x2="1140" y2="350" stroke="#9aa5bb" stroke-width="1"/>
+  <text class="s" x="1140" y="366" text-anchor="end" fill="#5b6578">time →</text>
+  <rect x="635" y="378" width="16" height="12" rx="2" fill="#2457d6"/><text class="s" x="657" y="389">running on the loop</text>
+  <rect x="800" y="378" width="16" height="12" rx="2" fill="none" stroke="#2457d6" stroke-dasharray="4 3"/><text class="s" x="822" y="389">awaiting I/O (costs nothing)</text>
+  <rect x="1010" y="378" width="16" height="12" rx="2" fill="#c62828"/><text class="s" x="1032" y="389">blocks all</text>
+  <text class="t b" x="635" y="420">No await → no switch → every request waits.</text>
+
+  <!-- ROW 2: task APIs -->
+  <rect class="panel" x="40" y="460" width="1120" height="345" rx="12"/>
+  <text class="title" x="60" y="493">3 · gather vs TaskGroup vs as_completed vs wait</text>
+  <text class="h" x="60" y="528">API</text><text class="h" x="290" y="528">RESULTS</text><text class="h" x="500" y="528">ON THE FIRST ERROR</text><text class="h" x="900" y="528">REACH FOR IT WHEN</text>
+  <line class="rule" x1="60" y1="538" x2="1140" y2="538"/>
+  <text class="mono" x="60" y="566">gather(*aws)</text><text class="t" x="290" y="566">list, input order</text>
+  <text class="t" x="500" y="566">raises first error; <tspan class="b red">others KEEP running</tspan></text>
+  <text class="s" x="500" y="586">return_exceptions=True → errors come back as values</text>
+  <text class="t" x="900" y="566">best-effort fan-out</text>
+  <line class="rule" x1="60" y1="602" x2="1140" y2="602"/>
+  <rect x="52" y="608" width="1096" height="62" rx="8" fill="#eaf1ff"/>
+  <text class="mono b" x="60" y="634">TaskGroup()</text><text class="s b blue" x="60" y="655">★ DEFAULT (3.11+)</text>
+  <text class="t" x="290" y="634">task.result()</text><text class="s" x="290" y="655">after the block</text>
+  <text class="t" x="500" y="634"><tspan class="b green">cancels siblings</tspan>, waits, raises ExceptionGroup</text>
+  <text class="s" x="500" y="655">catch with except* ValueError (plain except won't match)</text>
+  <text class="t" x="900" y="634">all-or-nothing work</text>
+  <line class="rule" x1="60" y1="676" x2="1140" y2="676"/>
+  <text class="mono" x="60" y="704">as_completed(aws)</text><text class="t" x="290" y="704">completion order</text>
+  <text class="t" x="500" y="704">each await raises its own error</text><text class="t" x="900" y="704">stream results as they land</text>
+  <line class="rule" x1="60" y1="720" x2="1140" y2="720"/>
+  <text class="mono" x="60" y="748">wait(FIRST_COMPLETED)</text><text class="t" x="290" y="748">(done, pending)</text>
+  <text class="t" x="500" y="748">nothing raised; you inspect</text><text class="t" x="900" y="748">races, hedged requests</text>
+  <text class="s" x="60" y="788"><tspan class="b red">Fire-and-forget gotcha:</tspan> the loop keeps only a WEAK ref to tasks → an unreferenced create_task() can be GC'd mid-flight. Keep a set + add_done_callback(discard), or give it an owner.</text>
+
+  <!-- ROW 3 LEFT: blocked loop -->
+  <rect class="panel" x="40" y="830" width="545" height="300" rx="12"/>
+  <text class="title" x="60" y="863">4 · Blocked loop: detect → fix</text>
+  <text class="s" x="60" y="889"><tspan class="b">Symptoms:</tspan> p99 spikes on unrelated endpoints, health checks</text>
+  <text class="s" x="60" y="907">time out → pod restarts, CPU not necessarily high.</text>
+  <text class="h" x="60" y="937">DETECT</text>
+  <text class="t" x="60" y="961"><tspan class="b">1</tspan> debug mode → logs callbacks &gt; 100 ms</text>
+  <text class="t" x="60" y="984"><tspan class="b">2</tspan> loop-lag gauge: sleep(0.5), measure lateness</text>
+  <text class="t" x="60" y="1007"><tspan class="b">3</tspan> <tspan class="mono">py-spy dump --pid</tspan> → the guilty stack</text>
+  <text class="t" x="60" y="1030"><tspan class="b">4</tspan> traces: big self-time, no child I/O span</text>
+  <text class="h" x="60" y="1060">FIX</text>
+  <text class="t" x="60" y="1084">sync I/O → <tspan class="mono">await asyncio.to_thread(fn)</tspan></text>
+  <text class="t" x="60" y="1107">CPU → process pool / worker via queue · FastAPI: no awaits? use def</text>
+
+  <!-- ROW 3 RIGHT: cancellation -->
+  <rect class="panel" x="615" y="830" width="545" height="300" rx="12"/>
+  <text class="title" x="635" y="863">5 · Cancellation = exception at next await</text>
+  <rect x="635" y="882" width="112" height="52" rx="8" fill="#eef1f7"/><text class="s b" x="691" y="904" text-anchor="middle">task.cancel()</text><text class="s" x="691" y="922" text-anchor="middle">just a request</text>
+  <text x="752" y="913" font-size="18" fill="#9aa5bb">→</text>
+  <rect x="770" y="882" width="118" height="52" rx="8" fill="#eef1f7"/><text class="s b" x="829" y="904" text-anchor="middle">CancelledError</text><text class="s" x="829" y="922" text-anchor="middle">at next await</text>
+  <text x="893" y="913" font-size="18" fill="#9aa5bb">→</text>
+  <rect x="911" y="882" width="112" height="52" rx="8" fill="#eef1f7"/><text class="s b" x="967" y="904" text-anchor="middle">finally:</text><text class="s" x="967" y="922" text-anchor="middle">bounded cleanup</text>
+  <text x="1028" y="913" font-size="18" fill="#9aa5bb">→</text>
+  <rect x="1046" y="882" width="100" height="52" rx="8" fill="#fde8e8"/><text class="s b red" x="1096" y="904" text-anchor="middle">RE-RAISE</text><text class="s red" x="1096" y="922" text-anchor="middle">never swallow</text>
+  <text class="mono" x="635" y="972">timeout(5)</text><text class="s" x="800" y="972"><tspan class="b blue">★ preferred</tspan>, raises TimeoutError</text>
+  <text class="mono" x="635" y="998">timeout_at(deadline)</text><text class="s" x="800" y="998">pass a request's budget downstream</text>
+  <text class="mono" x="635" y="1024">wait_for(aw, 5)</text><text class="s" x="800" y="1024">older equivalent</text>
+  <text class="mono" x="635" y="1050">shield(aw)</text><text class="s" x="800" y="1050">survives OUTER cancel; use sparingly</text>
+  <text class="s" x="635" y="1086">CancelledError is a <tspan class="b">BaseException</tspan> (3.8+), so</text>
+  <text class="s" x="635" y="1105"><tspan class="mono">except Exception</tspan> won't catch it by accident. Good.</text>
+
+  <!-- ROW 4 LEFT: primitives -->
+  <rect class="panel" x="40" y="1155" width="545" height="300" rx="12"/>
+  <text class="title" x="60" y="1188">6 · Primitives: single thread ≠ race-free</text>
+  <text class="mono" x="60" y="1222">if k not in cache: cache[k] = await fetch(k)</text>
+  <text class="s red" x="60" y="1242">↑ two tasks both pass the check across the await → double fetch</text>
+  <text class="t b" x="60" y="1276">Lock</text><text class="s" x="200" y="1276">check-then-act across await; single-flight</text>
+  <text class="t b" x="60" y="1304">Semaphore(n)</text><text class="s" x="200" y="1304">cap concurrency to API limit / DB pool</text>
+  <text class="t b" x="60" y="1332">Event</text><text class="s" x="200" y="1332">one-to-many signal: ready, shutting down</text>
+  <text class="t b" x="60" y="1360">Queue(maxsize)</text><text class="s" x="200" y="1360">backpressure: put() waits when full</text>
+  <text class="t b" x="60" y="1388">ContextVar</text><text class="s" x="200" y="1388">per-task request/trace ID, copied at creation</text>
+  <text class="s amber b" x="60" y="1430">All per-process only. Across pods → Redis/DB lock or a real queue.</text>
+
+  <!-- ROW 4 RIGHT: production patterns -->
+  <rect class="panel" x="615" y="1155" width="545" height="300" rx="12"/>
+  <text class="title" x="635" y="1188">7 · Production patterns</text>
+  <text class="t b" x="635" y="1222">Bounded fan-out</text>
+  <text class="s" x="635" y="1242">Semaphore(50) + TaskGroup, plus a semaphore per host</text>
+  <text class="t b" x="635" y="1274">Retry with full jitter</text>
+  <text class="mono" x="635" y="1294">sleep(uniform(0, min(cap, base * 2**n)))</text>
+  <text class="s" x="635" y="1313">only 429 / 503 / timeouts · honour Retry-After · cap tries + time</text>
+  <text class="t b" x="635" y="1345">Token bucket</text>
+  <text class="s" x="635" y="1365">refill r/sec up to b · 1 token per call → bursts ≤ b</text>
+  <text class="t b" x="635" y="1397">Graceful shutdown</text>
+  <text class="s" x="635" y="1417">SIGTERM → stop intake → drain with deadline → cancel</text>
+  <text class="s" x="635" y="1436">the rest → close pools (lifespan) · K8s: preStop first</text>
+
+  <!-- ROW 5: rules -->
+  <rect x="40" y="1480" width="1120" height="150" rx="12" fill="#1b2540"/>
+  <text x="60" y="1514" font-size="19" font-weight="800" fill="#ffffff">Six rules to say out loud</text>
+  <circle cx="72" cy="1550" r="13" fill="#2457d6"/><text class="num" x="72" y="1555" text-anchor="middle">1</text>
+  <text x="94" y="1556" font-size="15" fill="#e6ebf7">One thread; switches only at await</text>
+  <circle cx="440" cy="1550" r="13" fill="#2457d6"/><text class="num" x="440" y="1555" text-anchor="middle">2</text>
+  <text x="462" y="1556" font-size="15" fill="#e6ebf7">Nothing slow without an await</text>
+  <circle cx="790" cy="1550" r="13" fill="#2457d6"/><text class="num" x="790" y="1555" text-anchor="middle">3</text>
+  <text x="812" y="1556" font-size="15" fill="#e6ebf7">TaskGroup by default</text>
+  <circle cx="72" cy="1598" r="13" fill="#2457d6"/><text class="num" x="72" y="1603" text-anchor="middle">4</text>
+  <text x="94" y="1604" font-size="15" fill="#e6ebf7">Never swallow CancelledError</text>
+  <circle cx="440" cy="1598" r="13" fill="#2457d6"/><text class="num" x="440" y="1603" text-anchor="middle">5</text>
+  <text x="462" y="1604" font-size="15" fill="#e6ebf7">Bound every buffer and every fan-out</text>
+  <circle cx="790" cy="1598" r="13" fill="#2457d6"/><text class="num" x="790" y="1603" text-anchor="middle">6</text>
+  <text x="812" y="1604" font-size="15" fill="#e6ebf7">Keep a reference to every task</text>
+
+  <text x="600" y="1662" font-size="12.5" fill="#8a93a6" text-anchor="middle">interview repo · teach/infographics · regenerate or edit by asking Claude Code</text>
+</svg>

@@ -1,16 +1,15 @@
 {
   "meta": {
     "created": "2026-09-21",
-    "last_updated": "2026-10-10",
+    "last_updated": "2026-10-14",
     "total_sessions": 4,
     "total_minutes": 165,
-    "note": "Rolling assessment of Aniruddha's interview readiness by skill area. ONE flat dict of skill_areas, one schema per entry. Updated by Claude after each voice/text prep session -- edit entries in place, never append a second JSON object. See CLAUDE.md for update protocol.",
+    "note": "Rolling assessment of Aniruddha's interview readiness by skill area. ONE flat dict of skill_areas, one schema per entry. Updated by Claude after each voice/text prep session -- edit entries in place, never append a second JSON object. See CLAUDE.md for update protocol. 2026-10-14: added 10 AI-engineering / consulting / domain areas (unrated) to track the AI-consultant roadmap in plan/.",
     "level_scale": "unrated -> weak -> developing -> solid -> strong",
     "trend_scale": "unrated -> declining -> flat -> improving",
     "rating_rule": "'unrated' means not yet tested in a session. Self-reported or resume-implied skill does not count as rated."
   },
   "skill_areas": {
-
     "career_narrative_stability": {
       "label": "Career arc, job-hop story, motivation, what makes him stay",
       "category": "career",
@@ -51,7 +50,6 @@
       "sessions_covered": 0,
       "notes": "Not tested. Round 1 surfaced a hint: thinks well at system level, less at org level (versioning strategy, cross-team tradeoffs)."
     },
-
     "python_core": {
       "label": "Python fundamentals: GIL, data structures, mutable defaults, copy semantics",
       "category": "python",
@@ -82,7 +80,6 @@
       "sessions_covered": 1,
       "notes": "Event loop concept solid. Unknown: gather vs TaskGroup vs as_completed, structured concurrency, detecting loop blocking in prod (asyncio debug mode, py-spy). Mostly worked in sync codebases. Refresher scripts added in scripts/async/ on 2026-10-10 -- retest R3 Q15-22 next."
     },
-
     "web_api_design": {
       "label": "FastAPI/Flask/ASGI, API error models, request-scoped resources",
       "category": "backend",
@@ -143,7 +140,6 @@
       "sessions_covered": 1,
       "notes": "Real TB-scale Kafka. Partitioning, ordering, consumer groups accurate. RabbitMQ for task queues, DLQ, fan-out; clear on when to use which. Not yet tested: exactly-once semantics, schema evolution, CDC (R6 H)."
     },
-
     "containers_docker": {
       "label": "Docker images, multi-stage builds, layer optimisation",
       "category": "infra",
@@ -194,7 +190,6 @@
       "sessions_covered": 1,
       "notes": "Conflates OAuth2 (authorization) with OIDC (authentication layer on top); access vs ID token unclear. Risky because resume claims multi-provider SSO at GeoStorm (R1 Q28)."
     },
-
     "system_design": {
       "label": "End-to-end system design: NFRs, estimation, tradeoffs, failure handling",
       "category": "design",
@@ -225,7 +220,6 @@
       "sessions_covered": 0,
       "notes": ""
     },
-
     "ai_llm_rag": {
       "label": "LLM foundations, RAG design/quality/eval, agents & tool-calling, prod LLM ops",
       "category": "ai",
@@ -250,6 +244,106 @@
       "label": "Practical DSA and SQL (low priority, tie-breaker only)",
       "category": "dsa",
       "source_round": "DSA_SQL",
+      "level": "unrated",
+      "trend": "unrated",
+      "last_reviewed": null,
+      "sessions_covered": 0,
+      "notes": ""
+    },
+    "ai_evaluation": {
+      "label": "AI evaluation: golden sets, retrieval metrics, LLM-as-judge, evals in CI",
+      "category": "ai",
+      "source_round": "ROUND_5 F",
+      "level": "unrated",
+      "trend": "unrated",
+      "last_reviewed": null,
+      "sessions_covered": 0,
+      "notes": ""
+    },
+    "document_ai_extraction": {
+      "label": "Document AI & structured extraction (OCR/layout, schemas, confidence, human review)",
+      "category": "ai",
+      "source_round": "ROUND_5 E",
+      "level": "unrated",
+      "trend": "unrated",
+      "last_reviewed": null,
+      "sessions_covered": 0,
+      "notes": ""
+    },
+    "agents_tools_mcp": {
+      "label": "Agents, tool calling & MCP (workflows vs agents, agent loop, HITL)",
+      "category": "ai",
+      "source_round": "ROUND_5 C",
+      "level": "unrated",
+      "trend": "unrated",
+      "last_reviewed": null,
+      "sessions_covered": 0,
+      "notes": ""
+    },
+    "llmops_production": {
+      "label": "LLMOps: gateway, tracing, cost/latency control, fallbacks, prompt versioning",
+      "category": "ai",
+      "source_round": "ROUND_5 D",
+      "level": "unrated",
+      "trend": "unrated",
+      "last_reviewed": null,
+      "sessions_covered": 0,
+      "notes": ""
+    },
+    "ai_security_safety": {
+      "label": "AI security: prompt injection, OWASP LLM Top 10, PII, guardrails",
+      "category": "ai",
+      "source_round": "ROUND_5 A/D",
+      "level": "unrated",
+      "trend": "unrated",
+      "last_reviewed": null,
+      "sessions_covered": 0,
+      "notes": ""
+    },
+    "model_adaptation_ml_literacy": {
+      "label": "Fine-tuning decisions (LoRA/DPO) and classic ML literacy (metrics, imbalance, GBTs)",
+      "category": "ai",
+      "source_round": "ROUND_6 K",
+      "level": "unrated",
+      "trend": "unrated",
+      "last_reviewed": null,
+      "sessions_covered": 0,
+      "notes": ""
+    },
+    "ai_discovery_roi": {
+      "label": "AI consulting: discovery, use-case prioritisation, business case & token cost math, build vs buy",
+      "category": "consulting",
+      "source_round": "ROUND_7",
+      "level": "unrated",
+      "trend": "unrated",
+      "last_reviewed": null,
+      "sessions_covered": 0,
+      "notes": ""
+    },
+    "ai_governance_risk": {
+      "label": "AI governance & risk: EU AI Act, NIST AI RMF, ISO 42001, model risk, human oversight",
+      "category": "consulting",
+      "source_round": "ROUND_7",
+      "level": "unrated",
+      "trend": "unrated",
+      "last_reviewed": null,
+      "sessions_covered": 0,
+      "notes": ""
+    },
+    "insurance_domain": {
+      "label": "Insurance domain: value chain, Lloyd's / delegated authority, underwriting, rating, claims",
+      "category": "domain",
+      "source_round": "ROUND_7 / ROUND_1 C",
+      "level": "unrated",
+      "trend": "unrated",
+      "last_reviewed": null,
+      "sessions_covered": 0,
+      "notes": ""
+    },
+    "consulting_communication": {
+      "label": "Consulting communication: exec writing, recommendations, demos, workshops, saying no",
+      "category": "consulting",
+      "source_round": "ROUND_7",
       "level": "unrated",
       "trend": "unrated",
       "last_reviewed": null,
