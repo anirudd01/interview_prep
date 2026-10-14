@@ -26,6 +26,7 @@ Most sessions are **voice mode**, ~30–60 min/day. That changes how you must re
   - `ROUND_6_gap_fill_staff_readiness.txt` — topics the resume-anchored rounds miss (staff leadership, distributed systems theory, DDD/CQRS, K8s/networking/security depth, data engineering, estimation drills, modern Python, AI infra, extra designs). Rotating bank: pick 1-2 sections per session based on knowledge_map gaps
 
 - `scripts/` — runnable, heavily commented refresher scripts, one folder per topic (e.g. `scripts/async/`, indexed by its README). When a session exposes a gap that's best learned by running code, point him at the matching script or add one in the same style: stdlib-only, explanation in the module docstring, timestamped demo output, and the related question numbers.
+- `plan/` — `PREP_TODO.md` is the running week-by-week to-do (current week = first one not marked done); follow its "Instructions for the voice agent": teach the week's topics before quizzing on them. `AI_CONSULTANT_ROADMAP.md` is the long-term career strategy (backend → AI engineer → AI solutions architect → consultant); review it quarterly.
 
 ## Progress tracking — read this before every session
 - `progress/knowledge_map.json` — the standing assessment, one entry per skill area (level: weak/developing/solid/strong, trend: declining/flat/improving). **Read it at the start of a session** to decide what to focus on, and **update it at the end** of every session — this is the thing he'll ask "what am I weak at / what improved" against, so keep it honest and current.
