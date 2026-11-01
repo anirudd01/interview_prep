@@ -1,0 +1,207 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="1720" viewBox="0 0 1200 1720" font-family="Segoe UI, Inter, Helvetica, Arial, sans-serif">
+  <style>
+    .bg { fill: #f6f7fb; }
+    .panel { fill: #ffffff; stroke: #d8deea; stroke-width: 1.5; }
+    .title { font-size: 21px; font-weight: 700; fill: #1b2540; }
+    .sub { font-size: 14px; fill: #5b6578; font-style: italic; }
+    .h { font-size: 13px; font-weight: 700; fill: #5b6578; letter-spacing: 0.6px; }
+    .t { font-size: 14.5px; fill: #263048; }
+    .s { font-size: 13px; fill: #263048; }
+    .b { font-weight: 700; }
+    .mono { font-family: Consolas, "Cascadia Mono", Menlo, monospace; font-size: 13.5px; fill: #1b2540; }
+    .blue { fill: #2457d6; } .green { fill: #138a43; } .red { fill: #c62828; } .amber { fill: #b45309; }
+    .rule { stroke: #e6eaf2; stroke-width: 1; }
+    .num { font-size: 15px; font-weight: 800; fill: #ffffff; }
+  </style>
+  <defs>
+    <marker id="arr" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto">
+      <path d="M0,0 L10,5 L0,10 z" fill="#5b6578"/>
+    </marker>
+  </defs>
+
+  <rect class="bg" width="1200" height="1720"/>
+
+  <!-- HEADER -->
+  <rect x="0" y="0" width="1200" height="110" fill="#1b2540"/>
+  <text x="40" y="52" font-size="32" font-weight="800" fill="#ffffff">Kubernetes: request path, probes &amp; resources</text>
+  <text x="40" y="84" font-size="16" fill="#b9c4dc">W09 card · R2 Q65–69, Q72 · R3 Q29, Q91 · R4 Q38 · R6 Q40–42, Q50, Q57 · demo: scripts/k8s_graceful_shutdown/</text>
+  <text x="1160" y="52" font-size="15" fill="#8fa3cc" text-anchor="end">plan/PREP_TODO.md · Week 9</text>
+
+  <!-- PANEL 1: request path -->
+  <rect class="panel" x="40" y="135" width="1120" height="255" rx="12"/>
+  <text class="title" x="60" y="168">1 · Request path: client to pod</text>
+  <!-- boxes -->
+  <rect x="60" y="184" width="138" height="52" rx="8" fill="#eef1f7"/>
+  <text class="s b" x="129" y="206" text-anchor="middle">Client</text><text class="s" style="font-size:12px" x="129" y="225" text-anchor="middle">browser, app, SDK</text>
+  <rect x="217" y="184" width="138" height="52" rx="8" fill="#eef1f7"/>
+  <text class="s b" x="286" y="206" text-anchor="middle">DNS</text><text class="s" style="font-size:12px" x="286" y="225" text-anchor="middle">name → LB address</text>
+  <rect x="374" y="184" width="138" height="52" rx="8" fill="#eaf1ff" stroke="#2457d6"/>
+  <text class="s b" x="443" y="206" text-anchor="middle">Cloud LB</text><text class="s" style="font-size:12px" x="443" y="225" text-anchor="middle">L4 NLB or L7 ALB</text>
+  <rect x="531" y="184" width="138" height="52" rx="8" fill="#eaf1ff" stroke="#2457d6"/>
+  <text class="s b" x="600" y="206" text-anchor="middle">Ingress controller</text><text class="s" style="font-size:12px" x="600" y="225" text-anchor="middle">L7 proxy pods</text>
+  <rect x="688" y="184" width="138" height="52" rx="8" fill="#eef1f7"/>
+  <text class="s b" x="757" y="206" text-anchor="middle">Service</text><text class="s" style="font-size:12px" x="757" y="225" text-anchor="middle">ClusterIP, virtual</text>
+  <rect x="845" y="184" width="138" height="52" rx="8" fill="#eef1f7"/>
+  <text class="s b" x="914" y="206" text-anchor="middle">EndpointSlice</text><text class="s" style="font-size:12px" x="914" y="225" text-anchor="middle">Ready pod IPs only</text>
+  <rect x="1002" y="184" width="138" height="52" rx="8" fill="#e6f5ec" stroke="#138a43"/>
+  <text class="s b" x="1071" y="206" text-anchor="middle">Pod</text><text class="s" style="font-size:12px" x="1071" y="225" text-anchor="middle">container :8000</text>
+  <!-- arrows -->
+  <line x1="199" y1="210" x2="215" y2="210" stroke="#5b6578" stroke-width="1.5" marker-end="url(#arr)"/>
+  <line x1="356" y1="210" x2="372" y2="210" stroke="#5b6578" stroke-width="1.5" marker-end="url(#arr)"/>
+  <line x1="513" y1="210" x2="529" y2="210" stroke="#5b6578" stroke-width="1.5" marker-end="url(#arr)"/>
+  <line x1="670" y1="210" x2="686" y2="210" stroke="#5b6578" stroke-width="1.5" marker-end="url(#arr)"/>
+  <line x1="827" y1="210" x2="843" y2="210" stroke="#5b6578" stroke-width="1.5" marker-end="url(#arr)"/>
+  <line x1="984" y1="210" x2="1000" y2="210" stroke="#5b6578" stroke-width="1.5" marker-end="url(#arr)"/>
+  <!-- captions -->
+  <text class="s b blue" style="font-size:12px" x="443" y="254" text-anchor="middle">TLS ends here…</text>
+  <text class="s b blue" style="font-size:12px" x="600" y="254" text-anchor="middle">…or here</text>
+  <text class="s b amber" style="font-size:12px" x="757" y="254" text-anchor="middle">kube-proxy DNAT</text>
+  <text class="s b green" style="font-size:12px" x="914" y="254" text-anchor="middle">readiness-gated</text>
+  <text class="s b green" style="font-size:12px" x="1071" y="254" text-anchor="middle">kubelet probes</text>
+  <line class="rule" x1="60" y1="264" x2="1140" y2="264"/>
+  <text class="s" x="60" y="288"><tspan class="b">TLS ends at the LB or the Ingress</tspan> (cert-manager certs);</text>
+  <text class="s" x="60" y="306">re-encrypt or use mesh mTLS only if you need it inside.</text>
+  <text class="s" x="620" y="288"><tspan class="b">Service is not a process:</tspan> kube-proxy (iptables / IPVS)</text>
+  <text class="s" x="620" y="306">rewrites the ClusterIP to a pod IP on every node (R6 Q42).</text>
+  <text class="s" x="60" y="332"><tspan class="b red">Many Ingresses skip the Service:</tspan> they proxy straight to pod</text>
+  <text class="s" x="60" y="350">IPs read from EndpointSlices, so a Terminating pod can still get hits.</text>
+  <text class="s" x="620" y="332"><tspan class="b">In-cluster DNS:</tspan> svc.ns.svc.cluster.local; ndots:5 makes</text>
+  <text class="s" x="620" y="350">external names slow (R6 Q50). Fix: trailing dot, or lower ndots.</text>
+  <text class="s b amber" x="60" y="376">Endpoint removal vs SIGTERM race: see cards/docker_image_runtime.svg · demo scripts/k8s_graceful_shutdown/ (preStop, maxUnavailable 0)</text>
+
+  <!-- PANEL 2: probes -->
+  <rect class="panel" x="40" y="415" width="1120" height="330" rx="12"/>
+  <text class="title" x="60" y="448">2 · Probes: three questions, three different failures</text>
+  <text class="h" x="60" y="483">PROBE</text><text class="h" x="220" y="483">ASKS</text><text class="h" x="435" y="483">ON FAILURE</text><text class="h" x="765" y="483">TRAP / RULE</text>
+  <line class="rule" x1="60" y1="493" x2="1140" y2="493"/>
+  <!-- startup -->
+  <text class="mono b" x="60" y="521">startupProbe</text><text class="s" x="60" y="541">runs first, once</text>
+  <text class="t" x="220" y="521">Finished booting yet?</text>
+  <text class="t b" x="435" y="521">gates liveness + readiness</text>
+  <text class="s" x="435" y="541">too many failures → container restarted</text>
+  <text class="s b red" x="765" y="521">Slow start killed by liveness (model load)</text>
+  <text class="s" x="765" y="541">→ startupProbe: 30 × 10 s = 5 min budget</text>
+  <line class="rule" x1="60" y1="553" x2="1140" y2="553"/>
+  <!-- readiness -->
+  <text class="mono b" x="60" y="581">readinessProbe</text><text class="s" x="60" y="601">gates traffic, all life</text>
+  <text class="t" x="220" y="581">Can it take traffic now?</text>
+  <text class="t b" x="435" y="581">pulled from EndpointSlice, NO restart</text>
+  <text class="s" x="435" y="601">back in the moment it passes again</text>
+  <text class="s b red" x="765" y="581">No readiness fail on shutdown → 502s on deploy</text>
+  <text class="s" x="765" y="601">Hard-checking a shared DB: blip = every pod unready</text>
+  <line class="rule" x1="60" y1="613" x2="1140" y2="613"/>
+  <!-- liveness -->
+  <text class="mono b" x="60" y="641">livenessProbe</text><text class="s" x="60" y="661">the only one that kills</text>
+  <text class="t" x="220" y="641">Wedged beyond self-repair?</text>
+  <text class="t b" x="435" y="641">kubelet restarts the container</text>
+  <text class="s" x="435" y="661">restartPolicy + CrashLoopBackOff delay</text>
+  <text class="s b red" x="765" y="641">Liveness checks the DB → blip restarts every pod</text>
+  <text class="s" x="765" y="661">Keep it dumb: is the event loop answering at all?</text>
+  <line class="rule" x1="60" y1="673" x2="1140" y2="673"/>
+  <text class="mono" x="60" y="701">startupProbe: {httpGet: {path: /healthz, port: 8000}, periodSeconds: 10, failureThreshold: 30}</text>
+  <text class="s" x="60" y="727">Demo: readiness /readyz (every 2 s, 1 failure) flips during drain; liveness /healthz stays 200 → scripts/k8s_graceful_shutdown/k8s/app.yaml</text>
+
+  <!-- PANEL 3: requests vs limits -->
+  <rect class="panel" x="40" y="770" width="545" height="410" rx="12"/>
+  <text class="title" x="60" y="803">3 · Requests vs limits (cgroups)</text>
+  <text class="h" x="160" y="835">CPU</text><text class="h" x="365" y="835">MEMORY</text>
+  <line class="rule" x1="60" y1="845" x2="565" y2="845"/>
+  <text class="t b" x="60" y="869">request</text>
+  <text class="s" x="160" y="869">placement + relative weight</text><text class="s" x="160" y="889">when the node is busy</text>
+  <text class="s" x="365" y="869">placement + what the node</text><text class="s" x="365" y="889">reserves for you</text>
+  <line class="rule" x1="60" y1="901" x2="565" y2="901"/>
+  <text class="t b" x="60" y="925">limit</text>
+  <text class="s b red" x="160" y="925">CFS quota → THROTTLED</text><text class="s" x="160" y="945">slowed, never killed</text>
+  <text class="s b red" x="365" y="925">over it → OOMKill, exit 137</text><text class="s" x="365" y="945">can't be slowed, so it dies</text>
+  <line class="rule" x1="60" y1="957" x2="565" y2="957"/>
+  <text class="s" x="60" y="981"><tspan class="b red">CPU limit trap:</tspan> quota is per 100 ms window, so bursty</text>
+  <text class="s" x="60" y="999">async / GIL services throttle at LOW average CPU → p99 spikes.</text>
+  <text class="s" x="60" y="1017">Common stance: CPU request yes, CPU limit loose or none.</text>
+  <text class="s" x="60" y="1039"><tspan class="b red">OOMKilled, profiler flat?</tspan> (R3 Q91) cgroup counts RSS +</text>
+  <text class="s" x="60" y="1057">page cache + C memory + every worker process. Memory request = limit.</text>
+  <text class="h" x="60" y="1083">QOS CLASS</text><text class="h" x="175" y="1083">RULE</text><text class="h" x="395" y="1083">UNDER PRESSURE</text>
+  <line class="rule" x1="60" y1="1091" x2="565" y2="1091"/>
+  <text class="t b green" x="60" y="1111">Guaranteed</text><text class="s" x="175" y="1111">requests = limits (all)</text><text class="s green b" x="395" y="1111">killed last</text>
+  <text class="t b amber" x="60" y="1133">Burstable</text><text class="s" x="175" y="1133">some requests set</text><text class="s amber b" x="395" y="1133">most over request first</text>
+  <text class="t b red" x="60" y="1155">BestEffort</text><text class="s" x="175" y="1155">none set</text><text class="s red b" x="395" y="1155">killed first</text>
+
+  <!-- PANEL 4: scale + disruption -->
+  <rect class="panel" x="615" y="770" width="545" height="410" rx="12"/>
+  <text class="title" x="635" y="803">4 · Scale &amp; survive disruption</text>
+  <text class="h" x="635" y="835">HPA</text>
+  <text class="mono" x="635" y="859">desired = ceil(current × metric / target)</text>
+  <text class="s" x="635" y="879">Utilisation = % of the pod's REQUEST (none set → no HPA).</text>
+  <text class="s" x="635" y="897">Metrics: resource, custom (RPS), external (lag via KEDA).</text>
+  <text class="s b red" x="635" y="921">Trap: CPU-based HPA on an I/O-bound async service:</text>
+  <text class="s" x="635" y="939">CPU stays low while latency climbs. Scale on RPS / lag.</text>
+  <text class="s" x="635" y="957">Spiky 20× at 9am: HPA lags minutes → KEDA, schedule (R4 Q38).</text>
+  <line class="rule" x1="635" y1="969" x2="1140" y2="969"/>
+  <text class="h" x="635" y="989">POD DISRUPTION BUDGET</text>
+  <text class="s" x="635" y="1009">Caps VOLUNTARY evictions (drain, upgrade), not crashes.</text>
+  <text class="s b red" x="635" y="1027">minAvailable = replicas (or maxUnavailable: 0) blocks</text>
+  <text class="s" x="635" y="1045">every drain and cluster upgrade. Keep one pod of slack (R6 Q41).</text>
+  <line class="rule" x1="635" y1="1057" x2="1140" y2="1057"/>
+  <text class="h" x="635" y="1077">ROLLING UPDATE</text>
+  <text class="s" x="635" y="1097">Default maxSurge 25% / maxUnavailable 25%. Demo: surge 1,</text>
+  <text class="s" x="635" y="1115">unavailable 0 → never below capacity (needs a spare node).</text>
+  <text class="s" x="635" y="1133">SSE / WebSocket (R2 Q69): long grace period, reconnect with jitter.</text>
+  <text class="s" x="635" y="1151">Zones: topologySpreadConstraints + anti-affinity (R6 Q40).</text>
+
+  <!-- PANEL 5: debug ladder -->
+  <rect class="panel" x="40" y="1205" width="1120" height="300" rx="12"/>
+  <text class="title" x="60" y="1238">5 · Won't start / keeps restarting: debug ladder</text>
+  <text class="sub" x="1140" y="1238" text-anchor="end">kubectl &lt;verb&gt; · top to bottom (R2 Q72)</text>
+  <rect x="60" y="1255" width="196" height="46" rx="8" fill="#eef1f7"/>
+  <text class="mono b" x="158" y="1275" text-anchor="middle">get pods -o wide</text><text class="s" style="font-size:12px" x="158" y="1292" text-anchor="middle">STATUS, RESTARTS, node</text>
+  <rect x="281" y="1255" width="196" height="46" rx="8" fill="#eef1f7"/>
+  <text class="mono b" x="379" y="1275" text-anchor="middle">describe pod</text><text class="s" style="font-size:12px" x="379" y="1292" text-anchor="middle">Events at the bottom = the why</text>
+  <rect x="502" y="1255" width="196" height="46" rx="8" fill="#eef1f7"/>
+  <text class="mono b" x="600" y="1275" text-anchor="middle">logs --previous</text><text class="s" style="font-size:12px" x="600" y="1292" text-anchor="middle">the run that just crashed</text>
+  <rect x="723" y="1255" width="196" height="46" rx="8" fill="#eef1f7"/>
+  <text class="mono b" x="821" y="1275" text-anchor="middle">get endpointslice</text><text class="s" style="font-size:12px" x="821" y="1292" text-anchor="middle">Running but no traffic?</text>
+  <rect x="944" y="1255" width="196" height="46" rx="8" fill="#eef1f7"/>
+  <text class="mono b" x="1042" y="1275" text-anchor="middle">debug -it pod</text><text class="s" style="font-size:12px" x="1042" y="1292" text-anchor="middle">ephemeral debug container</text>
+  <line x1="257" y1="1278" x2="279" y2="1278" stroke="#5b6578" stroke-width="1.5" marker-end="url(#arr)"/>
+  <line x1="478" y1="1278" x2="500" y2="1278" stroke="#5b6578" stroke-width="1.5" marker-end="url(#arr)"/>
+  <line x1="699" y1="1278" x2="721" y2="1278" stroke="#5b6578" stroke-width="1.5" marker-end="url(#arr)"/>
+  <line x1="920" y1="1278" x2="942" y2="1278" stroke="#5b6578" stroke-width="1.5" marker-end="url(#arr)"/>
+  <text class="h" x="60" y="1335">STATUS</text><text class="h" x="270" y="1335">MEANING</text><text class="h" x="650" y="1335">LOOK AT / FIX</text>
+  <line class="rule" x1="60" y1="1345" x2="1140" y2="1345"/>
+  <text class="mono b amber" x="60" y="1369">Pending</text>
+  <text class="s" x="270" y="1369">scheduler can't place it (unschedulable)</text>
+  <text class="s" x="650" y="1369">Events: Insufficient cpu/memory, untolerated taint, unbound PVC</text>
+  <line class="rule" x1="60" y1="1379" x2="1140" y2="1379"/>
+  <text class="mono b amber" x="60" y="1398">ImagePullBackOff</text>
+  <text class="s" x="270" y="1398">kubelet can't fetch the image</text>
+  <text class="s" x="650" y="1398">wrong tag, registry auth (imagePullSecrets), rate limit</text>
+  <line class="rule" x1="60" y1="1408" x2="1140" y2="1408"/>
+  <text class="mono b red" x="60" y="1427">CrashLoopBackOff</text>
+  <text class="s" x="270" y="1427">container keeps exiting; delay 10 s → 5 min cap</text>
+  <text class="s" x="650" y="1427">logs --previous; Events 'Liveness probe failed' = probe-killed</text>
+  <line class="rule" x1="60" y1="1437" x2="1140" y2="1437"/>
+  <text class="mono b red" x="60" y="1456">exit 137 / 143 / 1</text>
+  <text class="s" x="270" y="1456">137 = SIGKILL (OOMKill, or grace period ran out)</text>
+  <text class="s" x="650" y="1456">143 = SIGTERM · 1 or 2 = app error · describe shows OOMKilled</text>
+  <line class="rule" x1="60" y1="1466" x2="1140" y2="1466"/>
+  <text class="mono b amber" x="60" y="1485">Running, 0/1 Ready</text>
+  <text class="s" x="270" y="1485">readiness failing, so no traffic</text>
+  <text class="s" x="650" y="1485">probe path/port wrong, or Service selector mismatch → empty slice</text>
+
+  <!-- FOOTER RULES -->
+  <rect x="40" y="1530" width="1120" height="140" rx="12" fill="#1b2540"/>
+  <text x="60" y="1564" font-size="19" font-weight="800" fill="#ffffff">Six rules to say out loud</text>
+  <circle cx="72" cy="1600" r="13" fill="#2457d6"/><text class="num" x="72" y="1605" text-anchor="middle">1</text>
+  <text x="94" y="1606" font-size="15" fill="#e6ebf7">Readiness gates traffic; liveness restarts</text>
+  <circle cx="440" cy="1600" r="13" fill="#2457d6"/><text class="num" x="440" y="1605" text-anchor="middle">2</text>
+  <text x="462" y="1606" font-size="15" fill="#e6ebf7">Liveness never checks dependencies</text>
+  <circle cx="790" cy="1600" r="13" fill="#2457d6"/><text class="num" x="790" y="1605" text-anchor="middle">3</text>
+  <text x="812" y="1606" font-size="15" fill="#e6ebf7">Slow starter? Add a startupProbe</text>
+  <circle cx="72" cy="1643" r="13" fill="#2457d6"/><text class="num" x="72" y="1648" text-anchor="middle">4</text>
+  <text x="94" y="1649" font-size="15" fill="#e6ebf7">CPU limit throttles; memory limit kills</text>
+  <circle cx="440" cy="1643" r="13" fill="#2457d6"/><text class="num" x="440" y="1648" text-anchor="middle">5</text>
+  <text x="462" y="1649" font-size="15" fill="#e6ebf7">HPA scales on % of requests: set them</text>
+  <circle cx="790" cy="1643" r="13" fill="#2457d6"/><text class="num" x="790" y="1648" text-anchor="middle">6</text>
+  <text x="812" y="1649" font-size="15" fill="#e6ebf7">describe, Events, then logs --previous</text>
+
+  <text x="600" y="1702" font-size="12.5" fill="#8a93a6" text-anchor="middle">interview repo · teach/infographics/cards · regenerate or edit by asking Claude Code</text>
+</svg>

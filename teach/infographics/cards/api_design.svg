@@ -1,0 +1,155 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="1450" viewBox="0 0 1200 1450" font-family="Segoe UI, Inter, Helvetica, Arial, sans-serif">
+  <style>
+    .bg { fill: #f6f7fb; }
+    .panel { fill: #ffffff; stroke: #d8deea; stroke-width: 1.5; }
+    .title { font-size: 21px; font-weight: 700; fill: #1b2540; }
+    .sub { font-size: 14px; fill: #5b6578; font-style: italic; }
+    .h { font-size: 13px; font-weight: 700; fill: #5b6578; letter-spacing: 0.6px; }
+    .t { font-size: 14.5px; fill: #263048; }
+    .s { font-size: 13px; fill: #263048; }
+    .b { font-weight: 700; }
+    .mono { font-family: Consolas, "Cascadia Mono", Menlo, monospace; font-size: 13.5px; fill: #1b2540; }
+    .blue { fill: #2457d6; } .green { fill: #138a43; } .red { fill: #c62828; } .amber { fill: #b45309; }
+    .rule { stroke: #e6eaf2; stroke-width: 1; }
+    .num { font-size: 15px; font-weight: 800; fill: #ffffff; }
+  </style>
+
+  <rect class="bg" width="1200" height="1450"/>
+
+  <!-- HEADER -->
+  <rect x="0" y="0" width="1200" height="110" fill="#1b2540"/>
+  <text x="40" y="52" font-size="32" font-weight="800" fill="#ffffff">API design, on one page</text>
+  <text x="40" y="84" font-size="16" fill="#b9c4dc">W04 card · REST contracts, paging, limits · R2 Q20–21, Q23–24, Q26, Q28 · R3 Q26, Q30 · R4 Q3 · R6 Q34, Q55</text>
+  <text x="1160" y="52" font-size="15" fill="#8fa3cc" text-anchor="end">plan/PREP_TODO.md · Week 4</text>
+
+  <!-- PANEL 1: methods + status codes -->
+  <rect class="panel" x="40" y="135" width="1120" height="310" rx="12"/>
+  <text class="title" x="60" y="168">1 · Methods &amp; status codes</text>
+  <line class="rule" x1="600" y1="182" x2="600" y2="430"/>
+
+  <text class="h" x="60" y="200">METHOD</text><text class="h" x="150" y="200">SAFE</text><text class="h" x="215" y="200">IDEMPOTENT</text><text class="h" x="330" y="200">USE</text>
+  <line class="rule" x1="60" y1="208" x2="575" y2="208"/>
+  <text class="mono b" x="60" y="232">GET</text><text class="s" x="150" y="232">yes</text><text class="s b green" x="215" y="232">yes</text><text class="s" x="330" y="232">read; cacheable</text>
+  <line class="rule" x1="60" y1="244" x2="575" y2="244"/>
+  <text class="mono b" x="60" y="258">PUT</text><text class="s" x="150" y="258">no</text><text class="s b green" x="215" y="258">yes</text><text class="s" x="330" y="258">replace the whole resource</text>
+  <line class="rule" x1="60" y1="270" x2="575" y2="270"/>
+  <text class="mono b" x="60" y="284">DELETE</text><text class="s" x="150" y="284">no</text><text class="s b green" x="215" y="284">yes</text><text class="s" x="330" y="284">2nd call 404 is fine (same state)</text>
+  <line class="rule" x1="60" y1="296" x2="575" y2="296"/>
+  <text class="mono b" x="60" y="310">PATCH</text><text class="s" x="150" y="310">no</text><text class="s b amber" x="215" y="310">maybe</text><text class="s" x="330" y="310">merge-patch yes; "+1" op no</text>
+  <line class="rule" x1="60" y1="322" x2="575" y2="322"/>
+  <text class="mono b" x="60" y="336">POST</text><text class="s" x="150" y="336">no</text><text class="s b red" x="215" y="336">NO</text><text class="s" x="330" y="336">create / action → needs a key</text>
+
+  <text class="s" x="60" y="368"><tspan class="b">Safe</tspan> = no side effects. <tspan class="b">Idempotent</tspan> = N calls, same end state</text>
+  <text class="s" x="60" y="386">(not the same response: 2nd DELETE returns 404, state is identical).</text>
+  <text class="mono" x="60" y="410">/orders/{id}/items</text><text class="s" x="240" y="410">nouns, plural · action → POST /orders/{id}/cancel</text>
+  <text class="s b red" x="60" y="432">Retry a POST after a timeout, no key → double charge. See resilience_patterns card.</text>
+
+  <text class="h" x="620" y="200">CODE</text><text class="h" x="715" y="200">MEANING · TRAP</text>
+  <line class="rule" x1="620" y1="208" x2="1140" y2="208"/>
+  <text class="mono b" x="620" y="230">200 · 204</text><text class="s" x="715" y="230">OK with body · success, no body (DELETE, PUT)</text>
+  <text class="mono b" x="620" y="251">201</text><text class="s" x="715" y="251">created, send a <tspan class="mono">Location:</tspan> header</text>
+  <text class="mono b" x="620" y="272">202</text><text class="s" x="715" y="272">accepted, not done → status URL to poll (R3 Q30)</text>
+  <text class="mono b" x="620" y="293">400 vs 422</text><text class="s" x="715" y="293">malformed JSON · parses, values invalid (FastAPI: 422)</text>
+  <text class="mono b red" x="620" y="314">401 vs 403</text><text class="s" x="715" y="314"><tspan class="b red">401 = not authenticated</tspan> (misnamed) · 403 = known, not allowed</text>
+  <text class="mono b" x="620" y="335">404 · 409</text><text class="s" x="715" y="335">missing · state conflict / duplicate create</text>
+  <text class="mono b" x="620" y="356">412</text><text class="s" x="715" y="356">If-Match / ETag failed → lost update blocked</text>
+  <text class="mono b" x="620" y="377">429</text><text class="s" x="715" y="377">slow down; always send <tspan class="mono">Retry-After</tspan></text>
+  <text class="mono b" x="620" y="398">5xx</text><text class="s" x="715" y="398"><tspan class="b">500</tspan> our bug · <tspan class="b">502</tspan> bad upstream · <tspan class="b">503</tspan> overloaded · <tspan class="b">504</tspan> upstream timeout</text>
+  <text class="s amber b" x="620" y="428">Retry 429 / 502 / 503 / 504 only. Blind retry of other 4xx never helps.</text>
+
+  <!-- PANEL 2: pagination -->
+  <rect class="panel" x="40" y="465" width="545" height="295" rx="12"/>
+  <text class="title" x="60" y="498">2 · Pagination: offset vs cursor</text>
+  <text class="h" x="60" y="528">STYLE</text><text class="h" x="150" y="528">COST</text><text class="h" x="360" y="528">WHEN ROWS ARRIVE</text>
+  <line class="rule" x1="60" y1="536" x2="565" y2="536"/>
+  <text class="t b" x="60" y="558">offset</text><text class="s" x="150" y="558">O(offset + limit): slow deep</text><text class="s b red" x="360" y="558">skips + dupes</text>
+  <line class="rule" x1="60" y1="568" x2="565" y2="568"/>
+  <text class="t b blue" x="60" y="590">cursor ★</text><text class="s" x="150" y="590">index seek: flat cost</text><text class="s b green" x="360" y="590" dy="0">stable</text>
+  <text class="mono" x="60" y="624">... LIMIT 20 OFFSET 100000</text><text class="s b red" x="345" y="624">← reads 100,020, keeps 20</text>
+  <text class="mono" x="60" y="646">WHERE (created_at, id) &lt; (:ts, :id)</text>
+  <text class="mono" x="60" y="666">ORDER BY created_at DESC, id DESC LIMIT 21</text><text class="s b green" x="400" y="666">← seek</text>
+  <text class="t" x="60" y="696">Cursor = <tspan class="b">opaque</tspan> base64 of (created_at, id)</text>
+  <text class="s" x="60" y="716">id breaks ties · fetch LIMIT+1 → has_more · needs that index</text>
+  <text class="s amber b" x="60" y="738">Cost: no jump-to-page-N, no cheap total count.</text>
+
+  <!-- PANEL 3: rate limiting -->
+  <rect class="panel" x="615" y="465" width="545" height="295" rx="12"/>
+  <text class="title" x="635" y="498">3 · Rate limiting</text>
+  <text class="h" x="635" y="528">ALGORITHM</text><text class="h" x="790" y="528">BEHAVIOUR</text><text class="h" x="975" y="528">STATE PER KEY</text>
+  <line class="rule" x1="635" y1="536" x2="1140" y2="536"/>
+  <text class="t b blue" x="635" y="558">Token bucket ★</text><text class="s" x="790" y="558">burst ≤ b, average r/s</text><text class="s" x="975" y="558">2 numbers</text>
+  <line class="rule" x1="635" y1="568" x2="1140" y2="568"/>
+  <text class="t b" x="635" y="588">Sliding log</text><text class="s" x="790" y="588">exact</text><text class="s" x="975" y="588">grows with requests</text>
+  <line class="rule" x1="635" y1="598" x2="1140" y2="598"/>
+  <text class="t b" x="635" y="618">Sliding counter</text><text class="s" x="790" y="618">approx., smooth</text><text class="s" x="975" y="618">2 counters</text>
+  <line class="rule" x1="635" y1="628" x2="1140" y2="628"/>
+  <text class="t b" x="635" y="648">Fixed window</text><text class="s b red" x="790" y="648">2× burst at the edge</text><text class="s" x="975" y="648">1 counter</text>
+  <text class="s b" x="635" y="680">Reject:</text><text class="mono" x="690" y="680">429 + Retry-After: 12</text>
+  <text class="s b" x="635" y="702">Headers:</text><text class="mono" x="700" y="702">RateLimit-Limit/Remaining/Reset</text><text class="s" x="950" y="702">(legacy X-RateLimit-*)</text>
+  <text class="s" x="635" y="724"><tspan class="b">Key by API key / tenant</tspan>, not IP alone (NAT, shared egress)</text>
+  <text class="s" x="635" y="744"><tspan class="b">Gateway</tspan> = coarse, edge · <tspan class="b">Redis + Lua</tspan> = atomic, shared across pods</text>
+
+  <!-- PANEL 4: evolve and protect -->
+  <rect class="panel" x="40" y="780" width="1120" height="240" rx="12"/>
+  <text class="title" x="60" y="813">4 · Evolve &amp; protect the contract</text>
+  <line class="rule" x1="420" y1="828" x2="420" y2="1005"/>
+  <line class="rule" x1="800" y1="828" x2="800" y2="1005"/>
+
+  <text class="h" x="60" y="845">VERSIONING</text>
+  <text class="mono b" x="60" y="867">/v1/orders</text><text class="s" x="170" y="867"><tspan class="b blue">★ default</tspan> · visible, cacheable</text>
+  <text class="mono" x="60" y="889">Accept: vnd.x.v2+json</text><text class="s" x="240" y="889">clean URL, hard to cache</text>
+  <text class="s b green" x="60" y="915">Non-breaking: new optional field / endpoint</text>
+  <text class="s b red" x="60" y="935">Breaking: remove / rename / retype / new required</text>
+  <text class="s" x="60" y="957">Clients: tolerant reader, ignore unknown fields</text>
+  <text class="s" x="60" y="977">Retire: <tspan class="mono">Deprecation</tspan> + <tspan class="mono">Sunset</tspan> headers, track usage</text>
+
+  <text class="h" x="440" y="845">LOST UPDATES · ETAG + IF-MATCH</text>
+  <text class="mono" x="440" y="867">GET /orders/7  → ETag: "v12"</text>
+  <text class="mono" x="440" y="889">PUT /orders/7  If-Match: "v12"</text>
+  <text class="s b green" x="440" y="911">match → 200 + new ETag "v13"</text>
+  <text class="s b red" x="440" y="931">stale → 412 Precondition Failed</text>
+  <text class="s" x="440" y="951">client re-GETs, merges, retries</text>
+  <text class="mono" x="440" y="973">UPDATE … WHERE id=7 AND version=12</text>
+  <text class="s" x="440" y="991">0 rows → 412 · header missing → 428</text>
+
+  <text class="h" x="820" y="845">ERRORS · RFC 9457 PROBLEM+JSON</text>
+  <text class="mono" x="820" y="867">application/problem+json</text>
+  <text class="mono" x="820" y="889">{"type": "/errors/out-of-stock",</text>
+  <text class="mono" x="820" y="907"> "title": "Out of stock",</text>
+  <text class="mono" x="820" y="925"> "status": 409, "instance": "/orders/7",</text>
+  <text class="mono" x="820" y="943"> "detail": "SKU 42 has 0 left"}</text>
+  <text class="s" x="820" y="967">stable machine type, human detail</text>
+  <text class="s" x="820" y="985">extensions: request_id, errors[] per field</text>
+  <text class="s b red" x="820" y="1003">never leak stack traces or SQL</text>
+
+  <!-- PANEL 5: pick the style -->
+  <rect class="panel" x="40" y="1040" width="1120" height="195" rx="12"/>
+  <text class="title" x="60" y="1073">5 · Pick the API style</text>
+  <text class="h" x="60" y="1103">STYLE</text><text class="h" x="260" y="1103">PICK WHEN</text><text class="h" x="760" y="1103">WATCH OUT</text>
+  <line class="rule" x1="60" y1="1111" x2="1140" y2="1111"/>
+  <text class="t b blue" x="60" y="1135">REST + JSON</text><text class="s" x="260" y="1135">public / partner APIs, CRUD, cacheable, any client</text><text class="s" x="760" y="1135">over/under-fetching, chatty clients</text>
+  <line class="rule" x1="60" y1="1147" x2="1140" y2="1147"/>
+  <text class="t b blue" x="60" y="1161">gRPC</text><text class="s" x="260" y="1161">internal service-to-service, streaming, deadlines, strict proto</text><text class="s" x="760" y="1161">no browser · HTTP/2 pins L4 balancing</text>
+  <line class="rule" x1="60" y1="1173" x2="1140" y2="1173"/>
+  <text class="t b blue" x="60" y="1187">GraphQL</text><text class="s" x="260" y="1187">many client shapes (web + mobile), aggregating backends</text><text class="s" x="760" y="1187">N+1 → DataLoader · cost limits, caching</text>
+  <line class="rule" x1="60" y1="1199" x2="1140" y2="1199"/>
+  <text class="t b blue" x="60" y="1213">Webhooks / SSE</text><text class="s" x="260" y="1213">long jobs, push to partners, LLM token streams</text><text class="s" x="760" y="1213">at-least-once → dedupe · sign + replay window</text>
+
+  <!-- FOOTER RULES -->
+  <rect x="40" y="1255" width="1120" height="140" rx="12" fill="#1b2540"/>
+  <text x="60" y="1289" font-size="19" font-weight="800" fill="#ffffff">Six rules to say out loud</text>
+  <circle cx="72" cy="1325" r="13" fill="#2457d6"/><text class="num" x="72" y="1330" text-anchor="middle">1</text>
+  <text x="94" y="1331" font-size="15" fill="#e6ebf7">PUT/DELETE idempotent; POST needs a key</text>
+  <circle cx="440" cy="1325" r="13" fill="#2457d6"/><text class="num" x="440" y="1330" text-anchor="middle">2</text>
+  <text x="462" y="1331" font-size="15" fill="#e6ebf7">401 = who are you, 403 = not you</text>
+  <circle cx="790" cy="1325" r="13" fill="#2457d6"/><text class="num" x="790" y="1330" text-anchor="middle">3</text>
+  <text x="812" y="1331" font-size="15" fill="#e6ebf7">Cursors seek; offsets scan and skip</text>
+  <circle cx="72" cy="1368" r="13" fill="#2457d6"/><text class="num" x="72" y="1373" text-anchor="middle">4</text>
+  <text x="94" y="1374" font-size="15" fill="#e6ebf7">Additive is safe; removal means a new version</text>
+  <circle cx="440" cy="1368" r="13" fill="#2457d6"/><text class="num" x="440" y="1373" text-anchor="middle">5</text>
+  <text x="462" y="1374" font-size="15" fill="#e6ebf7">ETag + If-Match: stale write → 412</text>
+  <circle cx="790" cy="1368" r="13" fill="#2457d6"/><text class="num" x="790" y="1373" text-anchor="middle">6</text>
+  <text x="812" y="1374" font-size="15" fill="#e6ebf7">429 always carries Retry-After</text>
+
+  <text x="600" y="1428" font-size="12.5" fill="#8a93a6" text-anchor="middle">interview repo · teach/infographics/cards · regenerate or edit by asking Claude Code</text>
+</svg>

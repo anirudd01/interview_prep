@@ -1,0 +1,159 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="1435" viewBox="0 0 1200 1435" font-family="Segoe UI, Inter, Helvetica, Arial, sans-serif">
+  <style>
+    .bg { fill: #f6f7fb; }
+    .panel { fill: #ffffff; stroke: #d8deea; stroke-width: 1.5; }
+    .title { font-size: 21px; font-weight: 700; fill: #1b2540; }
+    .sub { font-size: 14px; fill: #5b6578; font-style: italic; }
+    .h { font-size: 13px; font-weight: 700; fill: #5b6578; letter-spacing: 0.6px; }
+    .t { font-size: 14.5px; fill: #263048; }
+    .s { font-size: 13px; fill: #263048; }
+    .b { font-weight: 700; }
+    .mono { font-family: Consolas, "Cascadia Mono", Menlo, monospace; font-size: 13.5px; fill: #1b2540; }
+    .blue { fill: #2457d6; } .green { fill: #138a43; } .red { fill: #c62828; } .amber { fill: #b45309; }
+    .rule { stroke: #e6eaf2; stroke-width: 1; }
+    .num { font-size: 15px; font-weight: 800; fill: #ffffff; }
+  </style>
+  <defs>
+    <marker id="arr" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto">
+      <path d="M0,0 L10,5 L0,10 z" fill="#5b6578"/>
+    </marker>
+  </defs>
+
+  <rect class="bg" width="1200" height="1435"/>
+
+  <!-- HEADER -->
+  <rect x="0" y="0" width="1200" height="110" fill="#1b2540"/>
+  <text x="40" y="52" font-size="32" font-weight="800" fill="#ffffff">Distributed systems theory, on one page</text>
+  <text x="40" y="84" font-size="16" fill="#b9c4dc">W8 card · R6 Q19–23 · R3 Q35–36, Q42–43 · R2 Q54 · CAP, quorums, Raft, exactly-once, clocks</text>
+  <text x="1160" y="52" font-size="15" fill="#8fa3cc" text-anchor="end">plan/PREP_TODO.md · W8</text>
+
+  <!-- PANEL 1: CAP + PACELC -->
+  <rect class="panel" x="40" y="135" width="1120" height="300" rx="12"/>
+  <text class="title" x="60" y="168">1 · CAP and PACELC, stated correctly</text>
+  <text class="s b red" x="60" y="193">Trap: "pick 2 of 3". Partitions are not optional, so CAP only says: DURING a partition, choose C or A.</text>
+  <text class="s" x="60" y="213">PACELC adds the everyday case: if Partition → A or C; Else → Latency or Consistency (replication costs round trips even when healthy).</text>
+  <text class="h" x="60" y="238">SYSTEM</text><text class="h" x="280" y="238">CAP (PARTITION)</text><text class="h" x="430" y="238">PACELC</text><text class="h" x="560" y="238">WHY / THE KNOB</text>
+  <line class="rule" x1="60" y1="246" x2="1140" y2="246"/>
+  <text class="t b" x="60" y="270">Postgres, single primary</text><text class="t b blue" x="280" y="270">CP</text><text class="mono" x="430" y="270">PC/EC</text>
+  <text class="s" x="560" y="270">primary cut off → no writes. Sync replica = consistent but slower; async = stale reads</text>
+  <line class="rule" x1="60" y1="283" x2="1140" y2="283"/>
+  <text class="t b" x="60" y="306">DynamoDB / Cassandra</text><text class="t b green" x="280" y="306">AP, tunable</text><text class="mono" x="430" y="306">PA/EL</text>
+  <text class="s" x="560" y="306">default = available + fast. Quorum / strongly consistent reads shift it toward PC/EC</text>
+  <line class="rule" x1="60" y1="319" x2="1140" y2="319"/>
+  <text class="t b" x="60" y="342">Spanner</text><text class="t b blue" x="280" y="342">CP</text><text class="mono" x="430" y="342">PC/EC</text>
+  <text class="s" x="560" y="342">TrueTime + commit-wait: pays latency to get external consistency across regions</text>
+  <line class="rule" x1="60" y1="355" x2="1140" y2="355"/>
+  <text class="t b" x="60" y="378">etcd / ZooKeeper</text><text class="t b blue" x="280" y="378">CP</text><text class="mono" x="430" y="378">PC/EC</text>
+  <text class="s" x="560" y="378">Raft / Zab: the minority side refuses requests; it is the coordination store, not the data store</text>
+  <line class="rule" x1="60" y1="391" x2="1140" y2="391"/>
+  <text class="t b" x="60" y="414">Kafka</text><text class="t b amber" x="280" y="414">by config</text><text class="mono" x="430" y="414">tunable</text>
+  <text class="s" x="560" y="414">acks=all + min.insync.replicas=2 + no unclean election = CP; acks=1 trades safety for latency</text>
+
+  <!-- PANEL 2: consistency ladder -->
+  <rect class="panel" x="40" y="460" width="545" height="380" rx="12"/>
+  <text class="title" x="60" y="493">2 · Consistency ladder, strong to weak</text>
+  <text class="sub" x="60" y="514">stronger = more coordination = more latency</text>
+  <text class="h" x="60" y="545">MODEL</text><text class="h" x="230" y="545">WHAT A CLIENT SEES</text>
+  <line class="rule" x1="60" y1="553" x2="565" y2="553"/>
+  <text class="t b blue" x="60" y="578">Linearizable</text>
+  <text class="s" x="230" y="577">Behaves like ONE copy: a read sees the latest</text><text class="s" x="230" y="596">completed write, in real-time order. etcd, Spanner.</text>
+  <line class="rule" x1="60" y1="605" x2="565" y2="605"/>
+  <text class="t b blue" x="60" y="629">Sequential</text>
+  <text class="s" x="230" y="628">Everyone sees the same single order, but it may</text><text class="s" x="230" y="647">lag real time. Nothing about wall-clock recency.</text>
+  <line class="rule" x1="60" y1="656" x2="565" y2="656"/>
+  <text class="t b blue" x="60" y="680">Causal</text>
+  <text class="s" x="230" y="679">If B was caused by A, nobody sees B before A.</text><text class="s" x="230" y="698">Unrelated writes can show up in any order.</text>
+  <line class="rule" x1="60" y1="707" x2="565" y2="707"/>
+  <text class="t b blue" x="60" y="731">Session</text><text class="s b" x="60" y="749">read-your-writes</text>
+  <text class="s" x="230" y="730">You see your own writes; reads never go back in time</text><text class="s" x="230" y="749">(monotonic). Sticky routing or a version token.</text>
+  <line class="rule" x1="60" y1="758" x2="565" y2="758"/>
+  <text class="t b amber" x="60" y="782">Eventual</text>
+  <text class="s" x="230" y="781">Replicas converge if writes stop. Meanwhile reads</text><text class="s" x="230" y="800">may be stale or out of order. Feeds, counters, caches.</text>
+  <text class="s b red" x="60" y="818">Serializable ≠ linearizable (txn isolation vs recency). Strict serializable = both.</text>
+
+  <!-- PANEL 3: quorums + clocks -->
+  <rect class="panel" x="615" y="460" width="545" height="380" rx="12"/>
+  <text class="title" x="635" y="493">3 · Quorums: R + W &gt; N</text>
+  <text class="sub" x="635" y="514">read set and write set must share at least one replica</text>
+  <rect x="635" y="528" width="100" height="30" rx="6" fill="#e6f5ec" stroke="#138a43" stroke-width="1.5"/><text class="mono b" x="685" y="548" text-anchor="middle">A</text>
+  <rect x="755" y="528" width="100" height="30" rx="6" fill="#e6f5ec" stroke="#2457d6" stroke-width="3"/><text class="mono b" x="805" y="548" text-anchor="middle">B</text>
+  <rect x="875" y="528" width="100" height="30" rx="6" fill="#eaf1ff" stroke="#2457d6" stroke-width="1.5"/><text class="mono b" x="925" y="548" text-anchor="middle">C</text>
+  <text class="mono" x="995" y="538">N=3 W=2 R=2</text><text class="s" x="995" y="555">2 + 2 &gt; 3 → overlap</text>
+  <text class="s green" x="635" y="580">write acked by A, B</text><text class="s blue" x="775" y="580">read asks B, C</text><text class="s b" x="885" y="580">B is in both: has latest</text>
+  <text class="h" x="635" y="608">CONFIG</text><text class="h" x="740" y="608">RESULT</text>
+  <line class="rule" x1="635" y1="616" x2="1140" y2="616"/>
+  <text class="mono" x="635" y="638">W=2 R=2</text><text class="s" x="740" y="638">balanced; survives 1 node down (2 of 3 must be up)</text>
+  <text class="mono" x="635" y="660">W=3 R=1</text><text class="s" x="740" y="660">fast reads; any one node down blocks writes</text>
+  <text class="mono" x="635" y="682">W=1 R=1</text><text class="s" x="740" y="682">1 + 1 ≤ 3: no overlap = eventual, fastest</text>
+  <line class="rule" x1="635" y1="694" x2="1140" y2="694"/>
+  <text class="s b red" x="635" y="714">Sloppy quorum + hinted handoff:</text><text class="s" x="860" y="714">writes land on stand-ins,</text>
+  <text class="s" x="635" y="733">so R + W &gt; N no longer guarantees overlap until handoff completes.</text>
+  <text class="s b red" x="635" y="757">Last-write-wins + clock skew:</text><text class="s" x="822" y="757">the "newer" wall-clock</text>
+  <text class="s" x="635" y="776">write wins, so a skewed node silently drops real data. Use version vectors or CRDTs.</text>
+  <line class="rule" x1="635" y1="790" x2="1140" y2="790"/>
+  <text class="s" x="635" y="810"><tspan class="b blue">Logical clocks:</tspan> Lamport (counter, max+1) orders; vector clocks detect concurrency.</text>
+
+  <g transform="translate(0,15)">
+  <!-- PANEL 4: Raft + fencing -->
+  <rect class="panel" x="40" y="850" width="545" height="350" rx="12"/>
+  <text class="title" x="60" y="883">4 · Raft in one picture</text>
+  <text class="sub" x="60" y="905">term = logical clock · one vote per node per term</text>
+  <rect x="60" y="920" width="95" height="38" rx="8" fill="#eef1f7"/><text class="t b" x="107" y="944" text-anchor="middle">Follower</text>
+  <rect x="245" y="920" width="105" height="38" rx="8" fill="#fdf1e3" stroke="#b45309"/><text class="t b amber" x="297" y="944" text-anchor="middle">Candidate</text>
+  <rect x="440" y="920" width="95" height="38" rx="8" fill="#e6f5ec" stroke="#138a43"/><text class="t b green" x="487" y="944" text-anchor="middle">Leader</text>
+  <line x1="155" y1="944" x2="243" y2="944" stroke="#5b6578" stroke-width="1.5" marker-end="url(#arr)"/>
+  <text x="199" y="936" font-size="11.5" fill="#5b6578" text-anchor="middle">no heartbeat</text>
+  <line x1="350" y1="944" x2="438" y2="944" stroke="#5b6578" stroke-width="1.5" marker-end="url(#arr)"/>
+  <text x="394" y="936" font-size="11.5" fill="#5b6578" text-anchor="middle">majority vote</text>
+  <path d="M487 958 L487 980 L107 980 L107 960" fill="none" stroke="#5b6578" stroke-width="1.5" marker-end="url(#arr)"/>
+  <text x="297" y="998" font-size="11.5" fill="#5b6578" text-anchor="middle">sees a higher term → steps down</text>
+  <text class="s" x="60" y="1026"><tspan class="b">Write:</tspan> leader appends to its log → AppendEntries to followers →</text>
+  <text class="s" x="60" y="1045">entry is <tspan class="b green">COMMITTED once a majority has it</tspan> → apply → ack the client.</text>
+  <line class="rule" x1="60" y1="1058" x2="565" y2="1058"/>
+  <text class="mono" x="60" y="1080">N=3 → maj 2 → survives 1 · N=4 → 3 → 1 · N=5 → 3 → 2</text>
+  <text class="s" x="60" y="1099">Even N adds cost, not tolerance. Minority side can't elect or commit.</text>
+  <line class="rule" x1="60" y1="1112" x2="565" y2="1112"/>
+  <text class="s b red" x="60" y="1134">Split-brain: a GC-paused old leader wakes up and still writes.</text>
+  <text class="s" x="60" y="1153"><tspan class="b">Fencing token</tspan> = a number that only grows per lease (Raft term works).</text>
+  <text class="s" x="60" y="1172">Storage rejects any token lower than the highest it has seen.</text>
+
+  <!-- PANEL 5: exactly-once -->
+  <rect class="panel" x="615" y="850" width="545" height="350" rx="12"/>
+  <text class="title" x="635" y="883">5 · Exactly-once = at-least-once + idempotence</text>
+  <text class="sub" x="635" y="905">delivery is never exactly-once; the EFFECT can be</text>
+  <text class="h" x="635" y="932">TECHNIQUE</text><text class="h" x="800" y="932">WHAT IT GIVES YOU</text>
+  <line class="rule" x1="635" y1="940" x2="1140" y2="940"/>
+  <text class="s b blue" x="635" y="962">Idempotent consumer</text>
+  <text class="s" x="800" y="962">Dedupe on event_id (UNIQUE / ON CONFLICT DO</text><text class="s" x="800" y="981">NOTHING) in the SAME txn as the effect.</text>
+  <line class="rule" x1="635" y1="990" x2="1140" y2="990"/>
+  <text class="s b blue" x="635" y="1010">Transactional outbox</text>
+  <text class="s" x="800" y="1010">Business row + outbox row in ONE txn; relay/CDC</text><text class="s" x="800" y="1029">publishes. Fixes dual write; may resend → dedupe.</text>
+  <line class="rule" x1="635" y1="1038" x2="1140" y2="1038"/>
+  <text class="s b blue" x="635" y="1058">Idempotent producer</text>
+  <text class="s" x="800" y="1058">Producer ID + sequence number drops retry</text><text class="s" x="800" y="1077">duplicates, per partition, per producer session.</text>
+  <line class="rule" x1="635" y1="1086" x2="1140" y2="1086"/>
+  <text class="s b blue" x="635" y="1106">Kafka transactions</text>
+  <text class="s" x="800" y="1106">consume → process → produce + offsets, atomic</text><text class="s" x="800" y="1125">(read_committed consumers).</text>
+  <text class="s b red" x="800" y="1144">Only INSIDE Kafka; a DB or HTTP write is outside.</text>
+  <line class="rule" x1="635" y1="1156" x2="1140" y2="1156"/>
+  <text class="t b" x="635" y="1180">Kafka → Postgres: write, THEN commit offset, upsert.</text>
+
+  <!-- FOOTER RULES -->
+  <rect x="40" y="1225" width="1120" height="140" rx="12" fill="#1b2540"/>
+  <text x="60" y="1259" font-size="19" font-weight="800" fill="#ffffff">Six rules to say out loud</text>
+  <circle cx="72" cy="1295" r="13" fill="#2457d6"/><text class="num" x="72" y="1300" text-anchor="middle">1</text>
+  <text x="94" y="1301" font-size="15" fill="#e6ebf7">CAP: C or A only during a partition</text>
+  <circle cx="440" cy="1295" r="13" fill="#2457d6"/><text class="num" x="440" y="1300" text-anchor="middle">2</text>
+  <text x="462" y="1301" font-size="15" fill="#e6ebf7">Else: latency vs consistency (PACELC)</text>
+  <circle cx="790" cy="1295" r="13" fill="#2457d6"/><text class="num" x="790" y="1300" text-anchor="middle">3</text>
+  <text x="812" y="1301" font-size="15" fill="#e6ebf7">R + W &gt; N, unless the quorum is sloppy</text>
+  <circle cx="72" cy="1338" r="13" fill="#2457d6"/><text class="num" x="72" y="1343" text-anchor="middle">4</text>
+  <text x="94" y="1344" font-size="15" fill="#e6ebf7">Raft: majority elects, majority commits</text>
+  <circle cx="440" cy="1338" r="13" fill="#2457d6"/><text class="num" x="440" y="1343" text-anchor="middle">5</text>
+  <text x="462" y="1344" font-size="15" fill="#e6ebf7">Exactly-once = at-least-once + dedupe</text>
+  <circle cx="790" cy="1338" r="13" fill="#2457d6"/><text class="num" x="790" y="1343" text-anchor="middle">6</text>
+  <text x="812" y="1344" font-size="15" fill="#e6ebf7">Order by logical clocks, fence by token</text>
+
+  <text x="600" y="1398" font-size="12.5" fill="#8a93a6" text-anchor="middle">interview repo · teach/infographics/cards · regenerate or edit by asking Claude Code</text>
+  </g>
+</svg>

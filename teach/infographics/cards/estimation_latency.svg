@@ -1,0 +1,200 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="1910" viewBox="0 0 1200 1910" font-family="Segoe UI, Inter, Helvetica, Arial, sans-serif">
+  <style>
+    .bg { fill: #f6f7fb; }
+    .panel { fill: #ffffff; stroke: #d8deea; stroke-width: 1.5; }
+    .title { font-size: 21px; font-weight: 700; fill: #1b2540; }
+    .sub { font-size: 14px; fill: #5b6578; font-style: italic; }
+    .h { font-size: 13px; font-weight: 700; fill: #5b6578; letter-spacing: 0.6px; }
+    .t { font-size: 14.5px; fill: #263048; }
+    .s { font-size: 13px; fill: #263048; }
+    .b { font-weight: 700; }
+    .mono { font-family: Consolas, "Cascadia Mono", Menlo, monospace; font-size: 13.5px; fill: #1b2540; }
+    .blue { fill: #2457d6; } .green { fill: #138a43; } .red { fill: #c62828; } .amber { fill: #b45309; }
+    .rule { stroke: #e6eaf2; stroke-width: 1; }
+    .num { font-size: 15px; font-weight: 800; fill: #ffffff; }
+  </style>
+
+  <rect class="bg" width="1200" height="1910"/>
+
+  <!-- HEADER -->
+  <rect x="0" y="0" width="1200" height="110" fill="#1b2540"/>
+  <text x="40" y="52" font-size="32" font-weight="800" fill="#ffffff">Estimation &amp; latency numbers</text>
+  <text x="40" y="84" font-size="16" fill="#b9c4dc">W13 card · order of magnitude, say so out loud · R1 Q41, Q44 · R4 Q11 · R6 Q75–77, Q80–81 · R7 Q48–51</text>
+  <text x="1160" y="52" font-size="15" fill="#8fa3cc" text-anchor="end">plan/PREP_TODO.md · Week 13</text>
+
+  <!-- PANEL 1: latency numbers, log bars -->
+  <rect class="panel" x="40" y="135" width="1120" height="480" rx="12"/>
+  <text class="title" x="60" y="168">1 · Latency numbers (modern hardware, order of magnitude)</text>
+  <text class="sub" x="60" y="190">bars are LOG scale: each gridline = 1,000×. Quote ranges, never false precision.</text>
+  <rect x="800" y="178" width="12" height="12" rx="2" fill="#2457d6"/><text class="s" x="818" y="189">CPU / RAM</text>
+  <rect x="893" y="178" width="12" height="12" rx="2" fill="#138a43"/><text class="s" x="911" y="189">storage</text>
+  <rect x="975" y="178" width="12" height="12" rx="2" fill="#b45309"/><text class="s" x="993" y="189">network</text>
+  <rect x="1062" y="178" width="12" height="12" rx="2" fill="#5b6578" fill-opacity="0.35"/><text class="s" x="1080" y="189">= range</text>
+
+  <text class="h" x="60" y="222">OPERATION</text><text class="h" x="305" y="222">~TIME</text>
+  <text class="h" x="400.7" y="222" text-anchor="middle">1 ns</text>
+  <text class="h" x="556.7" y="222" text-anchor="middle">1 µs</text>
+  <text class="h" x="712.7" y="222" text-anchor="middle">1 ms</text>
+  <text class="h" x="868.7" y="222" text-anchor="middle">1 s</text>
+  <text class="h" x="895" y="222">WHY IT MATTERS</text>
+  <line class="rule" x1="60" y1="232" x2="1140" y2="232"/>
+  <!-- gridlines -->
+  <line x1="400.7" y1="236" x2="400.7" y2="546" stroke="#d8deea" stroke-width="1" stroke-dasharray="3 3"/>
+  <line x1="556.7" y1="236" x2="556.7" y2="546" stroke="#d8deea" stroke-width="1" stroke-dasharray="3 3"/>
+  <line x1="712.7" y1="236" x2="712.7" y2="546" stroke="#d8deea" stroke-width="1" stroke-dasharray="3 3"/>
+  <line x1="868.7" y1="236" x2="868.7" y2="546" stroke="#d8deea" stroke-width="1" stroke-dasharray="3 3"/>
+
+  <!-- rows: base = 254 + 22*i -->
+  <text class="t" x="60" y="254">L1 cache reference</text><text class="s b" x="305" y="254">~1 ns</text>
+  <rect x="385" y="243" width="15.7" height="12" rx="2" fill="#2457d6"/><text class="s" x="895" y="254">per-core, ~32–64 KB</text>
+
+  <text class="t" x="60" y="276">L2 cache reference</text><text class="s b" x="305" y="276">~4 ns</text>
+  <rect x="385" y="265" width="47" height="12" rx="2" fill="#2457d6"/><text class="s" x="895" y="276">~256 KB–2 MB per core</text>
+
+  <text class="t" x="60" y="298">Branch mispredict</text><text class="s b" x="305" y="298">~5 ns</text>
+  <rect x="385" y="287" width="52" height="12" rx="2" fill="#2457d6"/><text class="s" x="895" y="298">pipeline flush</text>
+
+  <text class="t" x="60" y="320">Mutex lock/unlock (uncontended)</text><text class="s b" x="305" y="320">~25 ns</text>
+  <rect x="385" y="309" width="88.4" height="12" rx="2" fill="#2457d6"/><text class="s" x="895" y="320">contended: µs and up</text>
+
+  <text class="t" x="60" y="342">Main memory (RAM) reference</text><text class="s b" x="305" y="342">~100 ns</text>
+  <rect x="385" y="331" width="119.7" height="12" rx="2" fill="#2457d6"/><text class="s" x="895" y="342">one cache miss ≈ 100 L1 hits</text>
+
+  <text class="t" x="60" y="364">Compress 1 KB (lz4 / snappy)</text><text class="s b" x="305" y="364">~2 µs</text>
+  <rect x="385" y="353" width="187.3" height="12" rx="2" fill="#2457d6"/><text class="s" x="895" y="364">cheap: compress big payloads</text>
+
+  <text class="t" x="60" y="386">SSD random read (4 KB)</text><text class="s b" x="305" y="386">16–100 µs</text>
+  <rect x="385" y="375" width="234.3" height="12" rx="2" fill="#138a43"/><rect x="619.3" y="375" width="41.3" height="12" rx="2" fill="#138a43" fill-opacity="0.35"/><text class="s" x="895" y="386">NVMe ~20 µs, SATA ~100 µs</text>
+
+  <text class="t" x="60" y="408">Read 1 MB sequential, RAM</text><text class="s b" x="305" y="408">50–100 µs</text>
+  <rect x="385" y="397" width="260" height="12" rx="2" fill="#2457d6"/><rect x="645" y="397" width="15.6" height="12" rx="2" fill="#2457d6" fill-opacity="0.35"/><text class="s" x="895" y="408">~10 GB/s single thread</text>
+
+  <text class="t" x="60" y="430">Redis GET over the network</text><text class="s b" x="305" y="430">0.2–1 ms</text>
+  <rect x="385" y="419" width="291.3" height="12" rx="2" fill="#b45309"/><rect x="676.3" y="419" width="36.4" height="12" rx="2" fill="#b45309" fill-opacity="0.35"/><text class="s" x="895" y="430">the network RTT, not Redis</text>
+
+  <text class="t" x="60" y="452">Read 1 MB sequential, SSD</text><text class="s b" x="305" y="452">0.3–1 ms</text>
+  <rect x="385" y="441" width="300.4" height="12" rx="2" fill="#138a43"/><rect x="685.4" y="441" width="27.3" height="12" rx="2" fill="#138a43" fill-opacity="0.35"/><text class="s" x="895" y="452">~1–3 GB/s NVMe</text>
+
+  <text class="t" x="60" y="474">Same-DC round trip</text><text class="s b" x="305" y="474">~0.5 ms</text>
+  <rect x="385" y="463" width="312" height="12" rx="2" fill="#b45309"/><text class="s" x="895" y="474">every sync call in a loop pays this</text>
+
+  <text class="t" x="60" y="496">Cross-AZ round trip (same region)</text><text class="s b" x="305" y="496">1–2 ms</text>
+  <rect x="385" y="485" width="327.7" height="12" rx="2" fill="#b45309"/><rect x="712.7" y="485" width="15.6" height="12" rx="2" fill="#b45309" fill-opacity="0.35"/><text class="s" x="895" y="496">sync replica adds it to each commit</text>
+
+  <text class="t" x="60" y="518">HDD seek</text><text class="s b" x="305" y="518">2–10 ms</text>
+  <rect x="385" y="507" width="343.3" height="12" rx="2" fill="#138a43"/><rect x="728.3" y="507" width="36.4" height="12" rx="2" fill="#138a43" fill-opacity="0.35"/><text class="s" x="895" y="518">why random I/O hurt on spinning disks</text>
+
+  <text class="t" x="60" y="540">Cross-continent round trip</text><text class="s b" x="305" y="540">70–150 ms</text>
+  <rect x="385" y="529" width="423.6" height="12" rx="2" fill="#b45309"/><rect x="808.6" y="529" width="17.2" height="12" rx="2" fill="#b45309" fill-opacity="0.35"/><text class="s" x="895" y="540">physics: CDN / regional replicas</text>
+
+  <line class="rule" x1="60" y1="554" x2="1140" y2="554"/>
+  <text class="t b" x="60" y="577">Ratios to remember:</text>
+  <text class="mono" x="228" y="577">RAM 100 ns → network hop 500 µs = 5,000×  ·  cross-continent 100 ms = 1,000,000× RAM</text>
+  <text class="s b red" x="60" y="601">Trap: N+1 calls. 100 sequential same-DC calls × 0.5 ms = 50 ms before any real work. Batch, pipeline or fan out.</text>
+
+  <!-- PANEL 2: method + shortcuts -->
+  <rect class="panel" x="40" y="640" width="545" height="355" rx="12"/>
+  <text class="title" x="60" y="673">2 · Method and unit shortcuts</text>
+  <text class="t b" x="60" y="703"><tspan class="blue">1</tspan> state assumptions  →  <tspan class="blue">2</tspan> round to one digit  →  <tspan class="blue">3</tspan> sanity-check</text>
+  <text class="s" x="60" y="724">Graded on method. 20% off is fine; 10× off is not.</text>
+  <line class="rule" x1="60" y1="736" x2="565" y2="736"/>
+  <text class="h" x="60" y="758">SHORTCUT</text><text class="h" x="215" y="758">SAY IT AS</text>
+  <text class="mono" x="60" y="784">2^10 / 2^20 / 2^30</text><text class="s" x="215" y="784">≈ 1K / 1M / 1G (really 1.02K / 1.05M / 1.07G)</text>
+  <text class="mono" x="60" y="808">1 day</text><text class="s" x="215" y="808">86,400 s ≈ 10^5 s (sketch ÷10^5, quote ÷86,400)</text>
+  <text class="mono" x="60" y="832">1 month / 1 year</text><text class="s" x="215" y="832">≈ 2.6M s / 31.5M s (≈ π × 10^7)</text>
+  <text class="mono" x="60" y="856">req/day → RPS</text><text class="s" x="215" y="856">1M≈12 · 10M≈120 · 100M≈1.2k · 1B≈12k per second</text>
+  <text class="mono" x="60" y="880">peak / avg</text><text class="s" x="215" y="880">steady consumer 2–3× · launches, sales, push 10×+</text>
+  <text class="mono" x="60" y="904">bandwidth</text><text class="s" x="215" y="904">MB/s × 8 = Mbps · 1 Gbps ≈ 125 MB/s</text>
+  <text class="mono" x="60" y="928">storage</text><text class="s" x="215" y="928">1M rows × 1 KB = 1 GB · 1B × 1 KB = 1 TB</text>
+  <text class="s b red" x="60" y="958">Trap: 10^5 s is 14% low, so 1M/day = 11.6/s, not 10/s.</text>
+  <text class="s" x="60" y="979">Sketch with 10^5, then say "about 12".</text>
+
+  <!-- PANEL 3: throughput + Little -->
+  <rect class="panel" x="615" y="640" width="545" height="355" rx="12"/>
+  <text class="title" x="635" y="673">3 · Throughput rules (ROUGH) + Little's Law</text>
+  <text class="sub" x="635" y="695">one modern box, simple operations · benchmark before you quote</text>
+  <text class="h" x="635" y="722">COMPONENT</text><text class="h" x="860" y="722">ROUGH CEILING</text>
+  <line class="rule" x1="635" y1="732" x2="1140" y2="732"/>
+  <text class="t" x="635" y="756">Postgres, simple indexed query</text><text class="s b" x="860" y="756">few k – 10k+ QPS (writes less)</text>
+  <text class="t" x="635" y="780">Redis GET / SET</text><text class="s b" x="860" y="780">~100k ops/s per core-ish</text>
+  <text class="t" x="635" y="804">Python async worker (1 proc)</text><text class="s b" x="860" y="804">~1–5k RPS trivial, 100s with DB</text>
+  <text class="t" x="635" y="828">Kafka partition</text><text class="s b" x="860" y="828">tens of MB/s; scale by partitions</text>
+  <text class="s b amber" x="635" y="852">Ceiling = whichever hits first: CPU, pool, network, disk.</text>
+  <line class="rule" x1="635" y1="866" x2="1140" y2="866"/>
+  <text class="h" x="635" y="888">LITTLE'S LAW</text>
+  <text class="mono b" x="635" y="912">L = λ × W</text><text class="s" x="740" y="912">in flight = arrival rate × time in system</text>
+  <text class="mono" x="635" y="937">R6 Q75: 500 RPS × 0.2 s = 100 in flight</text>
+  <text class="s" x="635" y="958">async: one loop holds 100 · sync: 100+ threads/workers</text>
+  <text class="s b red" x="635" y="979">Trap: slow downstream → W up → L up → pools exhaust.</text>
+
+  <!-- PANEL 4: Jio news recommender -->
+  <rect class="panel" x="40" y="1020" width="1120" height="420" rx="12"/>
+  <text class="title" x="60" y="1053">4 · Defend it: Jio news recommender, 100M req/day</text>
+  <text class="sub" x="60" y="1075">resume numbers: 33k peak RPS · p50 100 ms · p95 200 ms · &lt;0.5% errors · bandwidth assumes a 5 KB response</text>
+  <text class="h" x="60" y="1106">QUANTITY</text><text class="h" x="210" y="1106">ARITHMETIC</text><text class="h" x="470" y="1106">RESULT</text><text class="h" x="700" y="1106">SAY THIS / TRAP</text>
+  <line class="rule" x1="60" y1="1116" x2="1140" y2="1116"/>
+
+  <text class="t b" x="60" y="1144">avg RPS</text><text class="mono" x="210" y="1144">100M ÷ 86,400 s</text><text class="mono b blue" x="470" y="1144">≈ 1.2k RPS</text>
+  <text class="s" x="700" y="1144">exact: 1,157. The boring number.</text>
+  <line class="rule" x1="60" y1="1156" x2="1140" y2="1156"/>
+
+  <text class="t b" x="60" y="1184">peak / avg</text><text class="mono" x="210" y="1184">33k ÷ 1.16k</text><text class="mono b red" x="470" y="1184">≈ 28×</text>
+  <text class="s b red" x="700" y="1178">TRAP: normal peak is 2–3× (≈ 3.5k RPS).</text>
+  <text class="s" x="700" y="1196">28× needs a story: news push burst. How long? Cached? Pre-scaled?</text>
+  <line class="rule" x1="60" y1="1206" x2="1140" y2="1206"/>
+
+  <text class="t b" x="60" y="1234">in flight</text><text class="mono" x="210" y="1234">33k × 0.2 s (p95)</text><text class="mono b blue" x="470" y="1234">≈ 6.6k</text>
+  <text class="s" x="700" y="1234">Little's Law. At p50 (0.1 s) it is 3.3k.</text>
+  <line class="rule" x1="60" y1="1246" x2="1140" y2="1246"/>
+
+  <text class="t b" x="60" y="1274">bandwidth</text><text class="mono" x="210" y="1274">33k × 5 KB (assumed)</text><text class="mono b blue" x="470" y="1274">165 MB/s ≈ 1.3 Gbps</text>
+  <text class="s" x="700" y="1274">say "assumed 5 KB". Daily: 100M × 5 KB = 500 GB.</text>
+  <line class="rule" x1="60" y1="1286" x2="1140" y2="1286"/>
+
+  <text class="t b" x="60" y="1314">error budget</text><text class="mono" x="210" y="1314">0.5% × 33k  ·  0.5% × 100M</text><text class="mono b blue" x="470" y="1314">165/s · 500k/day</text>
+  <text class="s" x="700" y="1314">at peak: 165 failed requests a second. What were they?</text>
+  <line class="rule" x1="60" y1="1328" x2="1140" y2="1328"/>
+
+  <text class="h" x="60" y="1352">PODS AT PEAK</text>
+  <text class="h" x="250" y="1352" text-anchor="middle">PER-POD RPS →</text>
+  <text class="mono b" x="400" y="1352" text-anchor="middle">250</text><text class="mono b" x="500" y="1352" text-anchor="middle">500</text><text class="mono b" x="600" y="1352" text-anchor="middle">1,000</text>
+  <text class="s" x="60" y="1376">33k ÷ per-pod RPS</text><text class="mono" x="400" y="1376" text-anchor="middle">132</text><text class="mono" x="500" y="1376" text-anchor="middle">66</text><text class="mono" x="600" y="1376" text-anchor="middle">33</text>
+  <text class="s" x="60" y="1399">÷ 0.7 target utilisation</text><text class="mono b blue" x="400" y="1399" text-anchor="middle">189</text><text class="mono b blue" x="500" y="1399" text-anchor="middle">94</text><text class="mono b blue" x="600" y="1399" text-anchor="middle">47</text>
+  <text class="s" x="700" y="1376">avg load needs only 1.2k ÷ 500 ≈ 3 pods (66 at peak).</text>
+  <text class="s b red" x="700" y="1399">fixed peak fleet idles ~96% on average → autoscale or cache.</text>
+  <text class="s" x="60" y="1425"><tspan class="b">Sanity check:</tspan> 33k feed reads/s is Redis-sized (about a third of its ~100k/s rough ceiling), not Postgres-sized, so the hot path must hit cache.</text>
+
+  <!-- PANEL 5: ATS storage -->
+  <rect class="panel" x="40" y="1465" width="1120" height="225" rx="12"/>
+  <text class="title" x="60" y="1498">5 · Storage drill: Jio ATS, 100k resumes/day</text>
+  <text class="sub" x="60" y="1520">R1 Q44 · same shape as R6 Q76: rate → size → growth → tier. State the file-size assumption first.</text>
+  <text class="mono" x="60" y="1552">100k ÷ 86,400 s</text><text class="mono b blue" x="300" y="1552">≈ 1.2 resumes/s</text>
+  <text class="s" x="540" y="1552">peak 3× ≈ 3.5/s. Ingest rate is tiny: cost is parse + LLM + embed per doc.</text>
+  <text class="mono" x="60" y="1578">100k × 200 KB (assumed)</text><text class="mono b blue" x="300" y="1578">= 20 GB/day</text>
+  <text class="s" x="540" y="1578">average file size is the assumption to say out loud.</text>
+  <text class="mono" x="60" y="1604">20 GB × 365</text><text class="mono b blue" x="300" y="1604">≈ 7.3 TB/yr</text>
+  <text class="s" x="540" y="1604">raw files in object storage: ~$170/month after year 1 at ~$0.023/GB-mo.</text>
+  <text class="mono" x="60" y="1630">parsed text ~10 KB</text><text class="mono b blue" x="300" y="1630">≈ 1 GB/day (0.4 TB/yr)</text>
+  <text class="s" x="540" y="1630">small: Postgres / search index, not the bulk store.</text>
+  <text class="mono" x="60" y="1656">6 KB vector × 10 chunks</text><text class="mono b blue" x="300" y="1656">≈ 6.1 GB/day ≈ 2.2 TB/yr</text>
+  <text class="s b red" x="540" y="1656">TRAP: vector index wants RAM. int8 ÷4 ≈ 0.55 TB, or 1 vector/resume ≈ 0.22 TB.</text>
+  <text class="s" x="60" y="1678">(1536-d float32 = 6 KB per vector)</text>
+
+  <!-- FOOTER RULES -->
+  <rect x="40" y="1715" width="1120" height="140" rx="12" fill="#1b2540"/>
+  <text x="60" y="1749" font-size="19" font-weight="800" fill="#ffffff">Six rules to say out loud</text>
+  <circle cx="72" cy="1785" r="13" fill="#2457d6"/><text class="num" x="72" y="1790" text-anchor="middle">1</text>
+  <text x="94" y="1791" font-size="15" fill="#e6ebf7">Assumptions aloud, round to one digit</text>
+  <circle cx="440" cy="1785" r="13" fill="#2457d6"/><text class="num" x="440" y="1790" text-anchor="middle">2</text>
+  <text x="462" y="1791" font-size="15" fill="#e6ebf7">Per day ÷ 86,400 (≈ 10^5) = per second</text>
+  <circle cx="790" cy="1785" r="13" fill="#2457d6"/><text class="num" x="790" y="1790" text-anchor="middle">3</text>
+  <text x="812" y="1791" font-size="15" fill="#e6ebf7">Peak 2–3× avg; spikes 10×+ need a cause</text>
+  <circle cx="72" cy="1828" r="13" fill="#2457d6"/><text class="num" x="72" y="1833" text-anchor="middle">4</text>
+  <text x="94" y="1834" font-size="15" fill="#e6ebf7">Little: in flight = RPS × latency</text>
+  <circle cx="440" cy="1828" r="13" fill="#2457d6"/><text class="num" x="440" y="1833" text-anchor="middle">5</text>
+  <text x="462" y="1834" font-size="15" fill="#e6ebf7">A network hop ≈ 5,000× a RAM read</text>
+  <circle cx="790" cy="1828" r="13" fill="#2457d6"/><text class="num" x="790" y="1833" text-anchor="middle">6</text>
+  <text x="812" y="1834" font-size="15" fill="#e6ebf7">Sanity-check against one box</text>
+
+  <text x="600" y="1888" font-size="12.5" fill="#8a93a6" text-anchor="middle">interview repo · teach/infographics/cards · regenerate or edit by asking Claude Code</text>
+</svg>

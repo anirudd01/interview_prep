@@ -1,0 +1,162 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="1660" viewBox="0 0 1200 1660" font-family="Segoe UI, Inter, Helvetica, Arial, sans-serif">
+  <style>
+    .bg { fill: #f6f7fb; }
+    .panel { fill: #ffffff; stroke: #d8deea; stroke-width: 1.5; }
+    .title { font-size: 21px; font-weight: 700; fill: #1b2540; }
+    .sub { font-size: 14px; fill: #5b6578; font-style: italic; }
+    .h { font-size: 13px; font-weight: 700; fill: #5b6578; letter-spacing: 0.6px; }
+    .t { font-size: 14.5px; fill: #263048; }
+    .s { font-size: 13px; fill: #263048; }
+    .b { font-weight: 700; }
+    .mono { font-family: Consolas, "Cascadia Mono", Menlo, monospace; font-size: 13.5px; fill: #1b2540; }
+    .blue { fill: #2457d6; } .green { fill: #138a43; } .red { fill: #c62828; } .amber { fill: #b45309; }
+    .rule { stroke: #e6eaf2; stroke-width: 1; }
+    .num { font-size: 15px; font-weight: 800; fill: #ffffff; }
+  </style>
+  <defs>
+    <marker id="arr" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto">
+      <path d="M0,0 L10,5 L0,10 z" fill="#5b6578"/>
+    </marker>
+  </defs>
+
+  <rect class="bg" width="1200" height="1660"/>
+
+  <!-- HEADER -->
+  <rect x="0" y="0" width="1200" height="110" fill="#1b2540"/>
+  <text x="40" y="52" font-size="32" font-weight="800" fill="#ffffff">Observability &amp; SLOs, on one page</text>
+  <text x="40" y="84" font-size="16" fill="#b9c4dc">W11 card · metrics, traces, SLOs, burn rates · R2 Q100–107 · R3 Q14, Q86 · R4 Q33 · R5 Q58 · R6 Q25, Q105</text>
+  <text x="1160" y="52" font-size="15" fill="#8fa3cc" text-anchor="end">plan/PREP_TODO.md · W11</text>
+
+  <!-- PANEL 1: pillars + link + OTel -->
+  <rect class="panel" x="40" y="135" width="1120" height="410" rx="12"/>
+  <text class="title" x="60" y="168">1 · Pillars + profiles: link them, plumb them with OpenTelemetry</text>
+  <text class="h" x="60" y="198">PILLAR</text><text class="h" x="185" y="198">ANSWERS</text><text class="h" x="490" y="198">COST</text><text class="h" x="660" y="198">CARDINALITY</text><text class="h" x="860" y="198">JIO RECOMMENDER EXAMPLE</text>
+  <line class="rule" x1="60" y1="208" x2="1140" y2="208"/>
+  <text class="t b blue" x="60" y="232">Metrics</text><text class="t" x="185" y="232">Is it broken? How bad? Since when?</text>
+  <text class="s" x="490" y="232"><tspan class="b green">cheap</tspan> per series</text><text class="s" x="660" y="232"><tspan class="b green">LOW</tspan>: bounded labels only</text><text class="s" x="860" y="232">p95 of /feed jumped at 14:02</text>
+  <line class="rule" x1="60" y1="245" x2="1140" y2="245"/>
+  <text class="t b blue" x="60" y="258">Logs</text><text class="t" x="185" y="258">What happened to THIS request?</text>
+  <text class="s" x="490" y="258"><tspan class="b amber">dear</tspan>: $ per GB ingested</text><text class="s" x="660" y="258"><tspan class="b amber">HIGH</tspan> is fine: per event</text><text class="s" x="860" y="258">stack trace + inputs of one failed call</text>
+  <line class="rule" x1="60" y1="271" x2="1140" y2="271"/>
+  <text class="t b blue" x="60" y="284">Traces</text><text class="t" x="185" y="284">Where did the time go across hops?</text>
+  <text class="s" x="490" y="284"><tspan class="b amber">dear</tspan>: so sample it</text><text class="s" x="660" y="284"><tspan class="b amber">HIGH</tspan>: one per request</text><text class="s" x="860" y="284">Redis span ate 180 of 200 ms</text>
+  <line class="rule" x1="60" y1="297" x2="1140" y2="297"/>
+  <text class="t b blue" x="60" y="310">Profiles</text><text class="t" x="185" y="310">Which function burns CPU / RAM?</text>
+  <text class="s" x="490" y="310"><tspan class="b green">low</tspan>, always-on</text><text class="s" x="660" y="310"><tspan class="b green">LOW</tspan>: per function</text><text class="s" x="860" y="310">py-spy / Pyroscope flame graph</text>
+
+  <!-- link diagram -->
+  <rect x="60" y="324" width="270" height="44" rx="8" fill="#eef1f7"/>
+  <text class="s b" x="195" y="343" text-anchor="middle">METRIC · latency histogram</text><text class="s" x="195" y="360" text-anchor="middle">bucket shows the p99 spike</text>
+  <line x1="335" y1="347" x2="465" y2="347" stroke="#5b6578" stroke-width="1.5" marker-end="url(#arr)"/>
+  <text class="s b blue" x="400" y="340" text-anchor="middle">exemplar: trace_id</text>
+  <rect x="470" y="324" width="270" height="44" rx="8" fill="#eef1f7"/>
+  <text class="s b" x="605" y="343" text-anchor="middle">TRACE · one slow request</text><text class="s" x="605" y="360" text-anchor="middle">spans per hop, see the slow one</text>
+  <line x1="745" y1="347" x2="875" y2="347" stroke="#5b6578" stroke-width="1.5" marker-end="url(#arr)"/>
+  <text class="s b blue" x="810" y="340" text-anchor="middle">trace_id in logs</text>
+  <rect x="880" y="324" width="260" height="44" rx="8" fill="#eef1f7"/>
+  <text class="s b" x="1010" y="343" text-anchor="middle">LOGS · filter trace_id=…</text><text class="s" x="1010" y="360" text-anchor="middle">the exact error line</text>
+  <text class="s" x="60" y="392"><tspan class="b">Glue:</tspan> stamp trace_id on every log line (a ContextVar + logging filter), attach exemplars to latency histograms. No link = three silos.</text>
+
+  <line class="rule" x1="60" y1="406" x2="1140" y2="406"/>
+  <text class="h" x="60" y="428">OPENTELEMETRY IN ONE LINE</text>
+  <text class="t" x="60" y="451"><tspan class="b">App SDK</tspan>  →  <tspan class="b">Collector</tspan> (batch, redact, sample, route)  →  any backend (Prometheus, Tempo / Jaeger, Loki)</text>
+  <text class="mono" x="60" y="476">traceparent: 00-&lt;trace_id&gt;-&lt;span_id&gt;-01</text>
+  <text class="s" x="440" y="476">W3C header, forwarded on every hop (HTTP, Kafka headers). <tspan class="b red">Drop it once, trace breaks.</tspan></text>
+  <text class="s" x="60" y="501"><tspan class="b">Head sampling:</tspan> decide at the root. Cheap, but blind to errors and slow outliers.</text>
+  <text class="s" x="60" y="522"><tspan class="b">Tail sampling:</tspan> the collector buffers the whole trace, keeps all errors + slow + ~1% of the rest. Costs RAM; all spans of a trace must reach one collector.</text>
+
+  <!-- PANEL 2: RED / USE -->
+  <rect class="panel" x="40" y="570" width="545" height="290" rx="12"/>
+  <text class="title" x="60" y="603">2 · RED for services, USE for resources</text>
+  <text class="sub" x="60" y="623">RED = what users feel · USE = why a box is slow</text>
+  <text class="h" x="60" y="650">RED · PER SERVICE / ENDPOINT</text>
+  <text class="t b blue" x="60" y="673">Rate</text><text class="s" x="165" y="673">requests/s per route. Jio: 33k peak RPS</text>
+  <text class="t b blue" x="60" y="693">Errors</text><text class="s" x="165" y="693">failed ÷ total, timeouts count. Jio: &lt;0.5%</text>
+  <text class="t b blue" x="60" y="713">Duration</text><text class="s" x="165" y="713">histogram, p50 / p95 / p99. Jio: p95 200 ms</text>
+  <line class="rule" x1="60" y1="727" x2="565" y2="727"/>
+  <text class="h" x="60" y="748">USE · PER RESOURCE (CPU, DB POOL, QUEUE, DISK)</text>
+  <text class="t b green" x="60" y="771">Utilization</text><text class="s" x="165" y="771">% of time busy: CPU, pool slots in use</text>
+  <text class="t b green" x="60" y="791">Saturation</text><text class="s" x="165" y="791">waiting work: queue depth, pool wait, Kafka lag</text>
+  <text class="t b green" x="60" y="811">Errors</text><text class="s" x="165" y="811">OOMKills, disk / NIC errors, retransmits</text>
+  <text class="s b amber" x="60" y="842">Saturation warns first: latency climbs well before 100% busy.</text>
+
+  <!-- PANEL 3: metric types -->
+  <rect class="panel" x="615" y="570" width="545" height="290" rx="12"/>
+  <text class="title" x="635" y="603">3 · Metric types and the two classic traps</text>
+  <text class="h" x="635" y="633">TYPE</text><text class="h" x="755" y="633">WHAT IT IS</text>
+  <line class="rule" x1="635" y1="641" x2="1140" y2="641"/>
+  <text class="mono b" x="635" y="661">counter</text><text class="s" x="755" y="661">only goes up, resets on restart: use rate()</text>
+  <text class="mono b" x="635" y="682">gauge</text><text class="s" x="755" y="682">up and down: queue depth, in-flight, memory</text>
+  <text class="mono b" x="635" y="703">histogram</text><text class="s" x="755" y="703"><tspan class="b green">★ bucket counts: sum across pods, then quantile</tspan></text>
+  <text class="mono b" x="635" y="724">summary</text><text class="s" x="755" y="724">client-side quantiles: <tspan class="b red">CANNOT be aggregated</tspan></text>
+  <text class="s b red" x="635" y="757">TRAP: averaging p99s across pods is meaningless</text>
+  <text class="mono" x="635" y="778">histogram_quantile(0.99, sum by (le) (rate(x_bucket[5m])))</text>
+  <text class="s" x="635" y="798">Accuracy = bucket width: put edges at your SLO (100, 200 ms).</text>
+  <text class="s b red" x="635" y="825">TRAP: user_id / URL / trace_id as a label</text>
+  <text class="s" x="635" y="845">1M user_ids = 1M series per metric. Prometheus OOMs. Use logs/traces.</text>
+
+  <!-- PANEL 4: SLO math + burn rate -->
+  <rect class="panel" x="40" y="885" width="1120" height="285" rx="12"/>
+  <text class="title" x="60" y="918">4 · SLI → SLO → error budget → burn-rate alerts</text>
+  <line class="rule" x1="590" y1="932" x2="590" y2="1155"/>
+  <!-- left -->
+  <text class="t b blue" x="60" y="954">SLI</text><text class="s" x="125" y="954">good events ÷ valid events, e.g. non-5xx ÷ all requests</text>
+  <text class="t b blue" x="60" y="974">SLO</text><text class="s" x="125" y="974">target for the SLI over a window: 99.9% over 30 d (internal)</text>
+  <text class="t b blue" x="60" y="994">SLA</text><text class="s" x="125" y="994">contract with money attached; looser than the SLO</text>
+  <text class="t b blue" x="60" y="1014">Budget</text><text class="s" x="125" y="1014">1 − SLO: spend it on releases; at 0, freeze, fix reliability</text>
+  <line class="rule" x1="60" y1="1025" x2="565" y2="1025"/>
+  <text class="h" x="60" y="1044">SLO</text><text class="h" x="160" y="1044">DOWNTIME / 30 DAYS</text><text class="h" x="400" y="1044">BAD REQS OF ~3B</text>
+  <text class="t b" x="60" y="1066">99.5%</text><text class="t" x="160" y="1066">216 min (3.6 h)</text><text class="t" x="400" y="1066">15M</text>
+  <rect x="52" y="1072" width="521" height="24" rx="6" fill="#eaf1ff"/>
+  <text class="t b blue" x="60" y="1089">99.9%</text><text class="t b" x="160" y="1089">43.2 min ≈ 43 min</text><text class="t b" x="400" y="1089">3M</text>
+  <text class="t b" x="60" y="1113">99.95%</text><text class="t" x="160" y="1113">21.6 min ≈ 22 min</text><text class="t" x="400" y="1113">1.5M</text>
+  <text class="t b" x="60" y="1137">99.99%</text><text class="t" x="160" y="1137">4.32 min ≈ 4.3 min</text><text class="t" x="400" y="1137">300k</text>
+  <text class="s b amber" x="60" y="1159">43,200 min × (1 − SLO) · each extra nine = 10× less room</text>
+  <!-- right -->
+  <text class="h" x="615" y="954">MULTI-WINDOW BURN RATES · BURN = ERROR RATE ÷ (1 − SLO)</text>
+  <text class="h" x="615" y="976">ACTION</text><text class="h" x="705" y="976">BURN</text><text class="h" x="775" y="976">WINDOWS</text><text class="h" x="925" y="976">SPENT</text><text class="h" x="1040" y="976">EMPTY IN</text>
+  <line class="rule" x1="615" y1="984" x2="1140" y2="984"/>
+  <text class="t b red" x="615" y="1006">PAGE</text><text class="t b" x="705" y="1006">14.4×</text><text class="t" x="775" y="1006">1h AND 5m</text><text class="t" x="925" y="1006">2% in 1h</text><text class="t" x="1040" y="1006">2 days</text>
+  <line class="rule" x1="615" y1="1017" x2="1140" y2="1017"/>
+  <text class="t b red" x="615" y="1036">PAGE</text><text class="t b" x="705" y="1036">6×</text><text class="t" x="775" y="1036">6h AND 30m</text><text class="t" x="925" y="1036">5% in 6h</text><text class="t" x="1040" y="1036">5 days</text>
+  <line class="rule" x1="615" y1="1047" x2="1140" y2="1047"/>
+  <text class="t b amber" x="615" y="1066">TICKET</text><text class="t b" x="705" y="1066">1×</text><text class="t" x="775" y="1066">3d AND 6h</text><text class="t" x="925" y="1066">10% in 3d</text><text class="t" x="1040" y="1066">30 days</text>
+  <text class="s" x="615" y="1094">Long window = it is real. Short window = it is still happening,</text>
+  <text class="s" x="615" y="1112">so the alert clears minutes after a fix, not hours.</text>
+  <text class="mono" x="615" y="1136">14.4 × (1 − 0.999) = 1.44% errors for 1h</text>
+  <text class="t b" x="615" y="1160">Page on symptoms (users hurt), not causes (CPU 90%).</text>
+
+  <!-- PANEL 5: Jio anchor -->
+  <rect class="panel" x="40" y="1195" width="1120" height="255" rx="12"/>
+  <text class="title" x="60" y="1228">5 · Anchor: SLOs I would set for the Jio recommender</text>
+  <text class="sub" x="60" y="1248">measured today: ~100M req/day, 33k peak RPS, p50 100 ms, p95 200 ms, &lt;0.5% errors</text>
+  <text class="h" x="60" y="1276">SLI</text><text class="h" x="215" y="1276">GOOD EVENT</text><text class="h" x="760" y="1276">SLO / 30 D</text><text class="h" x="890" y="1276">WHY</text>
+  <line class="rule" x1="60" y1="1285" x2="1140" y2="1285"/>
+  <text class="t b blue" x="60" y="1307">Availability</text><text class="s" x="215" y="1307">valid feed returned (fallback counts), not 5xx / timeout</text><text class="t b" x="760" y="1307">99.5% → 99.9%</text><text class="s" x="890" y="1307">= today's &lt;0.5%; tighten later</text>
+  <line class="rule" x1="60" y1="1320" x2="1140" y2="1320"/>
+  <text class="t b blue" x="60" y="1333">Latency</text><text class="s" x="215" y="1333">request answered in &lt; 200 ms, measured server side</text><text class="t b" x="760" y="1333">95%</text><text class="s" x="890" y="1333">matches p95 200 ms; add p99 &lt; 500 ms</text>
+  <line class="rule" x1="60" y1="1346" x2="1140" y2="1346"/>
+  <text class="t b blue" x="60" y="1359">Personalized</text><text class="s" x="215" y="1359">response is personalized, not the popular-items fallback</text><text class="t b" x="760" y="1359">≥ 95%</text><text class="s" x="890" y="1359">fallback hides outages: no 5xx fires</text>
+  <line class="rule" x1="60" y1="1372" x2="1140" y2="1372"/>
+  <text class="t b blue" x="60" y="1385">Freshness</text><text class="s" x="215" y="1385">features / candidate index no older than 15 min</text><text class="t b" x="760" y="1385">99%</text><text class="s" x="890" y="1385">stale recs hurt CTR, throw no error</text>
+  <text class="s" x="60" y="1415"><tspan class="b">Say out loud:</tspan> SLO on what users see (a valid feed in &lt; 200 ms), not pod CPU. Budget at 99.9% of ~3B req = 3M bad requests a month.</text>
+  <text class="s b amber" x="60" y="1435">Q105 trap: do not claim an SLO you never had. Say what you measured, then what you would set and why.</text>
+
+  <!-- FOOTER RULES -->
+  <rect x="40" y="1475" width="1120" height="140" rx="12" fill="#1b2540"/>
+  <text x="60" y="1509" font-size="19" font-weight="800" fill="#ffffff">Six rules to say out loud</text>
+  <circle cx="72" cy="1545" r="13" fill="#2457d6"/><text class="num" x="72" y="1550" text-anchor="middle">1</text>
+  <text x="94" y="1551" font-size="15" fill="#e6ebf7">Metrics say it's broken, traces say where</text>
+  <circle cx="440" cy="1545" r="13" fill="#2457d6"/><text class="num" x="440" y="1550" text-anchor="middle">2</text>
+  <text x="462" y="1551" font-size="15" fill="#e6ebf7">trace_id in every log line</text>
+  <circle cx="790" cy="1545" r="13" fill="#2457d6"/><text class="num" x="790" y="1550" text-anchor="middle">3</text>
+  <text x="812" y="1551" font-size="15" fill="#e6ebf7">Never average percentiles: histograms</text>
+  <circle cx="72" cy="1593" r="13" fill="#2457d6"/><text class="num" x="72" y="1598" text-anchor="middle">4</text>
+  <text x="94" y="1599" font-size="15" fill="#e6ebf7">Bounded labels: no user_id on a metric</text>
+  <circle cx="440" cy="1593" r="13" fill="#2457d6"/><text class="num" x="440" y="1598" text-anchor="middle">5</text>
+  <text x="462" y="1599" font-size="15" fill="#e6ebf7">SLO on what users see; 99.9% ≈ 43 min</text>
+  <circle cx="790" cy="1593" r="13" fill="#2457d6"/><text class="num" x="790" y="1598" text-anchor="middle">6</text>
+  <text x="812" y="1599" font-size="15" fill="#e6ebf7">Page on burn rate, not on CPU</text>
+
+  <text x="600" y="1638" font-size="12.5" fill="#8a93a6" text-anchor="middle">interview repo · teach/infographics/cards · regenerate or edit by asking Claude Code</text>
+</svg>

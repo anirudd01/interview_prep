@@ -18,8 +18,17 @@ These are smaller cards on one topic each, kept in [cards/](cards/). They don't 
 | Resilience patterns | Timeouts and deadline budgets, retries with jitter and amplification, circuit breaker, idempotency keys, bulkheads (W08) | [SVG](cards/resilience_patterns.svg) · [PNG](cards/resilience_patterns.png) |
 | Docker image and runtime | A multi-stage uv Dockerfile, layer caching, base images, PID 1 and signals, hardening and secrets (W09) | [SVG](cards/docker_image_runtime.svg) · [PNG](cards/docker_image_runtime.png) |
 | Auth | Session vs JWT, OAuth2 vs OIDC, auth code + PKCE, refresh rotation, validating a JWT (W12) | [SVG](cards/auth_oauth_jwt.svg) · [PNG](cards/auth_oauth_jwt.png) |
+| API design | Method semantics and status codes, offset vs cursor pagination, rate limiting, versioning, ETags, problem+json, REST vs gRPC vs GraphQL (W04) | [SVG](cards/api_design.svg) · [PNG](cards/api_design.png) |
+| Postgres internals | Index types, reading `EXPLAIN ANALYZE`, MVCC and vacuum, isolation levels and their anomalies, PgBouncer pooling (W05) | [SVG](cards/postgres_internals.svg) · [PNG](cards/postgres_internals.png) |
+| Distributed systems theory | CAP and PACELC, the consistency ladder, quorums, Raft, exactly-once = at-least-once + idempotence, fencing (W08) | [SVG](cards/distributed_systems_theory.svg) · [PNG](cards/distributed_systems_theory.png) |
+| K8s request path and probes | Client → Ingress → Service → Pod, startup/readiness/liveness, requests vs limits, HPA and PDB, a debug ladder (W09) | [SVG](cards/k8s_request_path_probes.svg) · [PNG](cards/k8s_request_path_probes.png) |
+| Observability and SLOs | Metrics, logs, traces and profiles, RED vs USE, histograms vs averaged p99, error budgets, burn-rate alerts, Jio SLOs (W11) | [SVG](cards/observability_slos.svg) · [PNG](cards/observability_slos.png) |
+| Networking and TLS | What happens when you curl a URL: DNS, TCP, TLS 1.3, HTTP/1.1 vs 2 vs 3, L4 vs L7 load balancers, debug commands (W12) | [SVG](cards/networking_tls.svg) · [PNG](cards/networking_tls.png) |
+| Estimation and latency | Latency numbers, unit shortcuts, Little's law, defending the Jio 100M/day and ATS 100k/day numbers (W13) | [SVG](cards/estimation_latency.svg) · [PNG](cards/estimation_latency.png) |
+| RAG pipeline and debugging | The pipeline, chunking, bi-encoder vs cross-encoder, debugging by bisection with a frozen context, failure modes (AI track) | [SVG](cards/rag_pipeline_debugging.svg) · [PNG](cards/rag_pipeline_debugging.png) |
+| LLM evaluation | Golden sets, choosing an eval method, LLM-as-judge biases, offline vs online, confidence intervals (AI track) | [SVG](cards/llm_evaluation.svg) · [PNG](cards/llm_evaluation.png) |
 
-The cards use the same style as the weekly sheets. They're 1200 px wide, as tall as their content needs (about 1000–1350 px), and have 4–5 panels. To re-render one, run the command below with that card's path and its `height`. If headless Edge hangs after taking the screenshot, add `--user-data-dir` pointing at a temporary folder.
+The cards use the same style as the weekly sheets. They're 1200 px wide, as tall as their content needs (about 1000–1900 px), and have 4–5 panels. To re-render one, run the command below with that card's path and its `height`. If headless Edge hangs after taking the screenshot, add `--user-data-dir` pointing at a temporary folder.
 
 ## How they get made
 

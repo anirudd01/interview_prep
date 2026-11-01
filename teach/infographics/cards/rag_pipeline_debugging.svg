@@ -1,0 +1,248 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="1651" viewBox="0 0 1200 1651" font-family="Segoe UI, Inter, Helvetica, Arial, sans-serif">
+  <style>
+    .bg { fill: #f6f7fb; }
+    .panel { fill: #ffffff; stroke: #d8deea; stroke-width: 1.5; }
+    .title { font-size: 21px; font-weight: 700; fill: #1b2540; }
+    .sub { font-size: 14px; fill: #5b6578; font-style: italic; }
+    .h { font-size: 13px; font-weight: 700; fill: #5b6578; letter-spacing: 0.6px; }
+    .t { font-size: 14.5px; fill: #263048; }
+    .s { font-size: 13px; fill: #263048; }
+    .b { font-weight: 700; }
+    .mono { font-family: Consolas, "Cascadia Mono", Menlo, monospace; font-size: 13.5px; fill: #1b2540; }
+    .blue { fill: #2457d6; } .green { fill: #138a43; } .red { fill: #c62828; } .amber { fill: #b45309; }
+    .rule { stroke: #e6eaf2; stroke-width: 1; }
+    .num { font-size: 15px; font-weight: 800; fill: #ffffff; }
+  </style>
+  <defs>
+    <marker id="arr" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto">
+      <path d="M0,0 L10,5 L0,10 z" fill="#5b6578"/>
+    </marker>
+  </defs>
+
+  <rect class="bg" width="1200" height="1651"/>
+
+  <!-- HEADER -->
+  <rect x="0" y="0" width="1200" height="110" fill="#1b2540"/>
+  <text x="40" y="52" font-size="32" font-weight="800" fill="#ffffff">RAG pipeline &amp; debugging</text>
+  <text x="40" y="84" font-size="16" fill="#b9c4dc">AI card · R5 Q14–16, Q20–26, Q99 · R7 Q53 · miss: frozen-context replay, retrieval vs ranking</text>
+  <text x="1160" y="52" font-size="15" fill="#8fa3cc" text-anchor="end">plan/PREP_TODO.md · W6 A-06, W8 A-08</text>
+
+  <rect class="panel" x="40" y="135" width="1120" height="250" rx="12"/>
+  <text class="title" x="60" y="168">1 · The pipeline: offline builds the index, online answers the question</text>
+  <text class="sub" x="60" y="190">every stage is a place the answer can go wrong, so every stage needs its own metric</text>
+  <text class="h" x="62" y="212">OFFLINE · ONCE PER DOC CHANGE</text>
+  <text class="h" x="610" y="212">ONLINE · EVERY QUERY, INSIDE THE LATENCY BUDGET</text>
+  <line x1="62" y1="218" x2="589" y2="218" stroke="#9aa5bb" stroke-width="1.5"/>
+  <line x1="610" y1="218" x2="1137" y2="218" stroke="#9aa5bb" stroke-width="1.5"/>
+  <rect x="62" y="224" width="116" height="58" rx="8" fill="#eef1f7" stroke="#9aa5bb" stroke-width="1.5"/>
+  <text class="t b" x="120" y="248" text-anchor="middle">ingest</text>
+  <text x="120" y="268" text-anchor="middle" font-size="11.5" fill="#5b6578">parse + ACL tags</text>
+  <line x1="178" y1="253" x2="198" y2="253" stroke="#5b6578" stroke-width="1.5" marker-end="url(#arr)"/>
+  <rect x="199" y="224" width="116" height="58" rx="8" fill="#eef1f7" stroke="#9aa5bb" stroke-width="1.5"/>
+  <text class="t b" x="257" y="248" text-anchor="middle">chunk</text>
+  <text x="257" y="268" text-anchor="middle" font-size="11.5" fill="#5b6578">split + metadata</text>
+  <line x1="315" y1="253" x2="335" y2="253" stroke="#5b6578" stroke-width="1.5" marker-end="url(#arr)"/>
+  <rect x="336" y="224" width="116" height="58" rx="8" fill="#eef1f7" stroke="#9aa5bb" stroke-width="1.5"/>
+  <text class="t b" x="394" y="248" text-anchor="middle">embed</text>
+  <text x="394" y="268" text-anchor="middle" font-size="11.5" fill="#5b6578">bi-encoder</text>
+  <line x1="452" y1="253" x2="472" y2="253" stroke="#5b6578" stroke-width="1.5" marker-end="url(#arr)"/>
+  <rect x="473" y="224" width="116" height="58" rx="8" fill="#eef1f7" stroke="#9aa5bb" stroke-width="1.5"/>
+  <text class="t b" x="531" y="248" text-anchor="middle">index</text>
+  <text x="531" y="268" text-anchor="middle" font-size="11.5" fill="#5b6578">HNSW + inverted</text>
+  <line x1="589" y1="253" x2="609" y2="253" stroke="#5b6578" stroke-width="1.5" marker-end="url(#arr)"/>
+  <rect x="610" y="224" width="116" height="58" rx="8" fill="#e8effd" stroke="#2457d6" stroke-width="1.5"/>
+  <text class="t b" x="668" y="248" text-anchor="middle">retrieve</text>
+  <text x="668" y="268" text-anchor="middle" font-size="11.5" fill="#5b6578">BM25+dense → RRF</text>
+  <line x1="726" y1="253" x2="746" y2="253" stroke="#5b6578" stroke-width="1.5" marker-end="url(#arr)"/>
+  <rect x="747" y="224" width="116" height="58" rx="8" fill="#e8effd" stroke="#2457d6" stroke-width="1.5"/>
+  <text class="t b" x="805" y="248" text-anchor="middle">rerank</text>
+  <text x="805" y="268" text-anchor="middle" font-size="11.5" fill="#5b6578">cross-encoder</text>
+  <line x1="863" y1="253" x2="883" y2="253" stroke="#5b6578" stroke-width="1.5" marker-end="url(#arr)"/>
+  <rect x="884" y="224" width="116" height="58" rx="8" fill="#e6f5ec" stroke="#138a43" stroke-width="1.5"/>
+  <text class="t b" x="942" y="248" text-anchor="middle">assemble</text>
+  <text x="942" y="268" text-anchor="middle" font-size="11.5" fill="#5b6578">dedupe + budget</text>
+  <line x1="1000" y1="253" x2="1020" y2="253" stroke="#5b6578" stroke-width="1.5" marker-end="url(#arr)"/>
+  <rect x="1021" y="224" width="116" height="58" rx="8" fill="#e6f5ec" stroke="#138a43" stroke-width="1.5"/>
+  <text class="t b" x="1079" y="248" text-anchor="middle">generate</text>
+  <text x="1079" y="268" text-anchor="middle" font-size="11.5" fill="#5b6578">answer + cites</text>
+  <text x="668" y="302" text-anchor="middle" font-size="11.5" font-weight="700" fill="#2457d6">top-50 from each</text>
+  <text x="805" y="302" text-anchor="middle" font-size="11.5" font-weight="700" fill="#2457d6">50 → top-5</text>
+  <text x="1079" y="302" text-anchor="middle" font-size="11.5" font-weight="700" fill="#138a43">cite chunk ids</text>
+  <text class="t" x="60" y="326">Retrieve WIDE (cheap, recall-oriented), rerank NARROW (costly, precision-oriented), and spend prompt tokens only on the top 5.</text>
+  <text class="s b red" x="60" y="348">Trap: filter ACLs INSIDE the vector query. Post-filtering returns a short or empty top-k and risks a leak.</text>
+  <text class="s" x="60" y="370">Latency shape: retrieval tens of ms, rerank of 50 pairs ~100–300 ms, generation seconds and dominant (stream it).</text>
+  <rect class="panel" x="40" y="410" width="545" height="330" rx="12"/>
+  <text class="title" x="60" y="443">2 · Chunking: the knobs and the trap</text>
+  <text class="sub" x="60" y="465">start ~256–512 tokens, 10–15% overlap, then tune on recall@k</text>
+  <text class="h" x="60" y="497">STRATEGY</text>
+  <text class="h" x="205" y="497">HOW</text>
+  <text class="h" x="375" y="497">BREAKS WHEN</text>
+  <line class="rule" x1="60" y1="505" x2="565" y2="505"/>
+  <text class="t b blue" x="60" y="527">fixed + overlap</text>
+  <text class="s" x="205" y="527">256–512 tok, 10–15%</text>
+  <text class="s" x="375" y="527">cuts mid-clause, splits tables</text>
+  <line class="rule" x1="60" y1="539" x2="565" y2="539"/>
+  <text class="t b blue" x="60" y="555">recursive</text>
+  <text class="s" x="205" y="555">para → sentence → word</text>
+  <text class="s" x="375" y="555">ignores headings and tables</text>
+  <line class="rule" x1="60" y1="567" x2="565" y2="567"/>
+  <text class="t b blue" x="60" y="583">structure-aware</text>
+  <text class="s" x="205" y="583">by heading or clause</text>
+  <text class="s" x="375" y="583">needs a parser; wins on policies</text>
+  <line class="rule" x1="60" y1="595" x2="565" y2="595"/>
+  <text class="t b blue" x="60" y="611">semantic</text>
+  <text class="s" x="205" y="611">split on embedding drift</text>
+  <text class="s" x="375" y="611">costly; prove it on your evals</text>
+  <text class="s b red" x="60" y="650">Too big → diluted vector, noisy context, wasted tokens</text>
+  <text class="s b red" x="60" y="671">Too small → loses the 'it' / 'the clause above', no whole answer</text>
+  <line class="rule" x1="60" y1="684" x2="565" y2="684"/>
+  <text class="s" x="60" y="706">Fixes: small-to-big (embed small, return parent section),</text>
+  <text class="s" x="60" y="726">prepend section path, keep tables whole, 200-page PDF → by clause</text>
+  <rect class="panel" x="615" y="410" width="545" height="330" rx="12"/>
+  <text class="title" x="635" y="443">3 · Bi-encoder vs cross-encoder: why rerank</text>
+  <text class="sub" x="635" y="465">retrieval buys recall cheaply; rerank buys precision on a short list</text>
+  <text class="h" x="635" y="497"></text>
+  <text class="h" x="715" y="497">BI-ENCODER · RETRIEVE</text>
+  <text class="h" x="925" y="497">CROSS-ENCODER · RERANK</text>
+  <line class="rule" x1="635" y1="505" x2="1140" y2="505"/>
+  <text class="s b" x="635" y="527">input</text>
+  <text class="s" x="715" y="527">query, doc encoded apart</text>
+  <text class="s" x="925" y="527">query + doc read together</text>
+  <line class="rule" x1="635" y1="539" x2="1140" y2="539"/>
+  <text class="s b" x="635" y="553">index</text>
+  <text class="s" x="715" y="553">doc vectors precomputed</text>
+  <text class="s" x="925" y="553">nothing to precompute</text>
+  <line class="rule" x1="635" y1="565" x2="1140" y2="565"/>
+  <text class="s b" x="635" y="579">score</text>
+  <text class="s" x="715" y="579">cosine of two vectors</text>
+  <text class="s" x="925" y="579">learned relevance score</text>
+  <line class="rule" x1="635" y1="591" x2="1140" y2="591"/>
+  <text class="s b" x="635" y="605">cost</text>
+  <text class="s" x="715" y="605">~ms over millions (ANN)</text>
+  <text class="s" x="925" y="605">1 forward pass per pair</text>
+  <line class="rule" x1="635" y1="617" x2="1140" y2="617"/>
+  <text class="s b" x="635" y="631">goal</text>
+  <text class="s" x="715" y="631">recall, coarse order</text>
+  <text class="s" x="925" y="631">precision, sharp order</text>
+  <rect x="635" y="662" width="100" height="26" rx="6" fill="#eef1f7" stroke="#9aa5bb" stroke-width="1.5"/>
+  <text class="mono" x="685" y="680" text-anchor="middle" font-size="12.5">10^6 chunks</text>
+  <text x="685" y="704" text-anchor="middle" font-size="11.5" fill="#5b6578">corpus</text>
+  <line x1="735" y1="675" x2="769" y2="675" stroke="#5b6578" stroke-width="1.5" marker-end="url(#arr)"/>
+  <rect x="770" y="662" width="100" height="26" rx="6" fill="#e8effd" stroke="#2457d6" stroke-width="1.5"/>
+  <text class="mono" x="820" y="680" text-anchor="middle" font-size="12.5">top-50</text>
+  <text x="820" y="704" text-anchor="middle" font-size="11.5" fill="#5b6578">recall stage</text>
+  <line x1="870" y1="675" x2="904" y2="675" stroke="#5b6578" stroke-width="1.5" marker-end="url(#arr)"/>
+  <rect x="905" y="662" width="100" height="26" rx="6" fill="#e8effd" stroke="#2457d6" stroke-width="1.5"/>
+  <text class="mono" x="955" y="680" text-anchor="middle" font-size="12.5">top-5</text>
+  <text x="955" y="704" text-anchor="middle" font-size="11.5" fill="#5b6578">precision stage</text>
+  <line x1="1005" y1="675" x2="1039" y2="675" stroke="#5b6578" stroke-width="1.5" marker-end="url(#arr)"/>
+  <rect x="1040" y="662" width="100" height="26" rx="6" fill="#e6f5ec" stroke="#138a43" stroke-width="1.5"/>
+  <text class="mono" x="1090" y="680" text-anchor="middle" font-size="12.5">LLM</text>
+  <text x="1090" y="704" text-anchor="middle" font-size="11.5" fill="#5b6578">generate</text>
+  <text class="s b red" x="635" y="728">Reranker reorders, never retrieves: gold not in top-50 = lost</text>
+  <rect class="panel" x="40" y="765" width="1120" height="334" rx="12"/>
+  <text class="title" x="60" y="798">4 · Debug by bisection: freeze the context, replay, compare</text>
+  <text class="sub" x="60" y="820">answer is wrong: which stage broke? Three cuts, each with its own metric (R5 Q22, Q99)</text>
+  <text class="mono" x="60" y="853">1  log per request: query, chunk_ids, scores, rerank_ids, prompt, answer</text>
+  <text class="mono" x="60" y="874">2  replay(prompt, temperature=0)   # generator alone, same frozen context</text>
+  <text class="mono" x="60" y="895">3  replay(gold_chunks)   # oracle context: now right? upstream was the bug</text>
+  <rect x="700" y="833" width="440" height="72" rx="8" fill="#fde8e8" stroke="#c62828" stroke-width="1.5"/>
+  <text class="s b red" x="716" y="855">Known miss: retrieval ≠ ranking. Don't conflate them.</text>
+  <text class="s" x="716" y="875">Retrieval: is gold in the candidate set?  → recall@k</text>
+  <text class="s" x="716" y="894">Ranking: is gold high enough to reach the prompt?  → MRR, nDCG</text>
+  <text class="h" x="60" y="931">STAGE</text>
+  <text class="h" x="205" y="931">THE TEST (REPLAY)</text>
+  <text class="h" x="555" y="931">METRIC</text>
+  <text class="h" x="790" y="931">VERDICT → FIX</text>
+  <line class="rule" x1="60" y1="939" x2="1140" y2="939"/>
+  <text class="t b blue" x="60" y="959">A · Retrieval</text>
+  <text class="s" x="205" y="959">Run the retriever alone.</text>
+  <text class="s" x="205" y="978">Is the gold chunk anywhere in top-50?</text>
+  <text class="s b" x="555" y="959">recall@50 (hit rate)</text>
+  <text class="s" x="555" y="978">needs labelled gold chunks</text>
+  <text class="s b blue" x="790" y="959">NOT in top-50 → retrieval failure</text>
+  <text class="s" x="790" y="978">fix: chunking, embedding, query rewrite, ACL filter</text>
+  <line class="rule" x1="60" y1="990" x2="1140" y2="990"/>
+  <text class="t b amber" x="60" y="1009">B · Ranking</text>
+  <text class="s" x="205" y="1009">Gold is in top-50. Is it in the top-5</text>
+  <text class="s" x="205" y="1028">that actually reaches the prompt?</text>
+  <text class="s b" x="555" y="1009">MRR, nDCG@5, precision@5</text>
+  <text class="s" x="555" y="1028">position matters, not just presence</text>
+  <text class="s b amber" x="790" y="1009">in top-50, NOT top-5 → ranking failure</text>
+  <text class="s" x="790" y="1028">fix: reranker, RRF weights, rerank depth</text>
+  <line class="rule" x1="60" y1="1040" x2="1140" y2="1040"/>
+  <text class="t b red" x="60" y="1059">C · Generation</text>
+  <text class="s" x="205" y="1059">FREEZE the logged context, replay at temp 0.</text>
+  <text class="s" x="205" y="1078">Then swap in the gold chunks (oracle).</text>
+  <text class="s b" x="555" y="1059">faithfulness / groundedness</text>
+  <text class="s" x="555" y="1078">answer correctness vs gold answer</text>
+  <text class="s b red" x="790" y="1059">wrong even with gold → generation failure</text>
+  <text class="s" x="790" y="1078">fix: prompt, model, context order and size</text>
+  <rect class="panel" x="40" y="1124" width="1120" height="307" rx="12"/>
+  <text class="title" x="60" y="1157">5 · Failure modes → how to confirm → the fix</text>
+  <text class="h" x="60" y="1190">SYMPTOM</text>
+  <text class="h" x="395" y="1190">STAGE</text>
+  <text class="h" x="505" y="1190">CONFIRM BY</text>
+  <text class="h" x="790" y="1190">FIX</text>
+  <line class="rule" x1="60" y1="1198" x2="1140" y2="1198"/>
+  <text class="s" x="60" y="1221">Exact ID, clause number or acronym missed</text>
+  <text class="s b blue" x="395" y="1221">retrieve</text>
+  <text class="s" x="505" y="1221">BM25 finds it, dense does not</text>
+  <text class="s" x="790" y="1221">hybrid: BM25 + dense, fused with RRF</text>
+  <line class="rule" x1="60" y1="1233" x2="1140" y2="1233"/>
+  <text class="s" x="60" y="1248">Gold chunk not in the top-50 at all</text>
+  <text class="s b blue" x="395" y="1248">retrieve</text>
+  <text class="s" x="505" y="1248">recall@50 = miss on that case</text>
+  <text class="s" x="790" y="1248">better chunks, query rewrite, check ACL filter</text>
+  <line class="rule" x1="60" y1="1260" x2="1140" y2="1260"/>
+  <text class="s" x="60" y="1275">Answer cut off mid-clause or mid-table</text>
+  <text class="s b blue" x="395" y="1275">chunk</text>
+  <text class="s" x="505" y="1275">gold chunk is only a fragment</text>
+  <text class="s" x="790" y="1275">structure-aware, small-to-big, overlap</text>
+  <line class="rule" x1="60" y1="1287" x2="1140" y2="1287"/>
+  <text class="s" x="60" y="1302">Old policy version quoted</text>
+  <text class="s b blue" x="395" y="1302">index</text>
+  <text class="s" x="505" y="1302">chunk date or version is stale</text>
+  <text class="s" x="790" y="1302">incremental re-index, version filter</text>
+  <line class="rule" x1="60" y1="1314" x2="1140" y2="1314"/>
+  <text class="s" x="60" y="1329">Gold in top-50 but sitting at rank 20</text>
+  <text class="s b amber" x="395" y="1329">rank</text>
+  <text class="s" x="505" y="1329">recall@50 ok, but rank &gt; 5</text>
+  <text class="s" x="790" y="1329">cross-encoder rerank, tune rerank depth</text>
+  <line class="rule" x1="60" y1="1341" x2="1140" y2="1341"/>
+  <text class="s" x="60" y="1356">Right context in prompt, answer still wrong</text>
+  <text class="s b red" x="395" y="1356">generate</text>
+  <text class="s" x="505" y="1356">frozen replay is still wrong</text>
+  <text class="s" x="790" y="1356">tighter prompt, cite-or-refuse, better model</text>
+  <line class="rule" x1="60" y1="1368" x2="1140" y2="1368"/>
+  <text class="s" x="60" y="1383">Right chunk buried in a long context</text>
+  <text class="s b red" x="395" y="1383">generate</text>
+  <text class="s" x="505" y="1383">correct with only the gold chunk</text>
+  <text class="s" x="790" y="1383">fewer chunks, best first, cap rerank k</text>
+  <line class="rule" x1="60" y1="1395" x2="1140" y2="1395"/>
+  <text class="s" x="60" y="1410">Answers confidently when nothing matches</text>
+  <text class="s b red" x="395" y="1410">no-answer</text>
+  <text class="s" x="505" y="1410">top score below any sensible floor</text>
+  <text class="s" x="790" y="1410">score floor, then say 'I don't know'</text>
+  <rect x="40" y="1456" width="1120" height="140" rx="12" fill="#1b2540"/>
+  <text x="60" y="1490" font-size="19" font-weight="800" fill="#ffffff">Six rules to say out loud</text>
+  <circle cx="72" cy="1526" r="13" fill="#2457d6"/>
+  <text class="num" x="72" y="1531" text-anchor="middle">1</text>
+  <text x="94" y="1532" font-size="15" fill="#e6ebf7">Retrieval is recall; ranking is order</text>
+  <circle cx="440" cy="1526" r="13" fill="#2457d6"/>
+  <text class="num" x="440" y="1531" text-anchor="middle">2</text>
+  <text x="462" y="1532" font-size="15" fill="#e6ebf7">Freeze the context, replay the LLM</text>
+  <circle cx="790" cy="1526" r="13" fill="#2457d6"/>
+  <text class="num" x="790" y="1531" text-anchor="middle">3</text>
+  <text x="812" y="1532" font-size="15" fill="#e6ebf7">A reranker can't fix a recall miss</text>
+  <circle cx="72" cy="1569" r="13" fill="#2457d6"/>
+  <text class="num" x="72" y="1574" text-anchor="middle">4</text>
+  <text x="94" y="1575" font-size="15" fill="#e6ebf7">Hybrid: BM25 for IDs, dense for meaning</text>
+  <circle cx="440" cy="1569" r="13" fill="#2457d6"/>
+  <text class="num" x="440" y="1574" text-anchor="middle">5</text>
+  <text x="462" y="1575" font-size="15" fill="#e6ebf7">Too big dilutes, too small starves</text>
+  <circle cx="790" cy="1569" r="13" fill="#2457d6"/>
+  <text class="num" x="790" y="1574" text-anchor="middle">6</text>
+  <text x="812" y="1575" font-size="15" fill="#e6ebf7">Log chunk ids + prompt per request</text>
+  <text x="600" y="1629" text-anchor="middle" font-size="12.5" fill="#8a93a6">interview repo · teach/infographics/cards · regenerate or edit by asking Claude Code</text>
+</svg>

@@ -1,0 +1,180 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="1500" viewBox="0 0 1200 1500" font-family="Segoe UI, Inter, Helvetica, Arial, sans-serif">
+  <style>
+    .bg { fill: #f6f7fb; }
+    .panel { fill: #ffffff; stroke: #d8deea; stroke-width: 1.5; }
+    .title { font-size: 21px; font-weight: 700; fill: #1b2540; }
+    .sub { font-size: 14px; fill: #5b6578; font-style: italic; }
+    .h { font-size: 13px; font-weight: 700; fill: #5b6578; letter-spacing: 0.6px; }
+    .t { font-size: 14.5px; fill: #263048; }
+    .s { font-size: 13px; fill: #263048; }
+    .b { font-weight: 700; }
+    .mono { font-family: Consolas, "Cascadia Mono", Menlo, monospace; font-size: 13.5px; fill: #1b2540; }
+    .blue { fill: #2457d6; } .green { fill: #138a43; } .red { fill: #c62828; } .amber { fill: #b45309; }
+    .rule { stroke: #e6eaf2; stroke-width: 1; }
+    .num { font-size: 15px; font-weight: 800; fill: #ffffff; }
+  </style>
+  <defs>
+    <marker id="arr" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto">
+      <path d="M0,0 L10,5 L0,10 z" fill="#5b6578"/>
+    </marker>
+  </defs>
+
+  <rect class="bg" width="1200" height="1500"/>
+
+  <!-- HEADER -->
+  <rect x="0" y="0" width="1200" height="110" fill="#1b2540"/>
+  <text x="40" y="52" font-size="32" font-weight="800" fill="#ffffff">LLM evaluation: golden set to CI</text>
+  <text x="40" y="84" font-size="16" fill="#b9c4dc">card · eval methodology · R5 Q23–24, Q75–78 · R6 Q109 · R7 Q16, Q24, Q56 · retrieval metrics: see rag_pipeline_debugging</text>
+  <text x="1160" y="52" font-size="15" fill="#8fa3cc" text-anchor="end">plan: A-07 eval harness</text>
+
+  <!-- PANEL 1: why + golden set -->
+  <rect class="panel" x="40" y="135" width="545" height="410" rx="12"/>
+  <text class="title" x="60" y="168">1 · Evals are tests for prompts</text>
+  <text class="sub" x="60" y="190">a prompt, model or chunking change is a code change</text>
+  <text class="t" x="60" y="218">Every edit reruns the suite in CI; <tspan class="b">a regression fails the build</tspan></text>
+  <text class="s" x="60" y="238">No eval method = the single biggest red flag in an AI interview</text>
+  <line class="rule" x1="60" y1="252" x2="565" y2="252"/>
+  <text class="h" x="60" y="276">GOLDEN SET · 50–300 REAL, LABELED EXAMPLES</text>
+  <text class="t b blue" x="60" y="302">Real</text><text class="s" x="205" y="302">sampled from prod traffic, not written at a desk</text>
+  <line class="rule" x1="60" y1="314" x2="565" y2="314"/>
+  <text class="t b blue" x="60" y="330">Stratified</text><text class="s" x="205" y="330">by doc type, intent, language, length, customer</text>
+  <line class="rule" x1="60" y1="342" x2="565" y2="342"/>
+  <text class="t b blue" x="60" y="358">Edge + adversarial</text><text class="s" x="205" y="358">blank or garbled input, injection, unanswerable</text>
+  <line class="rule" x1="60" y1="370" x2="565" y2="370"/>
+  <text class="t b blue" x="60" y="386">Labeled</text><text class="s" x="205" y="386">SME labels; double-label a slice, track agreement</text>
+  <line class="rule" x1="60" y1="398" x2="565" y2="398"/>
+  <text class="t b blue" x="60" y="414">Versioned</text><text class="s" x="205" y="414">golden_v3.jsonl in git; old runs stay comparable</text>
+  <text class="s b red" x="60" y="450">TRAP: test examples copied into the few-shot prompt = inflated score</text>
+  <text class="s" x="60" y="471">Split a dev set (tune on it) from a held-out test set (touch rarely).</text>
+  <text class="s" x="60" y="491">How many? Start with ~30 from real failures; grow it with every incident.</text>
+  <text class="s" x="60" y="511">Same rule for fine-tuning data: dedupe it against the test set.</text>
+
+  <!-- PANEL 2: method table -->
+  <rect class="panel" x="615" y="135" width="545" height="410" rx="12"/>
+  <text class="title" x="635" y="168">2 · Pick the cheapest check that works</text>
+  <text class="sub" x="635" y="190">code checks first, a judge for what code cannot check, humans calibrate</text>
+  <text class="h" x="635" y="218">METHOD · USE WHEN</text><text class="h" x="920" y="218">COST / CAVEAT</text>
+  <line class="rule" x1="635" y1="226" x2="1140" y2="226"/>
+  <text class="t b blue" x="635" y="248">Exact / structured match</text><text class="s b green" x="920" y="248">free, deterministic</text>
+  <text class="s" x="635" y="267">extraction, classification, routing: P / R / F1 per field</text>
+  <line class="rule" x1="635" y1="277" x2="1140" y2="277"/>
+  <text class="t b blue" x="635" y="296">BLEU / ROUGE (reference)</text><text class="s b red" x="920" y="296">free, weak for LLMs</text>
+  <text class="s" x="635" y="315">paraphrase scores low; only for translation-like tasks</text>
+  <line class="rule" x1="635" y1="325" x2="1140" y2="325"/>
+  <text class="t b blue" x="635" y="344">Embedding similarity</text><text class="s b amber" x="920" y="344">cheap, blind to facts</text>
+  <text class="s" x="635" y="363">semantic match, dedupe; "not X" scores close to "X"</text>
+  <line class="rule" x1="635" y1="373" x2="1140" y2="373"/>
+  <text class="t b blue" x="635" y="392">LLM-as-judge</text><text class="s b amber" x="920" y="392">$ per run, calibrate it</text>
+  <text class="s" x="635" y="411">tone, helpfulness, RAG faithfulness (retrieval metrics: rag card)</text>
+  <line class="rule" x1="635" y1="421" x2="1140" y2="421"/>
+  <text class="t b blue" x="635" y="440">Human review</text><text class="s b red" x="920" y="440">slow, $$$</text>
+  <text class="s" x="635" y="459">gold labels and judge calibration; sample, do not review all</text>
+  <line class="rule" x1="635" y1="473" x2="1140" y2="473"/>
+  <text class="h" x="635" y="495">JIO ATS TIE-IN · PYDANTIC-SCHEMA EXTRACTION</text>
+  <text class="s" x="635" y="515">Per-field P / R / F1 after normalizing (dates, case); not one blended accuracy.</text>
+  <text class="s b amber" x="635" y="535">IDs / amounts: hard gate. Free text: softer threshold.</text>
+
+  <!-- PANEL 3: judge pitfalls -->
+  <rect class="panel" x="40" y="570" width="545" height="395" rx="12"/>
+  <text class="title" x="60" y="603">3 · LLM-as-judge: biased until calibrated</text>
+  <text class="h" x="60" y="635">BIAS · SYMPTOM</text>
+  <line class="rule" x1="60" y1="643" x2="565" y2="643"/>
+  <text class="t b red" x="60" y="667">Position bias</text><text class="s" x="215" y="667">prefers the answer shown first (or last)</text>
+  <text class="s green" x="60" y="687">fix: run both orders, count only verdicts that agree</text>
+  <line class="rule" x1="60" y1="698" x2="565" y2="698"/>
+  <text class="t b red" x="60" y="711">Verbosity bias</text><text class="s" x="215" y="711">longer sounds better</text>
+  <text class="s green" x="60" y="731">fix: rubric says "do not reward length"; compare at equal length</text>
+  <line class="rule" x1="60" y1="742" x2="565" y2="742"/>
+  <text class="t b red" x="60" y="755">Self-preference</text><text class="s" x="215" y="755">likes its own model family's output</text>
+  <text class="s green" x="60" y="775">fix: judge from a different (or stronger) model than the generator</text>
+  <line class="rule" x1="60" y1="786" x2="565" y2="786"/>
+  <text class="t b red" x="60" y="799">Fuzzy 1–10 scale</text><text class="s" x="215" y="799">scores drift and cluster at 7–8</text>
+  <text class="s green" x="60" y="819">fix: binary or 3-point rubric, written definitions + 2 examples</text>
+  <line class="rule" x1="60" y1="830" x2="565" y2="830"/>
+  <text class="t b red" x="60" y="843">Unchecked judge</text><text class="s" x="215" y="843">"92% pass" means nothing on its own</text>
+  <text class="s green" x="60" y="863">fix: hand-label 50–100, report agreement + Cohen's kappa (~0.6+ usable)</text>
+  <line class="rule" x1="60" y1="882" x2="565" y2="882"/>
+  <text class="s" x="60" y="906"><tspan class="b">Pointwise</tspan> = score one answer vs a rubric: cheap, good for CI gates.</text>
+  <text class="s" x="60" y="926"><tspan class="b">Pairwise</tspan> = A vs B: more reliable for prompt / model comparisons.</text>
+  <text class="s" x="60" y="946">Judge prompt: reasoning, then verdict · temperature 0 · re-calibrate on model change.</text>
+
+  <!-- PANEL 4: offline vs online -->
+  <rect class="panel" x="615" y="570" width="545" height="395" rx="12"/>
+  <text class="title" x="635" y="603">4 · Offline gates deploy, online confirms</text>
+  <text class="sub" x="635" y="625">they answer different questions</text>
+  <text class="h" x="635" y="655">OFFLINE · GOLDEN SET</text><text class="h" x="895" y="655">ONLINE · PRODUCTION</text>
+  <line class="rule" x1="635" y1="663" x2="1140" y2="663"/>
+  <line class="rule" x1="880" y1="640" x2="880" y2="770"/>
+  <text class="s" x="635" y="686">runs on every PR, in minutes</text><text class="s" x="895" y="686">A/B test on live traffic</text>
+  <text class="s" x="635" y="710">gates deploy: no regression</text><text class="s" x="895" y="710">implicit: retries, edits, thumbs</text>
+  <text class="s" x="635" y="734">repeatable, cheap, controlled</text><text class="s" x="895" y="734">sample 1–5% of traces to review</text>
+  <text class="s b red" x="635" y="758">blind to what you did not foresee</text><text class="s b green" x="895" y="758">sees drift and new input types</text>
+  <line class="rule" x1="635" y1="772" x2="1140" y2="772"/>
+  <text class="h" x="635" y="796">GUARDRAIL METRICS · TRACK ON EVERY RELEASE</text>
+  <text class="s" x="635" y="818">p95 latency · cost per request (tokens in / out) · refusal rate</text>
+  <text class="s" x="635" y="838">hallucination flags · schema-valid rate · escalation-to-human rate</text>
+  <line class="rule" x1="635" y1="852" x2="1140" y2="852"/>
+  <text class="s b red" x="635" y="876">Offline says better, online says worse?</text>
+  <text class="s" x="635" y="896">Offline set is stale, or the judge is miscalibrated: diff prod inputs</text>
+  <text class="s" x="635" y="916">against the golden set, then slice by segment. Online is ground truth.</text>
+  <text class="s" x="635" y="936">Fix the offline set, then ship on the corrected numbers.</text>
+
+  <!-- PANEL 5: loop + CI -->
+  <rect class="panel" x="40" y="990" width="1120" height="290" rx="12"/>
+  <text class="title" x="60" y="1023">5 · Close the loop, then report with error bars</text>
+  <line class="rule" x1="620" y1="1040" x2="620" y2="1262"/>
+
+  <!-- loop diagram -->
+  <rect x="60" y="1050" width="150" height="50" rx="8" fill="#eef1f7" stroke="#9aa5bb"/>
+  <text class="s b" x="135" y="1071" text-anchor="middle">1 prod traces</text><text class="s" x="135" y="1088" text-anchor="middle">sampled + flagged</text>
+  <rect x="250" y="1050" width="150" height="50" rx="8" fill="#eef1f7" stroke="#9aa5bb"/>
+  <text class="s b" x="325" y="1071" text-anchor="middle">2 error analysis</text><text class="s" x="325" y="1088" text-anchor="middle">tag + count failures</text>
+  <rect x="440" y="1050" width="150" height="50" rx="8" fill="#e8effc" stroke="#2457d6" stroke-width="1.8"/>
+  <text class="s b blue" x="515" y="1071" text-anchor="middle">3 new test cases</text><text class="s" x="515" y="1088" text-anchor="middle">into the golden set</text>
+  <rect x="440" y="1140" width="150" height="50" rx="8" fill="#eef1f7" stroke="#9aa5bb"/>
+  <text class="s b" x="515" y="1161" text-anchor="middle">4 fix it</text><text class="s" x="515" y="1178" text-anchor="middle">prompt, retrieval, model</text>
+  <rect x="250" y="1140" width="150" height="50" rx="8" fill="#eef1f7" stroke="#9aa5bb"/>
+  <text class="s b" x="325" y="1161" text-anchor="middle">5 rerun suite</text><text class="s" x="325" y="1178" text-anchor="middle">compare to baseline</text>
+  <rect x="60" y="1140" width="150" height="50" rx="8" fill="#e6f5ec" stroke="#138a43" stroke-width="1.8"/>
+  <text class="s b green" x="135" y="1161" text-anchor="middle">6 ship</text><text class="s" x="135" y="1178" text-anchor="middle">no slice regressed</text>
+  <line x1="210" y1="1075" x2="248" y2="1075" stroke="#5b6578" stroke-width="1.5" marker-end="url(#arr)"/>
+  <line x1="400" y1="1075" x2="438" y2="1075" stroke="#5b6578" stroke-width="1.5" marker-end="url(#arr)"/>
+  <line x1="515" y1="1100" x2="515" y2="1138" stroke="#5b6578" stroke-width="1.5" marker-end="url(#arr)"/>
+  <line x1="440" y1="1165" x2="402" y2="1165" stroke="#5b6578" stroke-width="1.5" marker-end="url(#arr)"/>
+  <line x1="250" y1="1165" x2="212" y2="1165" stroke="#5b6578" stroke-width="1.5" marker-end="url(#arr)"/>
+  <line x1="135" y1="1138" x2="135" y2="1102" stroke="#5b6578" stroke-width="1.5" stroke-dasharray="5 4" marker-end="url(#arr)"/>
+  <text class="s" x="145" y="1124" fill="#5b6578" style="fill:#5b6578">monitor</text>
+  <text class="s" x="60" y="1218">Read 50–100 failing traces first, tag the failure types, count them.</text>
+  <text class="s b" x="60" y="1238">Every fixed bug becomes a permanent test case. The suite only grows.</text>
+  <text class="s" x="60" y="1258">Fix the most frequent failure type first, not the most vivid one.</text>
+
+  <!-- CI table -->
+  <text class="h" x="645" y="1060">n (SAMPLES)</text><text class="h" x="760" y="1060">95% CI AT 80% SCORE</text><text class="h" x="965" y="1060">GAP TO CALL A WINNER</text>
+  <line class="rule" x1="645" y1="1068" x2="1140" y2="1068"/>
+  <text class="mono b" x="645" y="1092">50</text><text class="t b red" x="760" y="1092">± 11 pp</text><text class="s" x="965" y="1092">~15 pp (unpaired)</text>
+  <text class="mono b" x="645" y="1118">200</text><text class="t b amber" x="760" y="1118">± 5.5 pp</text><text class="s" x="965" y="1118">~8 pp</text>
+  <text class="mono b" x="645" y="1144">1000</text><text class="t b green" x="760" y="1144">± 2.5 pp</text><text class="s" x="965" y="1144">~3.5 pp</text>
+  <line class="rule" x1="645" y1="1160" x2="1140" y2="1160"/>
+  <text class="s b red" x="645" y="1182">TRAP: "B beats A by 2%" on 50 samples = 1 example, not a result</text>
+  <text class="s" x="645" y="1204">Score both on the SAME examples: paired test (McNemar, bootstrap).</text>
+  <text class="s" x="645" y="1224">Report n, CI and per-slice results, not one headline number.</text>
+  <text class="s" x="645" y="1244">LLM runs are noisy: temperature 0, or average 3–5 runs per case.</text>
+
+  <!-- FOOTER RULES -->
+  <rect x="40" y="1305" width="1120" height="140" rx="12" fill="#1b2540"/>
+  <text x="60" y="1339" font-size="19" font-weight="800" fill="#ffffff">Six rules to say out loud</text>
+  <circle cx="72" cy="1375" r="13" fill="#2457d6"/><text class="num" x="72" y="1380" text-anchor="middle">1</text>
+  <text x="94" y="1381" font-size="15" fill="#e6ebf7">Prompt change = code change: run the suite</text>
+  <circle cx="440" cy="1375" r="13" fill="#2457d6"/><text class="num" x="440" y="1380" text-anchor="middle">2</text>
+  <text x="462" y="1381" font-size="15" fill="#e6ebf7">Real labeled set, kept out of the prompt</text>
+  <circle cx="790" cy="1375" r="13" fill="#2457d6"/><text class="num" x="790" y="1380" text-anchor="middle">3</text>
+  <text x="812" y="1381" font-size="15" fill="#e6ebf7">Cheapest check first, judge second</text>
+  <circle cx="72" cy="1418" r="13" fill="#2457d6"/><text class="num" x="72" y="1423" text-anchor="middle">4</text>
+  <text x="94" y="1424" font-size="15" fill="#e6ebf7">Swap order, simple rubric, check vs humans</text>
+  <circle cx="440" cy="1418" r="13" fill="#2457d6"/><text class="num" x="440" y="1423" text-anchor="middle">5</text>
+  <text x="462" y="1424" font-size="15" fill="#e6ebf7">Offline gates deploy; online confirms</text>
+  <circle cx="790" cy="1418" r="13" fill="#2457d6"/><text class="num" x="790" y="1423" text-anchor="middle">6</text>
+  <text x="812" y="1424" font-size="15" fill="#e6ebf7">Small n = wide CI: no winner on 2%</text>
+
+  <text x="600" y="1478" font-size="12.5" fill="#8a93a6" text-anchor="middle">interview repo · teach/infographics/cards · regenerate or edit by asking Claude Code</text>
+</svg>

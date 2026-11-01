@@ -1,0 +1,220 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="1480" viewBox="0 0 1200 1480" font-family="Segoe UI, Inter, Helvetica, Arial, sans-serif">
+  <style>
+    .bg { fill: #f6f7fb; }
+    .panel { fill: #ffffff; stroke: #d8deea; stroke-width: 1.5; }
+    .title { font-size: 21px; font-weight: 700; fill: #1b2540; }
+    .sub { font-size: 14px; fill: #5b6578; font-style: italic; }
+    .h { font-size: 13px; font-weight: 700; fill: #5b6578; letter-spacing: 0.6px; }
+    .t { font-size: 14.5px; fill: #263048; }
+    .s { font-size: 13px; fill: #263048; }
+    .b { font-weight: 700; }
+    .mono { font-family: Consolas, "Cascadia Mono", Menlo, monospace; font-size: 13.5px; fill: #1b2540; }
+    .blue { fill: #2457d6; } .green { fill: #138a43; } .red { fill: #c62828; } .amber { fill: #b45309; }
+    .rule { stroke: #e6eaf2; stroke-width: 1; }
+    .num { font-size: 15px; font-weight: 800; fill: #ffffff; }
+  </style>
+
+  <rect class="bg" width="1200" height="1480"/>
+
+  <!-- HEADER -->
+  <rect x="0" y="0" width="1200" height="110" fill="#1b2540"/>
+  <text x="40" y="52" font-size="32" font-weight="800" fill="#ffffff">What happens when you curl https://</text>
+  <text x="40" y="84" font-size="16" fill="#b9c4dc">W12 card · DNS → TCP → TLS → HTTP, in RTTs · R2 Q126–129, Q132 · R6 Q46, Q50–52, Q55</text>
+  <text x="1160" y="52" font-size="15" fill="#8fa3cc" text-anchor="end">plan/PREP_TODO.md · W12</text>
+
+  <!-- PANEL 1: timeline -->
+  <rect class="panel" x="40" y="135" width="1120" height="340" rx="12"/>
+  <text class="title" x="60" y="168">1 · The timeline: four stages before the first byte</text>
+  <text class="sub" x="60" y="190">each stage costs round trips; you pay them in order</text>
+  <text class="h" x="60" y="218">STAGE</text><text class="h" x="350" y="218">COST IN RTTs · WATERFALL, NOT TO SCALE</text><text class="h" x="780" y="218">WHAT TO SAY</text>
+  <line class="rule" x1="60" y1="226" x2="1140" y2="226"/>
+
+  <!-- row DNS -->
+  <text class="t b" x="60" y="250">DNS lookup</text><text class="s" x="60" y="266">stub → recursive → root → TLD → authoritative</text>
+  <rect x="350" y="238" width="170" height="22" rx="3" fill="#fdf1e3" stroke="#b45309"/>
+  <text x="435" y="253" font-size="11.5" font-weight="700" fill="#b45309" text-anchor="middle">0 cached · ~1–4 hops cold</text>
+  <text class="s" x="780" y="250">cached at every hop, each entry obeys its TTL</text>
+  <text class="s b red" x="780" y="266">TRAP: low TTL ≠ failover; clients cache longer</text>
+  <line class="rule" x1="60" y1="278" x2="1140" y2="278"/>
+
+  <!-- row TCP -->
+  <text class="t b" x="60" y="296">TCP handshake</text><text class="s" x="60" y="312">SYN → SYN-ACK → ACK</text>
+  <rect x="520" y="284" width="50" height="22" rx="3" fill="#2457d6"/>
+  <text x="545" y="299" font-size="11.5" font-weight="700" fill="#ffffff" text-anchor="middle">1 RTT</text>
+  <text class="s" x="780" y="296">SYN lost → 1 s retransmit (the p99 spike)</text>
+  <text class="s" x="780" y="312">pooling / keep-alive skips this and TLS entirely</text>
+  <line class="rule" x1="60" y1="324" x2="1140" y2="324"/>
+
+  <!-- row TLS -->
+  <text class="t b" x="60" y="342">TLS handshake</text><text class="s" x="60" y="358">keys + cert check + ALPN (details in 2)</text>
+  <rect x="570" y="330" width="50" height="22" rx="3" fill="#138a43"/>
+  <text x="595" y="345" font-size="11.5" font-weight="700" fill="#ffffff" text-anchor="middle">1 RTT</text>
+  <rect x="620" y="330" width="50" height="22" rx="3" fill="none" stroke="#b45309" stroke-dasharray="5 4"/>
+  <text x="645" y="345" font-size="11" font-weight="700" fill="#b45309" text-anchor="middle">+1 RTT</text>
+  <text class="s amber" x="676" y="345">← TLS 1.2</text>
+  <text class="s" x="780" y="342">1.3: 1 RTT · resumption can send 0-RTT early data</text>
+  <text class="s b red" x="780" y="358">TRAP: 0-RTT is replayable → idempotent GETs only</text>
+  <line class="rule" x1="60" y1="370" x2="1140" y2="370"/>
+
+  <!-- row HTTP -->
+  <text class="t b" x="60" y="388">HTTP request</text><text class="s" x="60" y="404">h2 chosen by ALPN → streams on one connection</text>
+  <rect x="620" y="376" width="50" height="22" rx="3" fill="#2457d6"/>
+  <text x="645" y="391" font-size="11.5" font-weight="700" fill="#ffffff" text-anchor="middle">1 RTT</text>
+  <rect x="670" y="376" width="90" height="22" rx="3" fill="#fdf1e3" stroke="#b45309"/>
+  <text x="715" y="391" font-size="11.5" font-weight="700" fill="#b45309" text-anchor="middle">server time</text>
+  <text class="s" x="780" y="388">TTFB = 1 RTT + server time (your p95 budget)</text>
+  <text class="s" x="780" y="404">h2/h3: later requests reuse this one connection</text>
+  <line class="rule" x1="60" y1="416" x2="1140" y2="416"/>
+
+  <text class="t b" x="60" y="438">Cold request ≈ DNS + 3 RTT before the first byte (TLS 1.2: 4). Warm pooled connection ≈ 1 RTT.</text>
+  <text class="s" x="60" y="458">At 100 ms RTT that is 300 ms vs 100 ms. Jio recommender at 33k peak RPS: pool + keep-alive, so handshakes are paid per connection, not per request.</text>
+
+  <!-- PANEL 2: inside TLS -->
+  <rect class="panel" x="40" y="500" width="545" height="355" rx="12"/>
+  <text class="title" x="60" y="533">2 · Inside TLS: SNI, ALPN, cert checks</text>
+  <text class="sub" x="60" y="555">the same single RTT, now with its contents</text>
+  <text class="mono" x="60" y="585">C→S ClientHello: SNI · ALPN [h2,http/1.1] · key_share</text>
+  <text class="mono" x="60" y="605">S→C ServerHello · cert chain · Finished  (encrypted)</text>
+  <text class="mono" x="60" y="625">C→S Finished + HTTP request       ← 1 RTT done</text>
+  <text class="h" x="60" y="655">CERT CHECK</text><text class="h" x="355" y="655">FAILS AS</text>
+  <line class="rule" x1="60" y1="663" x2="565" y2="663"/>
+  <text class="t" x="60" y="685">Hostname is in a SAN entry</text><text class="s red" x="355" y="685">hostname mismatch</text>
+  <text class="t" x="60" y="707">Inside notBefore / notAfter</text><text class="s red" x="355" y="707">expired (#1 outage cause)</text>
+  <text class="t" x="60" y="729">Chain ends in a trusted root</text><text class="s red" x="355" y="729">unable to get local issuer</text>
+  <text class="t" x="60" y="751">Signature valid, not revoked</text><text class="s red" x="355" y="751">revoked (OCSP stapling)</text>
+  <text class="s b amber" x="60" y="775">Chain = leaf → intermediate → root; root is in the trust store.</text>
+  <text class="s b amber" x="60" y="793">Server skips the intermediate: browser works, curl/Python fails.</text>
+  <line class="rule" x1="60" y1="805" x2="565" y2="805"/>
+  <text class="s" x="60" y="824"><tspan class="b">SNI</tspan> = hostname in the ClientHello, so one IP serves many certs.</text>
+  <text class="s" x="60" y="843"><tspan class="b">mTLS</tspan>: server asks for a client cert too; meshes rotate them.</text>
+
+  <!-- PANEL 3: HTTP versions -->
+  <rect class="panel" x="615" y="500" width="545" height="355" rx="12"/>
+  <text class="title" x="635" y="533">3 · HTTP/1.1 vs HTTP/2 vs HTTP/3</text>
+  <text class="sub" x="635" y="555">where head-of-line blocking lives</text>
+  <text class="h" x="735" y="585">HTTP/1.1</text><text class="h" x="860" y="585">HTTP/2</text><text class="h" x="1000" y="585">HTTP/3</text>
+  <line class="rule" x1="635" y1="593" x2="1140" y2="593"/>
+
+  <text class="s b" x="635" y="615">Transport</text>
+  <text class="s" x="735" y="615">TCP</text>
+  <text class="s" x="860" y="615">TCP + TLS</text>
+  <text class="s" x="1000" y="615">QUIC on UDP</text><text class="s" x="1000" y="631">TLS 1.3 inside</text>
+  <line class="rule" x1="635" y1="639" x2="1140" y2="639"/>
+
+  <text class="s b" x="635" y="651">Multiplexing</text>
+  <text class="s" x="735" y="651">no: ~6 conns</text><text class="s" x="735" y="667">per host</text>
+  <text class="s" x="860" y="651">yes: streams</text><text class="s" x="860" y="667">on 1 connection</text>
+  <text class="s" x="1000" y="651">yes: independent</text><text class="s" x="1000" y="667">streams</text>
+  <line class="rule" x1="635" y1="675" x2="1140" y2="675"/>
+
+  <text class="s b" x="635" y="687">HOL blocking</text>
+  <text class="s b amber" x="735" y="687">per connection</text><text class="s amber" x="735" y="703">(request queue)</text>
+  <text class="s b red" x="860" y="687">at TCP layer:</text><text class="s red" x="860" y="703">1 loss stalls all</text>
+  <text class="s b green" x="1000" y="687">gone across</text><text class="s green" x="1000" y="703">streams</text>
+  <line class="rule" x1="635" y1="711" x2="1140" y2="711"/>
+
+  <text class="s b" x="635" y="723">Cold setup</text>
+  <text class="s" x="735" y="723">TCP 1 + TLS 1</text><text class="s" x="735" y="739">(with TLS 1.3)</text>
+  <text class="s" x="860" y="723">TCP 1 + TLS 1</text><text class="s" x="860" y="739">(with TLS 1.3)</text>
+  <text class="s b green" x="1000" y="723">1 RTT</text><text class="s" x="1000" y="739">0-RTT on resume</text>
+  <line class="rule" x1="635" y1="747" x2="1140" y2="747"/>
+
+  <text class="s b" x="635" y="759">Headers</text>
+  <text class="s" x="735" y="759">plain text,</text><text class="s" x="735" y="775">repeated</text>
+  <text class="s" x="860" y="759">HPACK,</text><text class="s" x="860" y="775">compressed</text>
+  <text class="s" x="1000" y="759">QPACK,</text><text class="s" x="1000" y="775">compressed</text>
+  <line class="rule" x1="635" y1="783" x2="1140" y2="783"/>
+
+  <text class="s b" x="635" y="795">Found via</text>
+  <text class="s" x="735" y="795">default</text>
+  <text class="s" x="860" y="795">ALPN in TLS</text><text class="s" x="860" y="811">→ "h2"</text>
+  <text class="s" x="1000" y="795">Alt-Svc / HTTPS</text><text class="s" x="1000" y="811">record; TCP fallback</text>
+
+  <text class="t b" x="635" y="842">HOL moved down a layer: HTTP → TCP → solved by QUIC</text>
+
+  <!-- PANEL 4: L4 vs L7 -->
+  <rect class="panel" x="40" y="880" width="545" height="380" rx="12"/>
+  <text class="title" x="60" y="913">4 · L4 vs L7 load balancers</text>
+  <text class="sub" x="60" y="935">L4 forwards connections, L7 reads requests</text>
+  <text class="h" x="170" y="965">L4 · NLB, IPVS</text><text class="h" x="370" y="965">L7 · ALB, nginx, Envoy</text>
+  <line class="rule" x1="60" y1="973" x2="565" y2="973"/>
+
+  <text class="t b" x="60" y="995">Sees</text>
+  <text class="s" x="170" y="995">IPs, ports, TCP bytes</text><text class="s" x="170" y="1011">(no HTTP at all)</text>
+  <text class="s" x="370" y="995">URL, headers, cookies,</text><text class="s" x="370" y="1011">gRPC method</text>
+  <line class="rule" x1="60" y1="1021" x2="565" y2="1021"/>
+
+  <text class="t b" x="60" y="1033">TLS</text>
+  <text class="s" x="170" y="1033">pass-through (NLB can</text><text class="s" x="170" y="1049">also terminate)</text>
+  <text class="s" x="370" y="1033">terminates, re-encrypts</text><text class="s" x="370" y="1049">to backend if needed</text>
+  <line class="rule" x1="60" y1="1059" x2="565" y2="1059"/>
+
+  <text class="t b" x="60" y="1071">Balances</text>
+  <text class="s b red" x="170" y="1071">per connection</text><text class="s" x="170" y="1087">h2/gRPC pins to 1 pod</text>
+  <text class="s b green" x="370" y="1071">per request</text><text class="s" x="370" y="1087">spreads h2 streams</text>
+  <line class="rule" x1="60" y1="1097" x2="565" y2="1097"/>
+
+  <text class="t b" x="60" y="1109">Sticky</text>
+  <text class="s" x="170" y="1109">source-IP hash</text><text class="s" x="170" y="1125">(breaks behind NAT)</text>
+  <text class="s" x="370" y="1109">cookie or header hash</text><text class="s" x="370" y="1125">(survives NAT)</text>
+  <line class="rule" x1="60" y1="1135" x2="565" y2="1135"/>
+
+  <text class="t b" x="60" y="1147">Routing</text>
+  <text class="s" x="170" y="1147">ports only</text>
+  <text class="s" x="370" y="1147">host, path, header,</text><text class="s" x="370" y="1163">canary weights, retries</text>
+  <line class="rule" x1="60" y1="1173" x2="565" y2="1173"/>
+
+  <text class="t b" x="60" y="1185">Examples</text>
+  <text class="s" x="170" y="1185">AWS NLB, IPVS, MetalLB</text><text class="s" x="170" y="1201">static IP, millions of conns</text>
+  <text class="s" x="370" y="1185">AWS ALB, nginx, Envoy,</text><text class="s" x="370" y="1201">Istio ingress; WAF, auth</text>
+
+  <text class="s b red" x="60" y="1226">gRPC / h2 behind an L4 LB: one long-lived conn pins to one pod.</text>
+  <text class="s" x="60" y="1245">Fix: an L7 proxy (Envoy/ALB) or client-side balancing (R6 Q55).</text>
+
+  <!-- PANEL 5: debug it -->
+  <rect class="panel" x="615" y="880" width="545" height="380" rx="12"/>
+  <text class="title" x="635" y="913">5 · Debug it: one command per stage</text>
+  <text class="sub" x="635" y="935">split the timing first: which gap is the big one?</text>
+
+  <text class="mono" x="635" y="968">dig +trace api.example.com</text>
+  <text class="s" x="635" y="986">walks root → TLD → authoritative; compare resolvers, read TTL</text>
+  <line class="rule" x1="635" y1="1000" x2="1140" y2="1000"/>
+
+  <text class="mono" x="635" y="1018" font-size="12.5">curl -so /dev/null -w "%{time_namelookup} %{time_connect}</text>
+  <text class="mono" x="635" y="1035" font-size="12.5">  %{time_appconnect} %{time_starttransfer} %{time_total}\n" $URL</text>
+  <text class="s b amber" x="635" y="1053">dns · tcp · tls · first byte · total: all CUMULATIVE, subtract</text>
+  <line class="rule" x1="635" y1="1065" x2="1140" y2="1065"/>
+
+  <text class="mono" x="635" y="1083">curl -v --http2 https://api.example.com</text>
+  <text class="s" x="635" y="1101">shows ALPN, TLS version, cert subject/SAN/expiry, h2 or not</text>
+  <line class="rule" x1="635" y1="1113" x2="1140" y2="1113"/>
+
+  <text class="mono" x="635" y="1131">openssl s_client -connect host:443 -servername host</text>
+  <text class="s b amber" x="635" y="1149">-servername is SNI: omit it and you may get the wrong cert</text>
+  <line class="rule" x1="635" y1="1161" x2="1140" y2="1161"/>
+
+  <text class="mono" x="635" y="1179">ss -tan state time-wait | wc -l</text>
+  <text class="s" x="635" y="1197">TIME_WAIT pile-up = no pooling → port exhaustion (R6 Q53)</text>
+  <line class="rule" x1="635" y1="1209" x2="1140" y2="1209"/>
+
+  <text class="mono" x="635" y="1227">tcpdump -nn -i any host 10.0.0.5 and port 443 -w t.pcap</text>
+  <text class="s" x="635" y="1245">repeated SYN = loss/firewall; RST = reset by peer (R6 Q52)</text>
+
+  <!-- FOOTER RULES -->
+  <rect x="40" y="1285" width="1120" height="140" rx="12" fill="#1b2540"/>
+  <text x="60" y="1319" font-size="19" font-weight="800" fill="#ffffff">Six rules to say out loud</text>
+  <circle cx="72" cy="1355" r="13" fill="#2457d6"/><text class="num" x="72" y="1360" text-anchor="middle">1</text>
+  <text x="94" y="1361" font-size="15" fill="#e6ebf7">Cold curl = DNS + 3 RTT; reuse connections</text>
+  <circle cx="440" cy="1355" r="13" fill="#2457d6"/><text class="num" x="440" y="1360" text-anchor="middle">2</text>
+  <text x="462" y="1361" font-size="15" fill="#e6ebf7">TLS 1.3 = 1 RTT; 0-RTT is replayable</text>
+  <circle cx="790" cy="1355" r="13" fill="#2457d6"/><text class="num" x="790" y="1360" text-anchor="middle">3</text>
+  <text x="812" y="1361" font-size="15" fill="#e6ebf7">Low TTL ≠ instant failover: clients cache</text>
+  <circle cx="72" cy="1398" r="13" fill="#2457d6"/><text class="num" x="72" y="1403" text-anchor="middle">4</text>
+  <text x="94" y="1404" font-size="15" fill="#e6ebf7">Cert: SAN, expiry, chain to trust store</text>
+  <circle cx="440" cy="1398" r="13" fill="#2457d6"/><text class="num" x="440" y="1403" text-anchor="middle">5</text>
+  <text x="462" y="1404" font-size="15" fill="#e6ebf7">HOL: h1 per conn, h2 in TCP, h3 fixed</text>
+  <circle cx="790" cy="1398" r="13" fill="#2457d6"/><text class="num" x="790" y="1403" text-anchor="middle">6</text>
+  <text x="812" y="1404" font-size="15" fill="#e6ebf7">L4 balances connections, L7 requests</text>
+
+  <text x="600" y="1458" font-size="12.5" fill="#8a93a6" text-anchor="middle">interview repo · teach/infographics/cards · regenerate or edit by asking Claude Code</text>
+</svg>

@@ -1,0 +1,187 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="1560" viewBox="0 0 1200 1560" font-family="Segoe UI, Inter, Helvetica, Arial, sans-serif">
+  <style>
+    .bg { fill: #f6f7fb; }
+    .panel { fill: #ffffff; stroke: #d8deea; stroke-width: 1.5; }
+    .title { font-size: 21px; font-weight: 700; fill: #1b2540; }
+    .sub { font-size: 14px; fill: #5b6578; font-style: italic; }
+    .h { font-size: 13px; font-weight: 700; fill: #5b6578; letter-spacing: 0.6px; }
+    .t { font-size: 14.5px; fill: #263048; }
+    .s { font-size: 13px; fill: #263048; }
+    .b { font-weight: 700; }
+    .mono { font-family: Consolas, "Cascadia Mono", Menlo, monospace; font-size: 13.5px; fill: #1b2540; }
+    .blue { fill: #2457d6; } .green { fill: #138a43; } .red { fill: #c62828; } .amber { fill: #b45309; }
+    .rule { stroke: #e6eaf2; stroke-width: 1; }
+    .num { font-size: 15px; font-weight: 800; fill: #ffffff; }
+  </style>
+  <defs>
+    <marker id="arr" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto">
+      <path d="M0,0 L10,5 L0,10 z" fill="#5b6578"/>
+    </marker>
+  </defs>
+
+  <rect class="bg" width="1200" height="1560"/>
+
+  <!-- HEADER -->
+  <rect x="0" y="0" width="1200" height="110" fill="#1b2540"/>
+  <text x="40" y="52" font-size="32" font-weight="800" fill="#ffffff">Postgres internals, on one page</text>
+  <text x="40" y="84" font-size="16" fill="#b9c4dc">W05 card · Postgres 16/17 · R2 Q30–34 · R3 Q40, Q45, Q92 · DSA Q74–79, Q87 · Jio: connection pooling bottleneck</text>
+  <text x="1160" y="52" font-size="15" fill="#8fa3cc" text-anchor="end">plan/PREP_TODO.md · W5</text>
+
+  <!-- PANEL 1: indexes -->
+  <rect class="panel" x="40" y="135" width="545" height="455" rx="12"/>
+  <text class="title" x="60" y="168">1 · Index types &amp; the rules that bite</text>
+  <text class="sub" x="60" y="190">pick by access pattern; every index costs writes</text>
+  <text class="h" x="60" y="214">INDEX</text><text class="h" x="185" y="214">USE FOR</text>
+  <line class="rule" x1="60" y1="222" x2="565" y2="222"/>
+  <text class="t b blue" x="60" y="244">B-tree (default)</text><text class="s" x="185" y="244">= &lt; &gt; BETWEEN, ORDER BY, prefix LIKE 'ab%'</text>
+  <text class="t b blue" x="60" y="266">GIN</text><text class="s" x="185" y="266">jsonb @&gt;, arrays, full-text (tsvector); slower writes</text>
+  <text class="t b blue" x="60" y="288">GiST</text><text class="s" x="185" y="288">PostGIS geometry, ranges, nearest-neighbour (KNN)</text>
+  <text class="t b blue" x="60" y="310">BRIN</text><text class="s" x="185" y="310">huge append-only time series; KBs, needs ts order</text>
+  <text class="t b blue" x="60" y="332">Hash</text><text class="s" x="185" y="332">equality only; B-tree is nearly always enough</text>
+  <line class="rule" x1="60" y1="346" x2="565" y2="346"/>
+  <text class="h" x="60" y="368">COMPOSITE · COVERING · PARTIAL</text>
+  <text class="s" x="60" y="391"><tspan class="b">(a,b,c)</tspan> serves a · a,b · a,b,c — not b alone, not c alone</text>
+  <text class="mono" x="60" y="414">ON t (a, b) INCLUDE (c)</text><text class="s" x="275" y="414">covering → Index Only Scan</text>
+  <text class="mono" x="60" y="436">ON jobs (id) WHERE status='pending'</text><text class="s" x="372" y="436">partial: tiny, hot rows</text>
+  <line class="rule" x1="60" y1="450" x2="565" y2="450"/>
+  <text class="h" x="60" y="472">WHY THE PLANNER SKIPS YOUR INDEX</text>
+  <text class="s b red" x="60" y="496">Function on the column: lower(email), date(ts), col + 1</text>
+  <text class="s" x="60" y="517">fix: expression index, or range on the raw column</text>
+  <text class="s" x="60" y="538">returns too many rows (~&gt;10%): seq scan is cheaper · stale stats</text>
+  <text class="s" x="60" y="559">type mismatch (int vs text cast) · tiny table</text>
+  <text class="s b amber" x="60" y="580">More indexes = slower writes + more VACUUM work</text>
+
+  <!-- PANEL 2: EXPLAIN -->
+  <rect class="panel" x="615" y="135" width="545" height="455" rx="12"/>
+  <text class="title" x="635" y="168">2 · Reading EXPLAIN ANALYZE</text>
+  <text class="sub" x="635" y="190">check estimated vs actual rows first</text>
+  <text class="h" x="635" y="214">SCAN</text><text class="h" x="775" y="214">WHEN / WHAT</text>
+  <line class="rule" x1="635" y1="222" x2="1140" y2="222"/>
+  <text class="t b blue" x="635" y="244">Seq Scan</text><text class="s" x="775" y="244">whole table; fine if small or most rows match</text>
+  <text class="t b blue" x="635" y="266">Index Scan</text><text class="s" x="775" y="266">index → one heap fetch per row; few rows</text>
+  <text class="t b blue" x="635" y="288">Index Only Scan</text><text class="s" x="775" y="288">no heap if visibility map set (Heap Fetches: 0)</text>
+  <text class="t b blue" x="635" y="310">Bitmap Heap Scan</text><text class="s" x="775" y="310">many hits: sort page IDs, read heap in order</text>
+  <line class="rule" x1="635" y1="324" x2="1140" y2="324"/>
+  <text class="h" x="635" y="346">JOIN</text><text class="h" x="775" y="346">PLANNER PICKS IT WHEN</text>
+  <text class="t b blue" x="635" y="368">Nested Loop</text><text class="s" x="775" y="368">few outer rows + indexed inner lookup (OLTP)</text>
+  <text class="t b blue" x="635" y="390">Hash Join</text><text class="s" x="775" y="390">big equality join; hash the smaller side (work_mem)</text>
+  <text class="t b blue" x="635" y="412">Merge Join</text><text class="s" x="775" y="412">both inputs already sorted (index or sort)</text>
+  <line class="rule" x1="635" y1="426" x2="1140" y2="426"/>
+  <text class="h" x="635" y="448">PLAN SNIPPET</text>
+  <text class="mono" x="635" y="471">Seq Scan on orders (cost=0.00..18334 <tspan class="b red">rows=50</tspan>)</text>
+  <text class="mono" x="635" y="491">  (actual time=0.1..210 <tspan class="b red">rows=48210</tspan> loops=1)</text>
+  <text class="mono" x="635" y="511">  Filter: (status = 'new')  Removed: 951790</text>
+  <text class="s b red" x="635" y="534">est 50 vs actual 48,210 → stale stats → ANALYZE orders</text>
+  <text class="s" x="635" y="555">also read: loops × time per loop, Buffers (hit vs read)</text>
+  <text class="s b amber" x="635" y="576">ANALYZE runs the query: wrap writes in BEGIN … ROLLBACK</text>
+
+  <!-- PANEL 3: MVCC -->
+  <rect class="panel" x="40" y="615" width="545" height="410" rx="12"/>
+  <text class="title" x="60" y="648">3 · MVCC: versions, not locks</text>
+  <text class="sub" x="60" y="670">readers never block writers; UPDATE writes a new tuple</text>
+  <rect x="60" y="686" width="190" height="52" rx="6" fill="#fde8e8" stroke="#c62828"/>
+  <text class="mono b" x="155" y="707" text-anchor="middle">v1  bal=100</text>
+  <text class="mono" x="155" y="727" text-anchor="middle">xmin=100 xmax=205</text>
+  <rect x="375" y="686" width="190" height="52" rx="6" fill="#e6f5ec" stroke="#138a43"/>
+  <text class="mono b" x="470" y="707" text-anchor="middle">v2  bal=90</text>
+  <text class="mono" x="470" y="727" text-anchor="middle">xmin=205 xmax=0</text>
+  <line x1="252" y1="712" x2="372" y2="712" stroke="#5b6578" stroke-width="1.5" marker-end="url(#arr)"/>
+  <text class="s" x="312" y="704" text-anchor="middle">UPDATE tx 205</text>
+  <text class="s red" x="155" y="757" text-anchor="middle">dead: no snapshot needs it</text>
+  <text class="s green" x="470" y="757" text-anchor="middle">live version</text>
+  <text class="h" x="60" y="788">OPERATION</text><text class="h" x="185" y="788">WHAT IT DOES</text>
+  <line class="rule" x1="60" y1="796" x2="565" y2="796"/>
+  <text class="t b blue" x="60" y="818">VACUUM</text><text class="s" x="185" y="818">frees dead space for reuse, sets visibility map; no shrink</text>
+  <text class="t b blue" x="60" y="840">VACUUM FULL</text><text class="s" x="185" y="840">rewrites table under ACCESS EXCLUSIVE; prefer pg_repack</text>
+  <text class="t b blue" x="60" y="862">autovacuum</text><text class="s" x="185" y="862">~20% dead rows by default; lower it for big hot tables</text>
+  <text class="t b blue" x="60" y="884">wraparound</text><text class="s" x="185" y="884">32-bit xids: VACUUM freezes old rows, or writes stop</text>
+  <line class="rule" x1="60" y1="898" x2="565" y2="898"/>
+  <text class="s b red" x="60" y="922">TRAP: a long-running / idle-in-transaction session</text>
+  <text class="s" x="60" y="943">pins the xmin horizon → VACUUM removes nothing → bloat</text>
+  <text class="s" x="60" y="964">find it: pg_stat_activity.xact_start, state = 'idle in transaction'</text>
+  <text class="s" x="60" y="985">set idle_in_transaction_session_timeout, statement_timeout</text>
+  <text class="s b amber" x="60" y="1008">Also pins it: stale replication slots, hot_standby_feedback</text>
+
+  <!-- PANEL 4: isolation -->
+  <rect class="panel" x="615" y="615" width="545" height="410" rx="12"/>
+  <text class="title" x="635" y="648">4 · Isolation levels in Postgres</text>
+  <text class="sub" x="635" y="670">no dirty reads ever (Read Uncommitted = Read Committed)</text>
+  <text class="h" x="635" y="702">LEVEL</text>
+  <text class="h" font-size="12" letter-spacing="0.2" x="796" y="702" text-anchor="middle">DIRTY</text><text class="h" font-size="12" letter-spacing="0.2" x="862" y="702" text-anchor="middle">NON-REP</text>
+  <text class="h" font-size="12" letter-spacing="0.2" x="936" y="702" text-anchor="middle">PHANTOM</text><text class="h" font-size="12" letter-spacing="0.2" x="1020" y="702" text-anchor="middle">LOST UPD</text>
+  <text class="h" font-size="12" letter-spacing="0.2" x="1099" y="702" text-anchor="middle">WRITE SKEW</text>
+  <line class="rule" x1="635" y1="710" x2="1140" y2="710"/>
+  <text class="t b" x="635" y="734">Read Committed</text>
+  <text class="s b green" x="796" y="734" text-anchor="middle">no</text><text class="s b red" x="862" y="734" text-anchor="middle">YES</text>
+  <text class="s b red" x="936" y="734" text-anchor="middle">YES</text><text class="s b red" x="1020" y="734" text-anchor="middle">YES</text>
+  <text class="s b red" x="1099" y="734" text-anchor="middle">YES</text>
+  <text class="s" x="635" y="753">default · new snapshot per statement</text>
+  <line class="rule" x1="635" y1="763" x2="1140" y2="763"/>
+  <text class="t b" x="635" y="787">Repeatable Read</text>
+  <text class="s b green" x="796" y="787" text-anchor="middle">no</text><text class="s b green" x="862" y="787" text-anchor="middle">no</text>
+  <text class="s b green" x="936" y="787" text-anchor="middle">no</text><text class="s b amber" x="1020" y="787" text-anchor="middle">abort</text>
+  <text class="s b red" x="1099" y="787" text-anchor="middle">YES</text>
+  <text class="s" x="635" y="806">one snapshot per tx · phantom-free (stricter than SQL std)</text>
+  <line class="rule" x1="635" y1="816" x2="1140" y2="816"/>
+  <text class="t b" x="635" y="840">Serializable</text>
+  <text class="s b green" x="796" y="840" text-anchor="middle">no</text><text class="s b green" x="862" y="840" text-anchor="middle">no</text>
+  <text class="s b green" x="936" y="840" text-anchor="middle">no</text><text class="s b green" x="1020" y="840" text-anchor="middle">no</text>
+  <text class="s b green" x="1099" y="840" text-anchor="middle">no</text>
+  <text class="s" x="635" y="859">SSI tracks read/write dependencies · may abort</text>
+  <line class="rule" x1="635" y1="869" x2="1140" y2="869"/>
+  <text class="s b amber" x="635" y="891">RR and Serializable fail with 40001 → retry the whole tx</text>
+  <text class="h" x="635" y="918">FIXES</text>
+  <text class="mono" x="635" y="940">SELECT … WHERE id=1 FOR UPDATE;</text><text class="s" x="940" y="940">lost update: row lock</text>
+  <text class="mono" x="635" y="961">… FOR UPDATE SKIP LOCKED LIMIT 1;</text><text class="s" x="940" y="961">job queue (Q40)</text>
+  <text class="s b red" x="635" y="985">Write skew: both txs read the set, write different rows</text>
+  <text class="s" x="635" y="1006">fix: Serializable, or lock the whole set / a guard row</text>
+
+  <!-- PANEL 5: connections -->
+  <rect class="panel" x="40" y="1050" width="1120" height="290" rx="12"/>
+  <text class="title" x="60" y="1083">5 · Connections: pool or fall over</text>
+  <text class="sub" x="60" y="1105">one OS process per connection (~5–10 MB + context switching); throughput peaks near 2× cores, then drops</text>
+  <rect x="60" y="1128" width="150" height="66" rx="6" fill="#eef1f7"/>
+  <text class="mono b" x="135" y="1155" text-anchor="middle">API pods</text><text class="s" x="135" y="1176" text-anchor="middle">N × app pool of 10</text>
+  <rect x="255" y="1128" width="150" height="66" rx="6" fill="#e8effd" stroke="#2457d6"/>
+  <text class="mono b" x="330" y="1155" text-anchor="middle">PgBouncer</text><text class="s" x="330" y="1176" text-anchor="middle">txn mode · 1000s in</text>
+  <rect x="450" y="1128" width="110" height="66" rx="6" fill="#e6f5ec" stroke="#138a43"/>
+  <text class="mono b" x="505" y="1155" text-anchor="middle">Postgres</text><text class="s" x="505" y="1176" text-anchor="middle">~20–50 conns</text>
+  <line x1="212" y1="1161" x2="252" y2="1161" stroke="#5b6578" stroke-width="1.5" marker-end="url(#arr)"/>
+  <line x1="407" y1="1161" x2="447" y2="1161" stroke="#5b6578" stroke-width="1.5" marker-end="url(#arr)"/>
+  <line class="rule" x1="60" y1="1210" x2="560" y2="1210"/>
+  <text class="mono b" x="60" y="1232">pods × app_pool ≤ max_connections − reserved</text>
+  <text class="s b red" x="60" y="1254">30 pods × pool 10 = 300 &gt; max_connections 200 → "too many clients"</text>
+  <text class="s" x="60" y="1277"><tspan class="b">Pool size ≈ cores × 2</tspan> (+ spindles): bigger pool = slower, not faster</text>
+  <text class="s" x="60" y="1298">Little's law: busy conns = QPS × query time (10k QPS × 5 ms ≈ 50)</text>
+  <text class="s b amber" x="60" y="1320">Jio recommender: say how you sized the pool, not "we added more"</text>
+
+  <line class="rule" x1="590" y1="1128" x2="590" y2="1320"/>
+  <text class="h" x="620" y="1140">PGBOUNCER MODE</text><text class="h" x="770" y="1140">HOLDS SERVER CONN</text><text class="h" x="930" y="1140">WHAT BREAKS</text>
+  <line class="rule" x1="620" y1="1148" x2="1140" y2="1148"/>
+  <text class="t b blue" x="620" y="1170">session</text><text class="s" x="770" y="1170">whole client session</text><text class="s" x="930" y="1170">nothing, but weak multiplexing</text>
+  <text class="t b blue" x="620" y="1194">transaction</text><text class="s" x="770" y="1194">one transaction</text><text class="s" x="930" y="1194">SET, advisory locks, LISTEN,</text>
+  <text class="s" x="930" y="1212">temp tables, prepared stmts</text>
+  <text class="t b blue" x="620" y="1236">statement</text><text class="s" x="770" y="1236">one statement</text><text class="s" x="930" y="1236">multi-statement transactions</text>
+  <line class="rule" x1="620" y1="1250" x2="1140" y2="1250"/>
+  <text class="s b red" x="620" y="1272">TRAP: session state in transaction mode leaks to the next client</text>
+  <text class="s" x="620" y="1293">SET LOCAL not SET · PgBouncer ≥ 1.21 max_prepared_statements ·</text>
+  <text class="s" x="620" y="1312">asyncpg statement_cache_size=0 · out of conns now (Q92): kill idle-in-tx first</text>
+
+  <!-- FOOTER RULES -->
+  <rect x="40" y="1365" width="1120" height="140" rx="12" fill="#1b2540"/>
+  <text x="60" y="1399" font-size="19" font-weight="800" fill="#ffffff">Six rules to say out loud</text>
+  <circle cx="72" cy="1435" r="13" fill="#2457d6"/><text class="num" x="72" y="1440" text-anchor="middle">1</text>
+  <text x="94" y="1441" font-size="15" fill="#e6ebf7">Leftmost prefix; no function on column</text>
+  <circle cx="440" cy="1435" r="13" fill="#2457d6"/><text class="num" x="440" y="1440" text-anchor="middle">2</text>
+  <text x="462" y="1441" font-size="15" fill="#e6ebf7">Estimated vs actual rows → ANALYZE</text>
+  <circle cx="790" cy="1435" r="13" fill="#2457d6"/><text class="num" x="790" y="1440" text-anchor="middle">3</text>
+  <text x="812" y="1441" font-size="15" fill="#e6ebf7">UPDATE = new version; VACUUM reclaims</text>
+  <circle cx="72" cy="1478" r="13" fill="#2457d6"/><text class="num" x="72" y="1483" text-anchor="middle">4</text>
+  <text x="94" y="1484" font-size="15" fill="#e6ebf7">Long transactions pin cleanup → bloat</text>
+  <circle cx="440" cy="1478" r="13" fill="#2457d6"/><text class="num" x="440" y="1483" text-anchor="middle">5</text>
+  <text x="462" y="1484" font-size="15" fill="#e6ebf7">RC loses updates; RR still write-skews</text>
+  <circle cx="790" cy="1478" r="13" fill="#2457d6"/><text class="num" x="790" y="1483" text-anchor="middle">6</text>
+  <text x="812" y="1484" font-size="15" fill="#e6ebf7">Pods × pool ≤ max_connections; PgBouncer</text>
+
+  <text x="600" y="1538" font-size="12.5" fill="#8a93a6" text-anchor="middle">interview repo · teach/infographics/cards · regenerate or edit by asking Claude Code</text>
+</svg>
