@@ -1,0 +1,299 @@
+<title>Say It Out Loud</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;600&family=IBM+Plex+Sans+Condensed:wght@600;700&family=IBM+Plex+Sans:wght@400;500;600&display=swap">
+<style>
+/* Layout: one centered column; a flashcard stage up top, deck grid below. Palette follows the repo's infographic cards (navy header, blue accent). */
+:root {
+  --bg: #f4f6fb; --surface: #ffffff; --line: #d8deea; --ink: #1b2540; --muted: #5b6578;
+  --navy: #1b2540; --navy-ink: #e6ebf7; --accent: #2457d6; --accent-soft: #e7eeff;
+  --good: #138a43; --good-soft: #e3f4ea; --warn: #b45309; --warn-soft: #fdf0e1; --bad: #c62828; --bad-soft: #fde8e8;
+  --display: "IBM Plex Sans Condensed", "Arial Narrow", system-ui, sans-serif;
+  --body: "IBM Plex Sans", "Segoe UI", system-ui, sans-serif;
+  --mono: "IBM Plex Mono", Consolas, ui-monospace, monospace;
+}
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) {
+  --bg: #0f1424; --surface: #18203a; --line: #2a3556; --ink: #e6ebf7; --muted: #9aa5bb;
+  --navy: #0a0e1b; --navy-ink: #e6ebf7; --accent: #7aa2ff; --accent-soft: #1f2c52;
+  --good: #4cc27e; --good-soft: #15301f; --warn: #f0a24a; --warn-soft: #3a2a14; --bad: #ff7a7a; --bad-soft: #3d1a1d;
+  color-scheme: dark } }
+:root[data-theme="dark"] {
+  --bg: #0f1424; --surface: #18203a; --line: #2a3556; --ink: #e6ebf7; --muted: #9aa5bb;
+  --navy: #0a0e1b; --navy-ink: #e6ebf7; --accent: #7aa2ff; --accent-soft: #1f2c52;
+  --good: #4cc27e; --good-soft: #15301f; --warn: #f0a24a; --warn-soft: #3a2a14; --bad: #ff7a7a; --bad-soft: #3d1a1d;
+  color-scheme: dark }
+* { box-sizing: border-box }
+body { background: var(--bg); color: var(--ink); font: 15px/1.55 var(--body); }
+.band { background: var(--navy); color: var(--navy-ink); }
+.wrap { max-width: 860px; margin: 0 auto; padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px)); }
+header .wrap { padding-block: 22px 18px; display: flex; flex-wrap: wrap; gap: 12px 24px; align-items: end; justify-content: space-between; }
+h1 { font: 700 30px/1.1 var(--display); margin: 0; letter-spacing: .2px; text-wrap: balance; }
+.tag { margin: 4px 0 0; color: #b9c4dc; font-size: 13.5px; }
+.stats { display: flex; gap: 18px; font-variant-numeric: tabular-nums; }
+.stat b { display: block; font: 700 24px/1 var(--display); }
+.stat span { font-size: 11.5px; letter-spacing: .6px; text-transform: uppercase; color: #b9c4dc; }
+main .wrap { padding-block: 20px 40px; display: grid; gap: 22px; }
+.note { font-size: 13px; color: var(--muted); margin: 0; }
+.note.warn { color: var(--warn); }
+
+/* controls */
+.controls { display: flex; flex-wrap: wrap; gap: 10px; align-items: center; justify-content: space-between; }
+.seg { display: inline-flex; border: 1px solid var(--line); border-radius: 8px; overflow: hidden; background: var(--surface); }
+.seg button { border: 0; background: none; color: var(--ink); font: 500 13px var(--body); padding: 7px 12px; cursor: pointer; }
+.seg button[aria-pressed="true"] { background: var(--accent); color: #fff; }
+.seg button + button { border-left: 1px solid var(--line); }
+.chk { display: inline-flex; gap: 6px; align-items: center; font-size: 13.5px; color: var(--muted); cursor: pointer; }
+.chk input { accent-color: var(--accent); width: 16px; height: 16px; }
+.filterline { font-size: 13px; color: var(--muted); }
+.filterline button { border: 0; background: none; color: var(--accent); font: inherit; cursor: pointer; padding: 0; text-decoration: underline; }
+
+/* card stage */
+.stage { background: var(--surface); border: 1.5px solid var(--line); border-radius: 14px; padding: 22px 24px; display: grid; gap: 14px; min-height: 280px; align-content: start; }
+.stage:focus { outline: none; }
+.meta { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; font-size: 12.5px; color: var(--muted); }
+.pill { font: 600 11.5px var(--body); letter-spacing: .5px; text-transform: uppercase; padding: 3px 8px; border-radius: 999px; background: var(--accent-soft); color: var(--accent); }
+.pill.miss { background: var(--bad-soft); color: var(--bad); }
+.pill.box { background: var(--good-soft); color: var(--good); }
+.progress { margin-left: auto; font-variant-numeric: tabular-nums; }
+.q { font: 600 21px/1.35 var(--body); margin: 0; text-wrap: pretty; }
+.hint { font-size: 13px; color: var(--muted); margin: 0; }
+.a { border-top: 1px dashed var(--line); padding-top: 14px; font-size: 16px; line-height: 1.6; margin: 0; white-space: pre-line; }
+code { font: 14px var(--mono); background: var(--accent-soft); padding: 1px 5px; border-radius: 4px; }
+.ref { font: 12.5px var(--mono); color: var(--muted); margin: 0; }
+.actions { display: flex; flex-wrap: wrap; gap: 10px; }
+.btn { font: 600 14.5px var(--body); border-radius: 10px; padding: 11px 18px; cursor: pointer; border: 1.5px solid transparent; display: inline-flex; gap: 8px; align-items: center; }
+.btn kbd { font: 11px var(--mono); opacity: .75; border: 1px solid currentColor; border-radius: 4px; padding: 0 4px; }
+.btn.primary { background: var(--accent); color: #fff; }
+.btn.miss { background: var(--bad-soft); color: var(--bad); border-color: var(--bad); }
+.btn.shaky { background: var(--warn-soft); color: var(--warn); border-color: var(--warn); }
+.btn.got { background: var(--good-soft); color: var(--good); border-color: var(--good); }
+.btn:focus-visible, .seg button:focus-visible, .deck:focus-visible { outline: 3px solid var(--accent); outline-offset: 2px; }
+.done h2 { font: 700 24px var(--display); margin: 0; }
+.tally { display: flex; gap: 18px; font-variant-numeric: tabular-nums; flex-wrap: wrap; }
+.tally span b { font: 700 22px var(--display); margin-right: 4px; }
+
+/* deck grid */
+.decks h2 { font: 700 18px var(--display); margin: 0 0 10px; letter-spacing: .3px; }
+.grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(190px, 1fr)); gap: 10px; }
+.deck { text-align: left; background: var(--surface); border: 1.5px solid var(--line); border-radius: 10px; padding: 10px 12px; cursor: pointer; color: var(--ink); font: inherit; display: grid; gap: 6px; }
+.deck[aria-pressed="true"] { border-color: var(--accent); box-shadow: inset 0 0 0 1px var(--accent); }
+.deck .name { font-weight: 600; font-size: 14px; }
+.deck .nums { font-size: 12px; color: var(--muted); font-variant-numeric: tabular-nums; }
+.bar { height: 6px; border-radius: 3px; background: var(--line); overflow: hidden; display: flex; }
+.bar i { display: block; height: 100% }
+.bar .m { background: var(--good) } .bar .s { background: var(--accent); opacity: .55 }
+.legend { display: flex; gap: 14px; font-size: 12px; color: var(--muted); margin-top: 8px; flex-wrap: wrap; }
+.legend i { display: inline-block; width: 10px; height: 10px; border-radius: 2px; margin-right: 5px; vertical-align: -1px; }
+@media (max-width: 520px) { .q { font-size: 18.5px } .stage { padding: 18px 16px } h1 { font-size: 26px } }
+@media (prefers-reduced-motion: no-preference) { .a { animation: rise .18s ease-out } @keyframes rise { from { opacity: .4; transform: translateY(4px) } } }
+</style>
+
+<header class="band"><div class="wrap">
+  <div><h1>Say It Out Loud</h1><p class="tag">Answer aloud first, then flip. Be honest with the grade.</p></div>
+  <div class="stats" aria-live="polite">
+    <div class="stat"><b id="s-due">0</b><span>due now</span></div>
+    <div class="stat"><b id="s-new">0</b><span>never seen</span></div>
+    <div class="stat"><b id="s-mast">0</b><span>mastered</span></div>
+  </div>
+</div></header>
+
+<main><div class="wrap">
+  <div class="controls">
+    <div class="seg" role="group" aria-label="Cards per round">
+      <button type="button" data-size="10">10</button><button type="button" data-size="20" aria-pressed="true">20</button><button type="button" data-size="40">40</button>
+    </div>
+    <label class="chk"><input type="checkbox" id="only-miss"> Interview misses only</label>
+    <button type="button" class="btn primary" id="start">Start round</button>
+  </div>
+  <p class="filterline" id="filterline"></p>
+
+  <section class="stage" id="stage" aria-live="polite" tabindex="-1"></section>
+  <p class="note" id="sync"></p>
+
+  <section class="decks">
+    <h2>Decks</h2>
+    <div class="grid" id="grid"></div>
+    <div class="legend"><span><i style="background:var(--good)"></i>mastered (box 4+)</span><span><i style="background:var(--accent);opacity:.55"></i>seen</span><span>Tap decks to filter a round.</span></div>
+  </section>
+</div></main>
+
+<script>
+const DECK = /*DECK*/[];
+const DAY = 864e5;
+const INTERVAL_DAYS = [0, 1, 3, 7, 14, 30]; // Leitner box -> days until next review
+const $ = id => document.getElementById(id);
+const esc = s => String(s).replace(/[&<>"]/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]));
+const fmt = s => esc(s).replace(/`([^`]+)`/g, "<code>$1</code>");
+const today = () => new Date().toLocaleDateString("en-CA");
+
+const decks = [];
+for (const c of DECK) if (!decks.some(d => d.id === c.deck)) decks.push({ id: c.deck, title: c.title });
+
+let reviews = {};            // card id -> {box, due, hits, misses, last}
+let db = null;
+let size = 20, picked = new Set(), round = null;
+
+/* ---------- storage: artifact db when available, else this browser ---------- */
+const writeChains = {};
+function persist(path, body) {
+  if (db) {
+    const prev = writeChains[path] || Promise.resolve();
+    writeChains[path] = prev.then(() => db.doc(path).set(body)).catch(e => {
+      $("sync").textContent = "Couldn't save the last grade (" + (e && e.code || "error") + "). It is kept in this browser only.";
+      $("sync").className = "note warn";
+      saveLocal();
+    });
+  } else saveLocal();
+}
+function saveLocal() { try { localStorage.setItem("drill.reviews", JSON.stringify(reviews)); } catch (_) {} }
+function loadLocal() { try { return JSON.parse(localStorage.getItem("drill.reviews") || "{}"); } catch (_) { return {}; } }
+
+async function connect() {
+  reviews = loadLocal();
+  renderAll();
+  try { db = window.claude ? await window.claude.use("db") : null; } catch (_) { db = null; }
+  if (!db) { $("sync").textContent = "Progress is saved in this browser only."; return; }
+  $("sync").textContent = "Loading your progress…";
+  const timer = setTimeout(() => { $("sync").textContent = "Can't reach saved progress yet. Grades still count and will sync."; $("sync").className = "note warn"; }, 10000);
+  db.collection("reviews").onSnapshot(snap => {
+    if (!snap.metadata.fromCache) { clearTimeout(timer); $("sync").textContent = "Progress syncs across your devices."; $("sync").className = "note"; }
+    const next = {};
+    for (const d of snap.docs) next[d.id] = d.data();
+    reviews = Object.assign(loadLocalOnlyIfEmpty(snap), next);
+    renderStats(); renderGrid(); renderFilterLine();
+    if (!round) renderIdle();
+  }, e => { clearTimeout(timer); db = null; $("sync").textContent = "Saved progress is unavailable (" + e.code + "). Using this browser."; $("sync").className = "note warn"; });
+}
+function loadLocalOnlyIfEmpty(snap) { return snap.empty ? loadLocal() : {}; }
+
+/* ---------- scheduling ---------- */
+const isDue = (r, now) => r && r.due <= now;
+function pool() {
+  const onlyMiss = $("only-miss").checked;
+  return DECK.filter(c => (!picked.size || picked.has(c.deck)) && (!onlyMiss || c.source === "miss"));
+}
+function buildRound() {
+  const now = Date.now(), cards = pool();
+  const due = cards.filter(c => isDue(reviews[c.id], now)).sort((a, b) => reviews[a.id].due - reviews[b.id].due);
+  const fresh = cards.filter(c => !reviews[c.id]).sort((a, b) => (a.source === "miss" ? 0 : 1) - (b.source === "miss" ? 0 : 1));
+  return due.concat(fresh).slice(0, size);
+}
+function grade(card, g) {
+  const now = Date.now();
+  const r = Object.assign({ box: 0, due: now, hits: 0, misses: 0 }, reviews[card.id]);
+  if (g === "miss") { r.box = 1; r.due = now; r.misses++; }
+  else if (g === "shaky") { r.box = Math.max(1, r.box); r.due = now + DAY; }
+  else { r.box = Math.min(5, r.box + 1); r.due = now + INTERVAL_DAYS[r.box] * DAY; r.hits++; }
+  r.last = now; r.lastGrade = g; r.deck = card.deck;
+  reviews[card.id] = r;
+  persist("reviews/" + card.id, r);
+  round.tally[g]++;
+  if (g === "miss" && round.requeued[card.id] !== true) {   // see it once more this round
+    round.requeued[card.id] = true;
+    round.queue.splice(Math.min(round.i + 4, round.queue.length), 0, card);
+  }
+  const day = today();
+  const s = round.sessionDoc;
+  s.date = day; s.seen++; s[g]++; if (!s.decks.includes(card.deck)) s.decks.push(card.deck);
+  if (g !== "got" && !s.weak.includes(card.id)) s.weak.push(card.id);
+  persist("sessions/" + day, s);
+  round.i++; round.revealed = false;
+  renderStats(); renderGrid(); renderCard();
+}
+
+/* ---------- rendering ---------- */
+function renderStats() {
+  const now = Date.now();
+  $("s-due").textContent = DECK.filter(c => isDue(reviews[c.id], now)).length;
+  $("s-new").textContent = DECK.filter(c => !reviews[c.id]).length;
+  $("s-mast").textContent = DECK.filter(c => (reviews[c.id] || {}).box >= 4).length;
+}
+function renderGrid() {
+  const now = Date.now();
+  $("grid").innerHTML = decks.map(d => {
+    const cs = DECK.filter(c => c.deck === d.id), n = cs.length;
+    const seen = cs.filter(c => reviews[c.id]).length, mast = cs.filter(c => (reviews[c.id] || {}).box >= 4).length;
+    const due = cs.filter(c => isDue(reviews[c.id], now)).length;
+    return `<button type="button" class="deck" data-deck="${esc(d.id)}" aria-pressed="${picked.has(d.id)}">
+      <span class="name">${esc(d.title)}</span>
+      <span class="bar"><i class="m" style="width:${100 * mast / n}%"></i><i class="s" style="width:${100 * (seen - mast) / n}%"></i></span>
+      <span class="nums">${n} cards · ${seen} seen · ${due} due</span></button>`;
+  }).join("");
+}
+function renderFilterLine() {
+  const n = pool().length, r = buildRound().length;
+  const what = picked.size ? [...picked].map(id => decks.find(d => d.id === id).title).join(", ") : "all decks";
+  $("filterline").innerHTML = `Round from ${esc(what)}: ${r} ready of ${n}.` + (picked.size ? ` <button type="button" id="clear">Clear filter</button>` : "");
+}
+function renderIdle() {
+  const next = buildRound().length;
+  $("stage").innerHTML = next
+    ? `<p class="q">${next} cards are ready.</p><p class="hint">Due reviews come first, then cards you've never seen, with your real interview misses at the front. Say the answer out loud before you flip: reading it silently doesn't count.</p><div class="actions"><button type="button" class="btn primary" data-act="start">Start round <kbd>Enter</kbd></button></div>`
+    : `<p class="q">Nothing is due in this selection.</p><p class="hint">Pick other decks below, or come back tomorrow. Spacing is what makes it stick.</p>`;
+}
+function renderCard() {
+  const c = round.queue[round.i];
+  if (!c) return renderDone();
+  const r = reviews[c.id];
+  $("stage").innerHTML = `
+    <div class="meta"><span class="pill${c.source === "miss" ? " miss" : ""}">${c.source === "miss" ? "interview miss" : esc(c.title)}</span>
+      ${r ? `<span class="pill box">box ${r.box}</span>` : ""}<span class="progress">${round.i + 1} / ${round.queue.length}</span></div>
+    <p class="q">${fmt(c.q)}</p>
+    ${round.revealed
+      ? `<p class="a">${fmt(c.a)}</p><p class="ref">${esc(c.ref || "")}</p>
+         <div class="actions">
+           <button type="button" class="btn miss" data-g="miss">Missed it <kbd>1</kbd></button>
+           <button type="button" class="btn shaky" data-g="shaky">Shaky <kbd>2</kbd></button>
+           <button type="button" class="btn got" data-g="got">Got it <kbd>3</kbd></button></div>`
+      : `<p class="hint">Say your answer out loud, about 30 seconds, as you would to an interviewer.</p>
+         <div class="actions"><button type="button" class="btn primary" data-act="reveal">Show answer <kbd>Space</kbd></button></div>`}`;
+  // Focus the reveal button, but never a grade button: a second Space must not grade the card.
+  const target = round.revealed ? $("stage") : $("stage").querySelector(".btn");
+  if (target) target.focus({ preventScroll: true });
+}
+function renderDone() {
+  const t = round.tally; round = null;
+  $("stage").innerHTML = `<div class="done"><h2>Round done</h2></div>
+    <div class="tally"><span><b style="color:var(--good)">${t.got}</b>got it</span><span><b style="color:var(--warn)">${t.shaky}</b>shaky</span><span><b style="color:var(--bad)">${t.miss}</b>missed</span></div>
+    <p class="hint">Missed cards come back next round; shaky ones tomorrow. Ask Claude Code to "read my drill results" and it will update your misses list.</p>
+    <div class="actions"><button type="button" class="btn primary" data-act="start">Another round <kbd>Enter</kbd></button></div>`;
+  renderFilterLine();
+}
+function renderAll() { renderStats(); renderGrid(); renderFilterLine(); renderIdle(); }
+
+function start() {
+  const q = buildRound();
+  if (!q.length) return renderIdle();
+  const day = today();
+  round = { queue: q, i: 0, revealed: false, requeued: {}, tally: { got: 0, shaky: 0, miss: 0 },
+            sessionDoc: { date: day, seen: 0, got: 0, shaky: 0, miss: 0, decks: [], weak: [] } };
+  // Add today's earlier rounds to this one; grades made before the read lands are kept.
+  if (db) db.doc("sessions/" + day).get().then(s => {
+    if (!s.exists || !round) return;
+    const prev = s.data(), cur = round.sessionDoc;
+    for (const k of ["seen", "got", "shaky", "miss"]) cur[k] += prev[k] || 0;
+    for (const k of ["decks", "weak"]) for (const v of prev[k] || []) if (!cur[k].includes(v)) cur[k].push(v);
+  }).catch(() => {});
+  renderCard();
+}
+
+/* ---------- events ---------- */
+document.addEventListener("click", e => {
+  const t = e.target.closest("button"); if (!t) return;
+  if (t.dataset.size) { size = +t.dataset.size; document.querySelectorAll("[data-size]").forEach(b => b.setAttribute("aria-pressed", b === t)); renderFilterLine(); if (!round) renderIdle(); }
+  else if (t.dataset.deck) { picked.has(t.dataset.deck) ? picked.delete(t.dataset.deck) : picked.add(t.dataset.deck); renderGrid(); renderFilterLine(); if (!round) renderIdle(); }
+  else if (t.id === "clear") { picked.clear(); renderGrid(); renderFilterLine(); if (!round) renderIdle(); }
+  else if (t.id === "start" || t.dataset.act === "start") start();
+  else if (t.dataset.act === "reveal") { round.revealed = true; renderCard(); }
+  else if (t.dataset.g && round) grade(round.queue[round.i], t.dataset.g);
+});
+$("only-miss").addEventListener("change", () => { renderFilterLine(); if (!round) renderIdle(); });
+document.addEventListener("keydown", e => {
+  if (e.target.matches("input") || e.metaKey || e.ctrlKey || e.altKey) return;
+  if (!round) { if (e.key === "Enter" && !e.target.closest("button")) { e.preventDefault(); start(); } return; }
+  if (e.key === " " || e.key === "Enter") { e.preventDefault(); if (!round.revealed) { round.revealed = true; renderCard(); } }
+  else if (round.revealed && ["1", "2", "3"].includes(e.key)) grade(round.queue[round.i], ["miss", "shaky", "got"][+e.key - 1]);
+});
+
+connect();
+</script>
