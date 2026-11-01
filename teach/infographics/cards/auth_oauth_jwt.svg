@@ -1,0 +1,140 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="1340" viewBox="0 0 1200 1340" font-family="Segoe UI, Inter, Helvetica, Arial, sans-serif">
+  <style>
+    .bg { fill: #f6f7fb; }
+    .panel { fill: #ffffff; stroke: #d8deea; stroke-width: 1.5; }
+    .title { font-size: 21px; font-weight: 700; fill: #1b2540; }
+    .sub { font-size: 14px; fill: #5b6578; font-style: italic; }
+    .h { font-size: 13px; font-weight: 700; fill: #5b6578; letter-spacing: 0.6px; }
+    .t { font-size: 14.5px; fill: #263048; }
+    .s { font-size: 13px; fill: #263048; }
+    .b { font-weight: 700; }
+    .mono { font-family: Consolas, "Cascadia Mono", Menlo, monospace; font-size: 13.5px; fill: #1b2540; }
+    .blue { fill: #2457d6; } .green { fill: #138a43; } .red { fill: #c62828; } .amber { fill: #b45309; }
+    .rule { stroke: #e6eaf2; stroke-width: 1; }
+    .num { font-size: 15px; font-weight: 800; fill: #ffffff; }
+    .life { stroke: #c3cbdb; stroke-width: 1.5; stroke-dasharray: 4 4; }
+    .msg { stroke: #5b6578; stroke-width: 1.4; marker-end: url(#arr); }
+    .msgb { stroke: #2457d6; stroke-width: 2; marker-end: url(#arrb); }
+  </style>
+  <defs>
+    <marker id="arr" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#5b6578"/></marker>
+    <marker id="arrb" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#2457d6"/></marker>
+  </defs>
+
+  <rect class="bg" width="1200" height="1340"/>
+
+  <!-- HEADER -->
+  <rect x="0" y="0" width="1200" height="110" fill="#1b2540"/>
+  <text x="40" y="52" font-size="32" font-weight="800" fill="#ffffff">Auth: sessions, JWT, OAuth2 &amp; OIDC</text>
+  <text x="40" y="84" font-size="16" fill="#b9c4dc">Plan W12 security/auth · R2 Q116–119, R6 Q65, R1 Q28 (your SSO work) · open miss: OAuth2 vs OIDC</text>
+  <text x="1160" y="52" font-size="15" fill="#8fa3cc" text-anchor="end">card · auth</text>
+
+  <!-- ROW 1 LEFT: sessions vs JWT -->
+  <rect class="panel" x="40" y="135" width="545" height="300" rx="12"/>
+  <text class="title" x="60" y="168">1 · Session cookie vs JWT</text>
+  <text class="h" x="60" y="200">ASPECT</text><text class="h" x="160" y="200">SESSION COOKIE</text><text class="h" x="360" y="200">JWT (BEARER)</text>
+  <line class="rule" x1="60" y1="210" x2="565" y2="210"/>
+  <text class="s b" x="60" y="236">State</text><text class="s" x="160" y="236">server store (Redis/DB)</text><text class="s" x="360" y="236">self-contained, signed</text>
+  <line class="rule" x1="60" y1="246" x2="565" y2="246"/>
+  <text class="s b" x="60" y="268">Revoke</text><text class="s b green" x="160" y="268">delete row → instant</text><text class="s b red" x="360" y="268">wait for exp / jti denylist</text>
+  <line class="rule" x1="60" y1="278" x2="565" y2="278"/>
+  <text class="s b" x="60" y="300">Scale</text><text class="s" x="160" y="300">lookup per request</text><text class="s" x="360" y="300">any pod verifies with pub key</text>
+  <line class="rule" x1="60" y1="310" x2="565" y2="310"/>
+  <text class="s b" x="60" y="332">Store in</text><text class="s" x="160" y="332">HttpOnly · Secure · SameSite</text><text class="s" x="360" y="332">memory or HttpOnly cookie</text>
+  <line class="rule" x1="60" y1="342" x2="565" y2="342"/>
+  <text class="s b" x="60" y="364">Main risk</text><text class="s" x="160" y="364">CSRF → SameSite + token</text><text class="s b red" x="360" y="364">XSS if in localStorage</text>
+  <text class="s" x="60" y="400"><tspan class="b">Trap:</tspan> a denylist puts state back. JWT's win is "no lookup",</text>
+  <text class="s" x="60" y="420">not "no state". Common: session at the edge, JWT between services.</text>
+
+  <!-- ROW 1 RIGHT: OAuth2 vs OIDC -->
+  <rect class="panel" x="615" y="135" width="545" height="300" rx="12"/>
+  <text class="title" x="635" y="168">2 · OAuth2 vs OIDC: two layers</text>
+  <rect x="635" y="182" width="505" height="26" rx="6" fill="#e7f6ee"/>
+  <text class="s" x="645" y="200"><tspan class="b green">OIDC</tspan> = authN on top: <tspan class="b">ID token</tspan> · openid scope · /userinfo · discovery</text>
+  <rect x="635" y="212" width="505" height="26" rx="6" fill="#eaf1ff"/>
+  <text class="s" x="645" y="230"><tspan class="b blue">OAuth2</tspan> = authZ, delegated access: <tspan class="b">access token</tspan> · scopes · flows</text>
+  <text class="h" x="635" y="268">QUESTION</text><text class="h" x="760" y="268">ACCESS TOKEN</text><text class="h" x="960" y="268">ID TOKEN</text>
+  <line class="rule" x1="635" y1="277" x2="1140" y2="277"/>
+  <text class="s b" x="635" y="298">Answers</text><text class="s" x="760" y="298">may this app call the API?</text><text class="s" x="960" y="298">who logged in, and how?</text>
+  <text class="s b" x="635" y="322">aud =</text><text class="s" x="760" y="322">the resource API</text><text class="s" x="960" y="322">the client (client_id)</text>
+  <text class="s b" x="635" y="346">Format</text><text class="s" x="760" y="346">opaque or JWT</text><text class="s" x="960" y="346">always a JWT (+ nonce)</text>
+  <text class="s b" x="635" y="370">Read by</text><text class="s" x="760" y="370">API only; opaque to client</text><text class="s" x="960" y="370">client only</text>
+  <text class="s b red" x="635" y="404">✗ Never send the ID token to an API as a bearer.</text>
+  <text class="s b red" x="635" y="424">✗ Never treat an access token as proof of who logged in.</text>
+
+  <!-- ROW 2: auth code + PKCE sequence -->
+  <rect class="panel" x="40" y="455" width="1120" height="395" rx="12"/>
+  <text class="title" x="60" y="488">3 · Authorization code + PKCE (the only flow you should pick)</text>
+  <text class="sub" x="60" y="510">client first makes verifier = random secret, challenge = BASE64URL(SHA256(verifier)) · state = CSRF guard</text>
+  <!-- lifeline heads -->
+  <rect x="65" y="525" width="150" height="30" rx="7" fill="#eef1f7"/><text class="s b" x="140" y="545" text-anchor="middle">User / browser</text>
+  <rect x="345" y="525" width="150" height="30" rx="7" fill="#eef1f7"/><text class="s b" x="420" y="545" text-anchor="middle">Client app</text>
+  <rect x="685" y="525" width="150" height="30" rx="7" fill="#eef1f7"/><text class="s b" x="760" y="545" text-anchor="middle">Auth server (IdP)</text>
+  <rect x="985" y="525" width="150" height="30" rx="7" fill="#eef1f7"/><text class="s b" x="1060" y="545" text-anchor="middle">Resource API</text>
+  <line class="life" x1="140" y1="555" x2="140" y2="788"/>
+  <line class="life" x1="420" y1="555" x2="420" y2="788"/>
+  <line class="life" x1="760" y1="555" x2="760" y2="788"/>
+  <line class="life" x1="1060" y1="555" x2="1060" y2="788"/>
+  <!-- messages -->
+  <line class="msg" x1="420" y1="585" x2="143" y2="585"/>
+  <text class="s" x="280" y="579" text-anchor="middle"><tspan class="b">1</tspan> 302 → /authorize + challenge, state</text>
+  <line class="msg" x1="140" y1="612" x2="757" y2="612"/>
+  <text class="s" x="590" y="606" text-anchor="middle"><tspan class="b">2</tspan> user logs in + consents</text>
+  <line class="msg" x1="760" y1="639" x2="143" y2="639"/>
+  <text class="s" x="590" y="633" text-anchor="middle"><tspan class="b">3</tspan> 302 → redirect_uri?code=…&amp;state=…</text>
+  <line class="msg" x1="140" y1="666" x2="417" y2="666"/>
+  <text class="s" x="280" y="660" text-anchor="middle"><tspan class="b">4</tspan> code + state (client checks state)</text>
+  <line class="msgb" x1="420" y1="693" x2="757" y2="693"/>
+  <text class="s b blue" x="590" y="687" text-anchor="middle">5 POST /token: code + code_verifier</text>
+  <text class="s amber b" x="772" y="698">IdP checks SHA256(verifier) == challenge</text>
+  <line class="msg" x1="760" y1="720" x2="423" y2="720"/>
+  <text class="s" x="590" y="714" text-anchor="middle"><tspan class="b">6</tspan> access + refresh (+ ID token if OIDC)</text>
+  <line class="msg" x1="420" y1="747" x2="1057" y2="747"/>
+  <text class="s" x="910" y="741" text-anchor="middle"><tspan class="b">7</tspan> Authorization: Bearer &lt;access token&gt;</text>
+  <line class="msg" x1="1060" y1="774" x2="423" y2="774"/>
+  <text class="s" x="910" y="768" text-anchor="middle"><tspan class="b">8</tspan> data (API checked sig, iss, aud, exp)</text>
+  <text class="s" x="60" y="814"><tspan class="b">Why PKCE:</tspan> a code stolen from the redirect (malicious app, custom-scheme hijack, logs) is <tspan class="b red">useless without the verifier</tspan>.</text>
+  <text class="s" x="60" y="834">Public clients (SPA, mobile) can't keep a client_secret, so PKCE is their proof. OAuth 2.1: PKCE for all; implicit &amp; password grants are gone.</text>
+
+  <!-- ROW 3 LEFT: access vs refresh -->
+  <rect class="panel" x="40" y="870" width="545" height="240" rx="12"/>
+  <text class="title" x="60" y="903">4 · Access vs refresh token</text>
+  <text class="h" x="60" y="933">ASPECT</text><text class="h" x="175" y="933">ACCESS</text><text class="h" x="370" y="933">REFRESH</text>
+  <line class="rule" x1="60" y1="942" x2="565" y2="942"/>
+  <text class="s b" x="60" y="964">Lifetime</text><text class="s" x="175" y="964">short: 5–15 min</text><text class="s" x="370" y="964">long: days–weeks</text>
+  <text class="s b" x="60" y="988">Sent to</text><text class="s" x="175" y="988">every API call</text><text class="s" x="370" y="988">only the IdP /token</text>
+  <text class="s b" x="60" y="1012">If stolen</text><text class="s" x="175" y="1012">usable until exp</text><text class="s" x="370" y="1012">revoke server-side</text>
+  <line class="rule" x1="60" y1="1026" x2="565" y2="1026"/>
+  <text class="s" x="60" y="1050"><tspan class="b">Rotation:</tspan> every refresh returns a NEW refresh token; old one dies.</text>
+  <text class="s b red" x="60" y="1072">Old one used again = theft → revoke the whole token family.</text>
+  <text class="s" x="60" y="1094">SPA: keep refresh tokens out of JS (BFF / HttpOnly cookie).</text>
+
+  <!-- ROW 3 RIGHT: JWT validation -->
+  <rect class="panel" x="615" y="870" width="545" height="240" rx="12"/>
+  <text class="title" x="635" y="903">5 · Validating a JWT (R6 Q65)</text>
+  <text class="mono" x="635" y="933">jwt.decode(tok, key, algorithms=["RS256"],</text>
+  <text class="mono" x="635" y="952" xml:space="preserve">           audience="orders-api", issuer=ISS)</text>
+  <text class="s" x="635" y="984"><tspan class="b red">alg=none / RS256→HS256 confusion</tspan> → pin algorithms, ignore header</text>
+  <text class="s" x="635" y="1008">Key from IdP's <tspan class="b">JWKS</tspan>, picked by <tspan class="mono">kid</tspan>; cache it, handle rotation</text>
+  <text class="s" x="635" y="1032">Check <tspan class="b">exp, nbf</tspan> (small clock skew), <tspan class="b">iss</tspan>, <tspan class="b">aud</tspan>, then scope</text>
+  <text class="s" x="635" y="1056">Payload is base64, <tspan class="b red">NOT encrypted</tspan> → no secrets/PII in claims</text>
+  <text class="s" x="635" y="1080"><tspan class="b red">localStorage</tspan> = readable by any XSS → memory or HttpOnly cookie</text>
+
+  <!-- FOOTER: rules -->
+  <rect x="40" y="1130" width="1120" height="150" rx="12" fill="#1b2540"/>
+  <text x="60" y="1164" font-size="19" font-weight="800" fill="#ffffff">Six rules to say out loud</text>
+  <circle cx="72" cy="1200" r="13" fill="#2457d6"/><text class="num" x="72" y="1205" text-anchor="middle">1</text>
+  <text x="94" y="1206" font-size="15" fill="#e6ebf7">OAuth2 = access; OIDC = identity</text>
+  <circle cx="440" cy="1200" r="13" fill="#2457d6"/><text class="num" x="440" y="1205" text-anchor="middle">2</text>
+  <text x="462" y="1206" font-size="15" fill="#e6ebf7">ID token → client; access token → API</text>
+  <circle cx="790" cy="1200" r="13" fill="#2457d6"/><text class="num" x="790" y="1205" text-anchor="middle">3</text>
+  <text x="812" y="1206" font-size="15" fill="#e6ebf7">Auth code + PKCE, every client</text>
+  <circle cx="72" cy="1248" r="13" fill="#2457d6"/><text class="num" x="72" y="1253" text-anchor="middle">4</text>
+  <text x="94" y="1254" font-size="15" fill="#e6ebf7">Short access, rotating refresh</text>
+  <circle cx="440" cy="1248" r="13" fill="#2457d6"/><text class="num" x="440" y="1253" text-anchor="middle">5</text>
+  <text x="462" y="1254" font-size="15" fill="#e6ebf7">Pin alg; check iss, aud, exp</text>
+  <circle cx="790" cy="1248" r="13" fill="#2457d6"/><text class="num" x="790" y="1253" text-anchor="middle">6</text>
+  <text x="812" y="1254" font-size="15" fill="#e6ebf7">Sessions revoke instantly; JWTs don't</text>
+
+  <text x="600" y="1316" font-size="12.5" fill="#8a93a6" text-anchor="middle">interview repo · teach/infographics/cards · regenerate or edit by asking Claude Code</text>
+</svg>

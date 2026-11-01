@@ -1,0 +1,128 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="1260" viewBox="0 0 1200 1260" font-family="Segoe UI, Inter, Helvetica, Arial, sans-serif">
+  <style>
+    .bg { fill: #f6f7fb; }
+    .panel { fill: #ffffff; stroke: #d8deea; stroke-width: 1.5; }
+    .title { font-size: 21px; font-weight: 700; fill: #1b2540; }
+    .sub { font-size: 14px; fill: #5b6578; font-style: italic; }
+    .h { font-size: 13px; font-weight: 700; fill: #5b6578; letter-spacing: 0.6px; }
+    .t { font-size: 14.5px; fill: #263048; }
+    .s { font-size: 13px; fill: #263048; }
+    .b { font-weight: 700; }
+    .mono { font-family: Consolas, "Cascadia Mono", Menlo, monospace; font-size: 13.5px; fill: #1b2540; }
+    .blue { fill: #2457d6; } .green { fill: #138a43; } .red { fill: #c62828; } .amber { fill: #b45309; }
+    .rule { stroke: #e6eaf2; stroke-width: 1; }
+    .num { font-size: 15px; font-weight: 800; fill: #ffffff; }
+  </style>
+
+  <rect class="bg" width="1200" height="1260"/>
+
+  <!-- HEADER -->
+  <rect x="0" y="0" width="1200" height="110" fill="#1b2540"/>
+  <text x="40" y="52" font-size="32" font-weight="800" fill="#ffffff">Caching with Redis, on one card</text>
+  <text x="40" y="84" font-size="16" fill="#b9c4dc">W06 · patterns, invalidation, stampedes, eviction, locks · R2 Q42–49, R1 Q33, R3 Q70</text>
+  <text x="1160" y="52" font-size="15" fill="#8fa3cc" text-anchor="end">plan W06 · caching_redis</text>
+
+  <!-- ROW 1: patterns -->
+  <rect class="panel" x="40" y="135" width="1120" height="255" rx="12"/>
+  <text class="title" x="60" y="168">1 · Four patterns: who fills the cache?</text>
+  <text class="h" x="60" y="203">PATTERN</text><text class="h" x="230" y="203">HOW IT WORKS</text><text class="h" x="610" y="203">CONSISTENCY</text><text class="h" x="830" y="203">TRAP</text>
+  <line class="rule" x1="60" y1="213" x2="1140" y2="213"/>
+  <rect x="52" y="218" width="1096" height="46" rx="8" fill="#eaf1ff"/>
+  <text class="t b" x="60" y="240">cache-aside</text><text class="s b blue" x="60" y="257">★ DEFAULT</text>
+  <text class="t" x="230" y="240">app: miss → read DB → SET with TTL</text><text class="s" x="230" y="257">write: update DB, then DEL key</text>
+  <text class="t" x="610" y="240">eventual; stale ≤ TTL</text>
+  <text class="t" x="830" y="240">miss storm on cold start</text><text class="s" x="830" y="257">e.g. Jio recs: per-user list, DB is truth</text>
+  <line class="rule" x1="60" y1="270" x2="1140" y2="270"/>
+  <text class="t b" x="60" y="296">read-through</text>
+  <text class="t" x="230" y="296">the cache layer loads on a miss</text>
+  <text class="t" x="610" y="296">same as aside</text>
+  <text class="t" x="830" y="296">needs a loader-aware cache/lib</text>
+  <line class="rule" x1="60" y1="310" x2="1140" y2="310"/>
+  <text class="t b" x="60" y="336">write-through</text>
+  <text class="t" x="230" y="336">every write goes to cache AND DB, sync</text>
+  <text class="t" x="610" y="336">fresh reads</text>
+  <text class="t" x="830" y="336">slower writes; caches cold data</text>
+  <line class="rule" x1="60" y1="350" x2="1140" y2="350"/>
+  <text class="t b" x="60" y="376">write-behind</text>
+  <text class="t" x="230" y="376">write cache, flush to DB later (async)</text>
+  <text class="t" x="610" y="376">DB lags behind</text>
+  <text class="t b red" x="830" y="376">crash loses acked writes</text>
+
+  <!-- ROW 2 LEFT: invalidation -->
+  <rect class="panel" x="40" y="415" width="545" height="300" rx="12"/>
+  <text class="title" x="60" y="448">2 · Invalidation: DEL, don't SET</text>
+  <text class="t" x="60" y="480">On write: <tspan class="b">update DB → then DEL key</tspan>; next read refills.</text>
+  <text class="h" x="60" y="514">WHY NOT SET ON WRITE?</text>
+  <text class="s" x="60" y="537">Writers A, B race: DB gets B, cache gets A last →</text>
+  <text class="s b red" x="60" y="556">stale value until the TTL expires.</text>
+  <text class="h" x="60" y="590">DEL STILL HAS ONE RACE</text>
+  <text class="s" x="60" y="613"><tspan class="b">1</tspan> reader misses, reads OLD row from DB</text>
+  <text class="s" x="60" y="633"><tspan class="b">2</tspan> writer updates DB, DELs key</text>
+  <text class="s" x="60" y="653"><tspan class="b">3</tspan> reader SETs the OLD row → <tspan class="b red">stale</tspan></text>
+  <text class="t b amber" x="60" y="690">TTL on every key = the backstop</text>
+  <text class="s" x="312" y="690">(+ optional delayed 2nd DEL)</text>
+
+  <!-- ROW 2 RIGHT: stampede -->
+  <rect class="panel" x="615" y="415" width="545" height="300" rx="12"/>
+  <text class="title" x="635" y="448">3 · Stampede (thundering herd)</text>
+  <text class="s" x="635" y="474">Hot key expires → 1,000 requests miss at once → all hit the DB.</text>
+  <text class="t b" x="635" y="510">Single-flight lock</text>
+  <text class="s" x="635" y="530">SET rebuild:k NX PX → one rebuilds; others wait or serve stale</text>
+  <text class="t b" x="635" y="562">Probabilistic early refresh</text>
+  <text class="s" x="635" y="582">refresh before expiry, odds rising as TTL nears (XFetch)</text>
+  <text class="t b" x="635" y="614">TTL jitter</text>
+  <text class="mono" x="635" y="634">ttl = base + randint(0, base // 10)</text>
+  <text class="s" x="635" y="653">keys written together don't all expire together</text>
+  <text class="t b" x="635" y="685">Stale-while-revalidate</text>
+  <text class="s" x="635" y="704">serve old value, refresh in the background</text>
+
+  <!-- ROW 3 LEFT: eviction -->
+  <rect class="panel" x="40" y="740" width="545" height="300" rx="12"/>
+  <text class="title" x="60" y="773">4 · Eviction: maxmemory-policy</text>
+  <text class="h" x="60" y="806">POLICY</text><text class="h" x="230" y="806">EVICTS</text>
+  <line class="rule" x1="60" y1="816" x2="565" y2="816"/>
+  <rect x="52" y="821" width="526" height="44" rx="8" fill="#fde8e8"/>
+  <text class="t b red" x="60" y="841">noeviction</text><text class="s b red" x="60" y="858">DEFAULT</text>
+  <text class="s" x="230" y="841">nothing: <tspan class="b red">writes fail with OOM</tspan> when full</text>
+  <text class="s" x="230" y="858">fine for a store, wrong for a cache</text>
+  <text class="t b blue" x="60" y="892">allkeys-lru</text><text class="s" x="230" y="892">★ pure cache: least recently used, any key</text>
+  <line class="rule" x1="60" y1="906" x2="565" y2="906"/>
+  <text class="t b blue" x="60" y="930">allkeys-lfu</text><text class="s" x="230" y="930">skewed hot/cold traffic: popular stays</text>
+  <line class="rule" x1="60" y1="944" x2="565" y2="944"/>
+  <text class="t b" x="60" y="968">volatile-*</text><text class="s" x="230" y="968">lru / lfu / ttl / random, only keys WITH a TTL</text>
+  <text class="s" x="230" y="986"><tspan class="b red">no TTLs → behaves like noeviction</tspan></text>
+  <text class="s" x="60" y="1022">LRU/LFU are approximate (sampled). Set <tspan class="mono">maxmemory</tspan> explicitly.</text>
+
+  <!-- ROW 3 RIGHT: locks -->
+  <rect class="panel" x="615" y="740" width="545" height="300" rx="12"/>
+  <text class="title" x="635" y="773">5 · Distributed lock, done right</text>
+  <text class="h" x="635" y="802">ACQUIRE (atomic set + expiry)</text>
+  <text class="mono" x="635" y="823">SET lock:task42 &lt;uuid&gt; NX PX 30000</text>
+  <text class="h" x="635" y="853">RELEASE (Lua: compare-and-delete)</text>
+  <text class="mono" x="635" y="874">if redis.call("get",KEYS[1]) == ARGV[1]</text>
+  <text class="mono" x="635" y="892">then return redis.call("del",KEYS[1]) end</text>
+  <text class="s red" x="635" y="912">plain DEL can free someone else's lock after yours expired</text>
+  <text class="t b" x="635" y="944">Fencing token</text>
+  <text class="s" x="635" y="964">GC pause &gt; TTL → two holders. Rising token per grant;</text>
+  <text class="s" x="635" y="982">storage rejects writes carrying an older token.</text>
+  <text class="t b" x="635" y="1010">Redlock</text><text class="s" x="700" y="1010"> majority of 5 masters. Kleppmann: leans on timing,</text>
+  <text class="s" x="635" y="1028">no fencing → OK for efficiency, <tspan class="b red">not for correctness</tspan>.</text>
+
+  <!-- FOOTER: rules -->
+  <rect x="40" y="1065" width="1120" height="150" rx="12" fill="#1b2540"/>
+  <text x="60" y="1099" font-size="19" font-weight="800" fill="#ffffff">Six rules to say out loud</text>
+  <circle cx="72" cy="1135" r="13" fill="#2457d6"/><text class="num" x="72" y="1140" text-anchor="middle">1</text>
+  <text x="94" y="1141" font-size="15" fill="#e6ebf7">DB is truth; the cache is disposable</text>
+  <circle cx="440" cy="1135" r="13" fill="#2457d6"/><text class="num" x="440" y="1140" text-anchor="middle">2</text>
+  <text x="462" y="1141" font-size="15" fill="#e6ebf7">Write the DB, then DEL the key</text>
+  <circle cx="790" cy="1135" r="13" fill="#2457d6"/><text class="num" x="790" y="1140" text-anchor="middle">3</text>
+  <text x="812" y="1141" font-size="15" fill="#e6ebf7">Every key gets a TTL, with jitter</text>
+  <circle cx="72" cy="1183" r="13" fill="#2457d6"/><text class="num" x="72" y="1188" text-anchor="middle">4</text>
+  <text x="94" y="1189" font-size="15" fill="#e6ebf7">maxmemory + allkeys-lru/lfu for caches</text>
+  <circle cx="440" cy="1183" r="13" fill="#2457d6"/><text class="num" x="440" y="1188" text-anchor="middle">5</text>
+  <text x="462" y="1189" font-size="15" fill="#e6ebf7">Lock = NX PX + token + Lua release</text>
+  <circle cx="790" cy="1183" r="13" fill="#2457d6"/><text class="num" x="790" y="1188" text-anchor="middle">6</text>
+  <text x="812" y="1189" font-size="15" fill="#e6ebf7">Correctness needs fencing, not Redlock</text>
+
+  <text x="600" y="1243" font-size="12.5" fill="#8a93a6" text-anchor="middle">interview repo · teach/infographics/cards · regenerate or edit by asking Claude Code</text>
+</svg>

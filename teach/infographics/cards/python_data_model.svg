@@ -1,0 +1,126 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="1220" viewBox="0 0 1200 1220" font-family="Segoe UI, Inter, Helvetica, Arial, sans-serif">
+  <style>
+    .bg { fill: #f6f7fb; }
+    .panel { fill: #ffffff; stroke: #d8deea; stroke-width: 1.5; }
+    .title { font-size: 21px; font-weight: 700; fill: #1b2540; }
+    .sub { font-size: 14px; fill: #5b6578; font-style: italic; }
+    .h { font-size: 13px; font-weight: 700; fill: #5b6578; letter-spacing: 0.6px; }
+    .t { font-size: 14.5px; fill: #263048; }
+    .s { font-size: 13px; fill: #263048; }
+    .b { font-weight: 700; }
+    .mono { font-family: Consolas, "Cascadia Mono", Menlo, monospace; font-size: 13.5px; fill: #1b2540; }
+    .blue { fill: #2457d6; } .green { fill: #138a43; } .red { fill: #c62828; } .amber { fill: #b45309; }
+    .rule { stroke: #e6eaf2; stroke-width: 1; }
+    .num { font-size: 15px; font-weight: 800; fill: #ffffff; }
+    .cm { fill: #6b7488; }
+  </style>
+
+  <rect class="bg" width="1200" height="1220"/>
+
+  <!-- HEADER -->
+  <rect x="0" y="0" width="1200" height="110" fill="#1b2540"/>
+  <text x="40" y="52" font-size="32" font-weight="800" fill="#ffffff">Python Data Model, on one card</text>
+  <text x="40" y="84" font-size="16" fill="#b9c4dc">W01 · names, hashing, dunders, traps · R2 Q3, Q4, Q8–10, Q15 · R3 Q3, Q12</text>
+  <text x="1160" y="52" font-size="15" fill="#8fa3cc" text-anchor="end">teach/W01_python_core.md</text>
+
+  <!-- PANEL 1: names, identity, copies -->
+  <rect class="panel" x="40" y="135" width="545" height="410" rx="12"/>
+  <text class="title" x="60" y="168">1 · Names point to objects; copies differ</text>
+  <text class="sub" x="60" y="190">assignment never copies anything</text>
+  <text class="mono" x="60" y="222">a = [[1, 2], [3]]</text>
+  <text class="mono" x="60" y="244" xml:space="preserve">b = a                <tspan class="cm"># same object: b is a</tspan></text>
+  <text class="mono" x="60" y="266" xml:space="preserve">c = copy.copy(a)     <tspan class="cm"># new OUTER, shared inners</tspan></text>
+  <text class="mono" x="60" y="288" xml:space="preserve">d = copy.deepcopy(a) <tspan class="cm"># new all the way down</tspan></text>
+  <!-- diagram -->
+  <rect x="60" y="310" width="110" height="26" rx="5" fill="#eef1f7"/><text class="s b" x="115" y="328" text-anchor="middle">a, b → outer</text>
+  <rect x="60" y="346" width="110" height="26" rx="5" fill="#eef1f7"/><text class="s b" x="115" y="364" text-anchor="middle">c → outer′</text>
+  <line x1="170" y1="323" x2="236" y2="338" stroke="#c62828" stroke-width="1.5"/>
+  <line x1="170" y1="359" x2="236" y2="344" stroke="#c62828" stroke-width="1.5"/>
+  <rect x="238" y="328" width="76" height="26" rx="5" fill="#fde8e8"/><text class="s b red" x="276" y="346" text-anchor="middle">[1, 2]</text>
+  <text class="s red" x="276" y="388" text-anchor="middle">one shared inner</text>
+  <rect x="370" y="310" width="110" height="26" rx="5" fill="#eef1f7"/><text class="s b" x="425" y="328" text-anchor="middle">d → outer″</text>
+  <line x1="425" y1="336" x2="425" y2="346" stroke="#138a43" stroke-width="1.5"/>
+  <rect x="380" y="346" width="90" height="26" rx="5" fill="#e6f4ea"/><text class="s b green" x="425" y="364" text-anchor="middle">[1, 2]′</text>
+  <text class="s green" x="425" y="388" text-anchor="middle">its own inner</text>
+  <text class="mono" x="60" y="420" xml:space="preserve">c[0].append(9)  <tspan class="red b"># a[0] is now [1, 2, 9]!</tspan></text>
+  <text class="mono" x="60" y="442" xml:space="preserve">d[0].append(9)  <tspan class="green"># a untouched</tspan></text>
+  <line class="rule" x1="60" y1="458" x2="565" y2="458"/>
+  <text class="t" x="60" y="484"><tspan class="mono b">==</tspan> asks __eq__ (value) · <tspan class="mono b">is</tspan> asks id() (same object)</text>
+  <text class="s" x="60" y="507"><tspan class="b">is</tspan> only for None and sentinels.</text>
+  <text class="s" x="60" y="527"><tspan class="b red">Trap:</tspan> 256 is 256 is True via CPython's −5..256 cache. Never rely on it.</text>
+
+  <!-- PANEL 2: eq / hash -->
+  <rect class="panel" x="615" y="135" width="545" height="410" rx="12"/>
+  <text class="title" x="635" y="168">2 · The __eq__ / __hash__ contract</text>
+  <text class="sub" x="635" y="190">a == b  ⇒  hash(a) == hash(b)   (not the reverse)</text>
+  <text class="mono" x="635" y="222" xml:space="preserve">class Point:</text>
+  <text class="mono" x="635" y="243" xml:space="preserve">    def __init__(self, x, y):</text>
+  <text class="mono" x="635" y="264" xml:space="preserve">        self.x, self.y = x, y</text>
+  <text class="mono" x="635" y="285" xml:space="preserve">    def __eq__(self, other):</text>
+  <text class="mono" x="635" y="306" xml:space="preserve">        if not isinstance(other, Point):</text>
+  <text class="mono" x="635" y="327" xml:space="preserve">            return NotImplemented  <tspan class="cm"># not False</tspan></text>
+  <text class="mono" x="635" y="348" xml:space="preserve">        return (self.x, self.y) == (other.x, other.y)</text>
+  <text class="mono" x="635" y="369" xml:space="preserve">    def __hash__(self):</text>
+  <text class="mono" x="635" y="390" xml:space="preserve">        return hash((self.x, self.y))</text>
+  <line class="rule" x1="635" y1="406" x2="1140" y2="406"/>
+  <text class="t" x="635" y="432">Define <tspan class="mono">__eq__</tspan> only → Python sets <tspan class="mono b">__hash__ = None</tspan></text>
+  <text class="s" x="635" y="452">→ TypeError: unhashable type, as a set member or dict key.</text>
+  <text class="s b red" x="635" y="482">Trap: hash on mutable fields, then mutate after insert</text>
+  <text class="s red" x="635" y="501">→ wrong bucket → p in s is False, d[p] raises KeyError.</text>
+  <text class="s" x="635" y="527">Easiest: <tspan class="mono">@dataclass(frozen=True)</tspan> generates both, consistently.</text>
+
+  <!-- PANEL 3: dunders -->
+  <rect class="panel" x="40" y="570" width="545" height="420" rx="12"/>
+  <text class="title" x="60" y="603">3 · Dunders interviewers ask about</text>
+  <text class="h" x="60" y="635">METHOD</text><text class="h" x="250" y="635">WHAT IT BUYS YOU</text>
+  <line class="rule" x1="60" y1="645" x2="565" y2="645"/>
+  <text class="mono b" x="60" y="673">__repr__</text><text class="s" x="250" y="673">for devs and logs; str() falls back to it</text>
+  <text class="mono b" x="60" y="707">__str__</text><text class="s" x="250" y="707">for users: print(x), f"{x}"</text>
+  <text class="mono b" x="60" y="741">__len__ __getitem__</text><text class="s" x="250" y="741">len(), x[i], slicing, even for-loops</text>
+  <text class="mono b" x="60" y="775">__iter__ / __next__</text><text class="s" x="250" y="775">iterable hands out a fresh iterator</text>
+  <text class="mono b" x="60" y="809">__contains__</text><text class="s" x="250" y="809"><tspan class="mono">in</tspan>; without it, Python scans: O(n)</text>
+  <text class="mono b" x="60" y="843">__get__ / __set__</text><text class="s" x="250" y="843">descriptors: property, methods, ORM fields</text>
+  <text class="mono b" x="60" y="877">__slots__</text><text class="s" x="250" y="877">no __dict__: less RAM, <tspan class="b amber">no new attrs</tspan></text>
+  <text class="mono b" x="60" y="911">__enter__ / __exit__</text><text class="s" x="250" y="911">with; __exit__ returning True <tspan class="b red">swallows</tspan></text>
+  <line class="rule" x1="60" y1="927" x2="565" y2="927"/>
+  <text class="mono b blue" x="60" y="953">@dataclass(frozen=True, slots=True)</text>
+  <text class="s" x="60" y="974">→ writes __init__, __repr__, __eq__ <tspan class="b">and</tspan> __hash__ for you</text>
+
+  <!-- PANEL 4: bugs + skeletons -->
+  <rect class="panel" x="615" y="570" width="545" height="420" rx="12"/>
+  <text class="title" x="635" y="603">4 · Bugs that bite + the decorator skeleton</text>
+  <text class="h" x="635" y="635">MUTABLE DEFAULT</text>
+  <text class="mono" x="635" y="657" xml:space="preserve">def add(x, acc=[]):   <tspan class="red b"># [] built ONCE, at def</tspan></text>
+  <text class="mono" x="635" y="679" xml:space="preserve">def add(x, acc=None): <tspan class="green"># fix: None sentinel</tspan></text>
+  <text class="mono" x="635" y="699" xml:space="preserve">    acc = [] if acc is None else acc</text>
+  <text class="h" x="635" y="731">LATE-BINDING CLOSURE</text>
+  <text class="mono" x="635" y="753">fs = [lambda: i for i in range(3)]</text>
+  <text class="mono" x="635" y="775" xml:space="preserve">[f() for f in fs]  <tspan class="red b"># [2, 2, 2]: i read at CALL</tspan></text>
+  <text class="mono" x="635" y="797" xml:space="preserve"><tspan class="green b">fix:</tspan> lambda i=i: i   <tspan class="cm"># bind at creation</tspan></text>
+  <text class="h" x="635" y="829">DECORATOR WITH ARGS = 3 LAYERS</text>
+  <text class="mono" x="635" y="851" xml:space="preserve">def retry(times):                 <tspan class="cm"># config</tspan></text>
+  <text class="mono" x="635" y="871" xml:space="preserve">    def deco(fn):                 <tspan class="cm"># function</tspan></text>
+  <text class="mono" x="635" y="891" xml:space="preserve">        @functools.wraps(fn)      <tspan class="cm"># keep name/doc</tspan></text>
+  <text class="mono" x="635" y="911" xml:space="preserve">        def wrapper(*args, **kwargs): ...</text>
+  <text class="mono" x="635" y="931" xml:space="preserve">        return wrapper</text>
+  <text class="mono" x="635" y="951" xml:space="preserve">    return deco</text>
+  <text class="s" x="635" y="976"><tspan class="mono">@contextmanager</tspan>: before yield = enter · finally: = exit</text>
+
+  <!-- FOOTER RULES -->
+  <rect x="40" y="1015" width="1120" height="150" rx="12" fill="#1b2540"/>
+  <text x="60" y="1049" font-size="19" font-weight="800" fill="#ffffff">Six rules to say out loud</text>
+  <circle cx="72" cy="1085" r="13" fill="#2457d6"/><text class="num" x="72" y="1090" text-anchor="middle">1</text>
+  <text x="94" y="1091" font-size="15" fill="#e6ebf7">Assignment binds a name; it never copies</text>
+  <circle cx="440" cy="1085" r="13" fill="#2457d6"/><text class="num" x="440" y="1090" text-anchor="middle">2</text>
+  <text x="462" y="1091" font-size="15" fill="#e6ebf7">Shallow copy shares the nested objects</text>
+  <circle cx="790" cy="1085" r="13" fill="#2457d6"/><text class="num" x="790" y="1090" text-anchor="middle">3</text>
+  <text x="812" y="1091" font-size="15" fill="#e6ebf7">is for None, == for values</text>
+  <circle cx="72" cy="1133" r="13" fill="#2457d6"/><text class="num" x="72" y="1138" text-anchor="middle">4</text>
+  <text x="94" y="1139" font-size="15" fill="#e6ebf7">Equal objects must hash equal</text>
+  <circle cx="440" cy="1133" r="13" fill="#2457d6"/><text class="num" x="440" y="1138" text-anchor="middle">5</text>
+  <text x="462" y="1139" font-size="15" fill="#e6ebf7">Defaults are evaluated once, at def</text>
+  <circle cx="790" cy="1133" r="13" fill="#2457d6"/><text class="num" x="790" y="1138" text-anchor="middle">6</text>
+  <text x="812" y="1139" font-size="15" fill="#e6ebf7">Always @wraps your wrappers</text>
+
+  <text x="600" y="1200" font-size="12.5" fill="#8a93a6" text-anchor="middle">interview repo · teach/infographics/cards · regenerate or edit by asking Claude Code</text>
+</svg>

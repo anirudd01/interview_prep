@@ -1,0 +1,120 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="1130" viewBox="0 0 1200 1130" font-family="Segoe UI, Inter, Helvetica, Arial, sans-serif">
+  <style>
+    .bg { fill: #f6f7fb; }
+    .panel { fill: #ffffff; stroke: #d8deea; stroke-width: 1.5; }
+    .title { font-size: 21px; font-weight: 700; fill: #1b2540; }
+    .sub { font-size: 14px; fill: #5b6578; font-style: italic; }
+    .h { font-size: 13px; font-weight: 700; fill: #5b6578; letter-spacing: 0.6px; }
+    .t { font-size: 14.5px; fill: #263048; }
+    .s { font-size: 13px; fill: #263048; }
+    .b { font-weight: 700; }
+    .mono { font-family: Consolas, "Cascadia Mono", Menlo, monospace; font-size: 13.5px; fill: #1b2540; }
+    .blue { fill: #2457d6; } .green { fill: #138a43; } .red { fill: #c62828; } .amber { fill: #b45309; }
+    .rule { stroke: #e6eaf2; stroke-width: 1; }
+    .num { font-size: 15px; font-weight: 800; fill: #ffffff; }
+    .cm { fill: #8a93a6; }
+  </style>
+
+  <rect class="bg" width="1200" height="1130"/>
+
+  <!-- HEADER -->
+  <rect x="0" y="0" width="1200" height="110" fill="#1b2540"/>
+  <text x="40" y="52" font-size="32" font-weight="800" fill="#ffffff">Docker: image &amp; runtime</text>
+  <text x="40" y="84" font-size="16" fill="#b9c4dc">W09 · Python containers for interviews · R2 Q61–64, Q98 · R6 Q64 · demo: scripts/k8s_graceful_shutdown/</text>
+  <text x="1160" y="52" font-size="15" fill="#8fa3cc" text-anchor="end">card · docker</text>
+
+  <!-- PANEL 1: multi-stage Dockerfile -->
+  <rect class="panel" x="40" y="135" width="545" height="420" rx="12"/>
+  <text class="title" x="60" y="168">1 · Multi-stage Dockerfile (FastAPI + uv)</text>
+  <rect x="52" y="182" width="521" height="306" rx="8" fill="#f3f5fa"/>
+  <text class="mono cm" x="64" y="204"># syntax=docker/dockerfile:1</text>
+  <text class="mono" x="64" y="226"><tspan class="b blue">FROM</tspan> python:3.12-slim <tspan class="b blue">AS</tspan> build</text>
+  <text class="mono" x="64" y="246">COPY --from=ghcr.io/astral-sh/uv /uv /bin/uv</text>
+  <text class="mono" x="64" y="266">WORKDIR /app</text>
+  <text class="mono" x="64" y="286">COPY pyproject.toml uv.lock ./</text><text class="s b green" x="560" y="286" text-anchor="end">← deps first</text>
+  <text class="mono" x="64" y="306">RUN uv sync --frozen --no-dev \</text>
+  <text class="mono" x="108" y="326">--no-install-project</text><text class="s" x="560" y="326" text-anchor="end">cached till lock changes</text>
+  <text class="mono" x="64" y="356"><tspan class="b blue">FROM</tspan> python:3.12-slim</text><text class="s b green" x="560" y="356" text-anchor="end">← no compilers, no uv</text>
+  <text class="mono" x="64" y="376">WORKDIR /app</text>
+  <text class="mono" x="64" y="396">COPY --from=build /app/.venv .venv</text>
+  <text class="mono" x="64" y="416">COPY src/ src/</text><text class="s b green" x="560" y="416" text-anchor="end">← code last</text>
+  <text class="mono" x="64" y="436">ENV PATH=/app/.venv/bin:$PATH</text>
+  <text class="mono" x="64" y="456">USER 10001</text><text class="s b green" x="560" y="456" text-anchor="end">← non-root</text>
+  <text class="mono" x="64" y="476">CMD ["uvicorn", "src.main:app", "--host", "0.0.0.0"]</text>
+  <text class="s" x="60" y="512"><tspan class="b">Why:</tspan> gcc, headers, uv and caches stay in <tspan class="mono">build</tspan>; only the venv ships.</text>
+  <text class="s" x="60" y="532">Same base + same venv path in both stages, or the venv's python link breaks.</text>
+
+  <!-- PANEL 2: cache + base images -->
+  <rect class="panel" x="615" y="135" width="545" height="420" rx="12"/>
+  <text class="title" x="635" y="168">2 · Layer cache &amp; slimming</text>
+  <text class="s" x="635" y="198"><tspan class="b">Cache is top-down:</tspan> one changed layer rebuilds every layer after it.</text>
+  <text class="s" x="635" y="220"><tspan class="b">Order:</tspan> base → OS pkgs → lockfile + deps → source (least → most churn)</text>
+  <text class="s" x="635" y="242"><tspan class="b red">Trap:</tspan> <tspan class="mono">rm</tspan> in a LATER layer saves nothing; clean up in the SAME RUN.</text>
+  <text class="s" x="635" y="264"><tspan class="mono">RUN --mount=type=cache</tspan> keeps pip/uv cache out of the image.</text>
+  <text class="h" x="635" y="300">BASE</text><text class="h" x="790" y="300">SIZE</text><text class="h" x="870" y="300">CATCH</text>
+  <line class="rule" x1="635" y1="310" x2="1140" y2="310"/>
+  <text class="mono" x="635" y="334">python:3.12</text><text class="s" x="790" y="334">~1 GB</text><text class="s" x="870" y="334">compilers + docs → build stage only</text>
+  <line class="rule" x1="635" y1="346" x2="1140" y2="346"/>
+  <rect x="627" y="350" width="521" height="40" rx="6" fill="#eaf1ff"/>
+  <text class="mono b" x="635" y="375">-slim</text><text class="s" x="790" y="375">~130 MB</text><text class="s" x="870" y="375"><tspan class="b blue">★ default:</tspan> glibc, wheels just install</text>
+  <line class="rule" x1="635" y1="396" x2="1140" y2="396"/>
+  <text class="mono" x="635" y="420">-alpine</text><text class="s" x="790" y="420">~50 MB</text><text class="s b red" x="870" y="420">musl: glibc wheels don't fit →</text>
+  <text class="s red" x="870" y="438">compiles from source, often BIGGER + slower</text>
+  <line class="rule" x1="635" y1="450" x2="1140" y2="450"/>
+  <text class="mono" x="635" y="474">distroless</text><text class="s" x="790" y="474">~50 MB</text><text class="s" x="870" y="474">no shell/pip: tiny attack surface;</text>
+  <text class="s" x="870" y="492">debug via kubectl debug (ephemeral)</text>
+  <text class="s" x="635" y="526"><tspan class="b mono">.dockerignore</tspan>: .git .venv __pycache__ tests .env → smaller context,</text>
+  <text class="s" x="635" y="545">better cache hits, and no secrets copied in by <tspan class="mono">COPY . .</tspan></text>
+
+  <!-- PANEL 3: PID 1 + signals -->
+  <rect class="panel" x="40" y="580" width="545" height="330" rx="12"/>
+  <text class="title" x="60" y="613">3 · PID 1 &amp; signals (graceful shutdown)</text>
+  <rect x="60" y="630" width="112" height="52" rx="8" fill="#eef1f7"/><text class="s b" x="116" y="652" text-anchor="middle">preStop</text><text class="s" x="116" y="670" text-anchor="middle">sleep 10s</text>
+  <text x="177" y="661" font-size="18" fill="#9aa5bb">→</text>
+  <rect x="195" y="630" width="118" height="52" rx="8" fill="#eef1f7"/><text class="s b" x="254" y="652" text-anchor="middle">SIGTERM</text><text class="s" x="254" y="670" text-anchor="middle">to PID 1 only</text>
+  <text x="318" y="661" font-size="18" fill="#9aa5bb">→</text>
+  <rect x="336" y="630" width="112" height="52" rx="8" fill="#eef1f7"/><text class="s b" x="392" y="652" text-anchor="middle">drain</text><text class="s" x="392" y="670" text-anchor="middle">in-flight reqs</text>
+  <text x="453" y="661" font-size="18" fill="#9aa5bb">→</text>
+  <rect x="471" y="630" width="100" height="52" rx="8" fill="#fde8e8"/><text class="s b red" x="521" y="652" text-anchor="middle">SIGKILL</text><text class="s red" x="521" y="670" text-anchor="middle">at grace (45s)</text>
+  <text class="mono" x="60" y="714">CMD python app.py</text><text class="s b red" x="250" y="714">✗ shell form: /bin/sh is PID 1,</text>
+  <text class="s red" x="250" y="732">doesn't forward SIGTERM → no drain, killed</text>
+  <text class="mono" x="60" y="760">CMD ["python","app.py"]</text><text class="s b green" x="250" y="760">✓ exec form: app is PID 1</text>
+  <text class="s" x="60" y="794"><tspan class="b">PID 1 is special:</tspan> the kernel skips default actions for signals it hasn't</text>
+  <text class="s" x="60" y="812">handled (uvicorn installs handlers; a bare script may ignore SIGTERM),</text>
+  <text class="s" x="60" y="830">and it must <tspan class="b">reap zombie</tspan> children. Fix: <tspan class="mono">tini</tspan> as ENTRYPOINT or <tspan class="mono">--init</tspan>.</text>
+  <text class="s" x="60" y="856">Shell entrypoint script? End it with <tspan class="mono b">exec "$@"</tspan> so the app replaces sh.</text>
+  <text class="s amber b" x="60" y="888">Your demo: preStop 10s + drain 25s + cleanup &lt; grace 45s.</text>
+
+  <!-- PANEL 4: hardening -->
+  <rect class="panel" x="615" y="580" width="545" height="330" rx="12"/>
+  <text class="title" x="635" y="613">4 · Runtime hardening</text>
+  <text class="t b" x="635" y="646">Non-root</text><text class="s" x="790" y="646"><tspan class="mono">USER 10001</tspan> + <tspan class="mono">runAsNonRoot: true</tspan></text>
+  <text class="t b" x="635" y="674">Read-only FS</text><text class="s" x="790" y="674"><tspan class="mono">readOnlyRootFilesystem</tspan> + emptyDir /tmp</text>
+  <text class="t b" x="635" y="702">Fewer powers</text><text class="s" x="790" y="702"><tspan class="mono">drop: [ALL]</tspan>, no privilege escalation</text>
+  <text class="t b" x="635" y="730">Supply chain</text><text class="s" x="790" y="730">pin base by digest · scan (Trivy) · tag git SHA</text>
+  <line class="rule" x1="635" y1="748" x2="1140" y2="748"/>
+  <text class="h" x="635" y="774">SECRETS</text>
+  <text class="s" x="635" y="798"><tspan class="b red">Trap:</tspan> ARG / ENV / COPY'd secrets live in layer history;</text>
+  <text class="s" x="635" y="816"><tspan class="mono">docker history</tspan> shows them, deleting later doesn't help.</text>
+  <text class="s" x="635" y="842">Build time: <tspan class="mono">RUN --mount=type=secret,id=pip_token ...</tspan></text>
+  <text class="s" x="635" y="860">(mounted for that one RUN, never written to a layer)</text>
+  <text class="s" x="635" y="886">Runtime: K8s Secret / Key Vault CSI, injected, not baked in.</text>
+
+  <!-- RULES -->
+  <rect x="40" y="935" width="1120" height="150" rx="12" fill="#1b2540"/>
+  <text x="60" y="969" font-size="19" font-weight="800" fill="#ffffff">Six rules to say out loud</text>
+  <circle cx="72" cy="1005" r="13" fill="#2457d6"/><text class="num" x="72" y="1010" text-anchor="middle">1</text>
+  <text x="94" y="1011" font-size="15" fill="#e6ebf7">Deps before code, cleanup in the same RUN</text>
+  <circle cx="440" cy="1005" r="13" fill="#2457d6"/><text class="num" x="440" y="1010" text-anchor="middle">2</text>
+  <text x="462" y="1011" font-size="15" fill="#e6ebf7">Build tools stay in the build stage</text>
+  <circle cx="790" cy="1005" r="13" fill="#2457d6"/><text class="num" x="790" y="1010" text-anchor="middle">3</text>
+  <text x="812" y="1011" font-size="15" fill="#e6ebf7">slim over alpine for Python</text>
+  <circle cx="72" cy="1053" r="13" fill="#2457d6"/><text class="num" x="72" y="1058" text-anchor="middle">4</text>
+  <text x="94" y="1059" font-size="15" fill="#e6ebf7">Exec-form CMD, always</text>
+  <circle cx="440" cy="1053" r="13" fill="#2457d6"/><text class="num" x="440" y="1058" text-anchor="middle">5</text>
+  <text x="462" y="1059" font-size="15" fill="#e6ebf7">Non-root, read-only, caps dropped</text>
+  <circle cx="790" cy="1053" r="13" fill="#2457d6"/><text class="num" x="790" y="1058" text-anchor="middle">6</text>
+  <text x="812" y="1059" font-size="15" fill="#e6ebf7">A secret in a layer is a leaked secret</text>
+
+  <text x="600" y="1115" font-size="12.5" fill="#8a93a6" text-anchor="middle">interview repo · teach/infographics/cards · regenerate or edit by asking Claude Code</text>
+</svg>

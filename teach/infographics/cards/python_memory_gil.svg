@@ -1,0 +1,134 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="1010" viewBox="0 0 1200 1010" font-family="Segoe UI, Inter, Helvetica, Arial, sans-serif">
+  <style>
+    .bg { fill: #f6f7fb; }
+    .panel { fill: #ffffff; stroke: #d8deea; stroke-width: 1.5; }
+    .title { font-size: 21px; font-weight: 700; fill: #1b2540; }
+    .sub { font-size: 14px; fill: #5b6578; font-style: italic; }
+    .h { font-size: 13px; font-weight: 700; fill: #5b6578; letter-spacing: 0.6px; }
+    .t { font-size: 14.5px; fill: #263048; }
+    .s { font-size: 13px; fill: #263048; }
+    .b { font-weight: 700; }
+    .mono { font-family: Consolas, "Cascadia Mono", Menlo, monospace; font-size: 13.5px; fill: #1b2540; }
+    .blue { fill: #2457d6; } .green { fill: #138a43; } .red { fill: #c62828; } .amber { fill: #b45309; }
+    .rule { stroke: #e6eaf2; stroke-width: 1; }
+    .num { font-size: 15px; font-weight: 800; fill: #ffffff; }
+  </style>
+  <defs>
+    <pattern id="hatch" width="6" height="6" patternUnits="userSpaceOnUse" patternTransform="rotate(45)">
+      <rect width="6" height="6" fill="#fdf1e3"/><line x1="0" y1="0" x2="0" y2="6" stroke="#b45309" stroke-width="2"/>
+    </pattern>
+    <marker id="arr" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto">
+      <path d="M0,0 L10,5 L0,10 z" fill="#5b6578"/>
+    </marker>
+  </defs>
+
+  <rect class="bg" width="1200" height="1010"/>
+
+  <!-- HEADER -->
+  <rect x="0" y="0" width="1200" height="110" fill="#1b2540"/>
+  <text x="40" y="52" font-size="32" font-weight="800" fill="#ffffff">Python memory, copies &amp; the GIL</text>
+  <text x="40" y="84" font-size="16" fill="#b9c4dc">W02 card · CPython 3.12–3.14 · R2 Q1, Q4, Q7 · R3 Q4, Q7 · misses: GIL release cases, shallow vs deep copy</text>
+  <text x="1160" y="52" font-size="15" fill="#8fa3cc" text-anchor="end">teach/W02_python_internals.md</text>
+
+  <!-- PANEL 1: refcount + GC -->
+  <rect class="panel" x="40" y="135" width="545" height="300" rx="12"/>
+  <text class="title" x="60" y="168">1 · Refcount frees now, GC frees cycles</text>
+  <text class="sub" x="60" y="190">two mechanisms, two different jobs</text>
+  <text class="h" x="60" y="222">REFCOUNT · ALWAYS ON</text>
+  <text class="t" x="60" y="246">Each reference +1; at 0 the object is <tspan class="b">freed at once</tspan></text>
+  <text class="s" x="60" y="267">deterministic: files close, memory goes back to the allocator</text>
+  <text class="mono" x="60" y="292">del x</text><text class="s b red" x="112" y="292">removes ONE name, not the object</text>
+  <line class="rule" x1="60" y1="306" x2="565" y2="306"/>
+  <text class="h" x="60" y="330">CYCLIC GC · GENERATIONS 0 → 1 → 2</text>
+  <text class="mono" x="60" y="354">a.peer = b; b.peer = a; del a, b</text>
+  <text class="s red" x="60" y="375">↑ refcount stays 1 each → only the cycle collector can free them</text>
+  <text class="s" x="60" y="397">scans containers only · survivors get promoted · gc.freeze() before fork</text>
+  <text class="s b amber" x="60" y="420">RSS may not drop (pymalloc keeps arenas). Break cycles: weakref.</text>
+
+  <!-- PANEL 2: shallow vs deep -->
+  <rect class="panel" x="615" y="135" width="545" height="300" rx="12"/>
+  <text class="title" x="635" y="168">2 · Shallow vs deep copy</text>
+  <text class="sub" x="635" y="190">shallow = new outer box, SAME inner objects</text>
+  <text class="mono" x="635" y="220">orig = {"tags": ["a"]}</text>
+  <text class="mono" x="635" y="241">s = copy.copy(orig)   # also dict(orig), lst[:]</text>
+  <text class="mono" x="635" y="262">s["tags"].append("b")</text>
+  <text class="mono" x="635" y="283">orig["tags"]  →  ['a', 'b']</text><text class="s b red" x="900" y="283">← surprise!</text>
+  <!-- diagram -->
+  <rect x="635" y="302" width="60" height="26" rx="5" fill="#eef1f7"/><text class="mono" x="665" y="320" text-anchor="middle">orig</text>
+  <rect x="635" y="340" width="60" height="26" rx="5" fill="#eef1f7"/><text class="mono" x="665" y="358" text-anchor="middle">s</text>
+  <rect x="770" y="320" width="110" height="28" rx="5" fill="#fde8e8" stroke="#c62828"/><text class="mono" x="825" y="339" text-anchor="middle">['a','b']</text>
+  <line x1="695" y1="315" x2="768" y2="330" stroke="#5b6578" stroke-width="1.5" marker-end="url(#arr)"/>
+  <line x1="695" y1="353" x2="768" y2="340" stroke="#5b6578" stroke-width="1.5" marker-end="url(#arr)"/>
+  <text class="s red" x="825" y="368" text-anchor="middle">one shared list</text>
+  <rect x="925" y="320" width="60" height="28" rx="5" fill="#eef1f7"/><text class="mono" x="955" y="339" text-anchor="middle">d</text>
+  <rect x="1035" y="320" width="100" height="28" rx="5" fill="#e6f5ec" stroke="#138a43"/><text class="mono" x="1085" y="339" text-anchor="middle">['a']</text>
+  <line x1="985" y1="334" x2="1033" y2="334" stroke="#5b6578" stroke-width="1.5" marker-end="url(#arr)"/>
+  <text class="s green" x="1030" y="368" text-anchor="middle">d = copy.deepcopy(orig): own copy</text>
+  <text class="s" x="635" y="400"><tspan class="b">Bug in the wild:</tspan> copy a default config per request, mutate a</text>
+  <text class="s" x="635" y="420">nested key → it leaks into every later request. Fix: deepcopy or rebuild.</text>
+
+  <!-- PANEL 3: GIL timeline + release cases -->
+  <rect class="panel" x="40" y="460" width="545" height="330" rx="12"/>
+  <text class="title" x="60" y="493">3 · GIL: one thread runs bytecode at a time</text>
+  <text class="sub" x="60" y="514">protects CPython internals (refcounts, dicts), not your logic</text>
+  <text class="s" x="60" y="545">T1</text><text class="s" x="60" y="575">T2</text><text class="s" x="60" y="605">T3</text>
+  <!-- T1: run, wait on I/O, run -->
+  <rect x="100" y="532" width="80" height="18" rx="3" fill="#2457d6"/>
+  <rect x="180" y="532" width="150" height="18" rx="3" fill="none" stroke="#2457d6" stroke-dasharray="5 4"/>
+  <rect x="330" y="532" width="90" height="18" rx="3" fill="#2457d6"/>
+  <!-- T2: run until forced switch -->
+  <rect x="180" y="562" width="80" height="18" rx="3" fill="#138a43"/>
+  <rect x="420" y="562" width="140" height="18" rx="3" fill="#138a43"/>
+  <!-- T3: run, then NumPy without GIL -->
+  <rect x="260" y="592" width="70" height="18" rx="3" fill="#b45309"/>
+  <rect x="330" y="592" width="200" height="18" rx="3" fill="url(#hatch)" stroke="#b45309"/>
+  <rect x="372" y="594" width="116" height="14" rx="3" fill="#ffffff"/>
+  <text x="430" y="605" font-size="11.5" font-weight="700" fill="#b45309" text-anchor="middle">NumPy in C, no GIL</text>
+  <!-- markers -->
+  <text x="180" y="628" font-size="11.5" fill="#5b6578" text-anchor="middle">▲ recv()</text>
+  <text x="260" y="628" font-size="11.5" fill="#5b6578" text-anchor="middle">▲ 5 ms</text>
+  <text x="330" y="628" font-size="11.5" fill="#5b6578" text-anchor="middle">▲ C ext</text>
+  <line x1="100" y1="638" x2="560" y2="638" stroke="#9aa5bb" stroke-width="1"/>
+  <text class="s" x="560" y="654" text-anchor="end" fill="#5b6578">time →</text>
+  <text class="s" x="60" y="654">solid = holds GIL · dashed = waiting, GIL free</text>
+  <text class="h" x="60" y="684">GIL RELEASED WHEN</text><text class="h" x="290" y="684">EXAMPLE</text>
+  <line class="rule" x1="60" y1="692" x2="565" y2="692"/>
+  <text class="t b" x="60" y="714">blocking I/O syscall</text><text class="s" x="290" y="714">socket recv, file read, DB driver wait</text>
+  <text class="t b" x="60" y="737">time.sleep()</text><text class="s" x="290" y="737">sleeps without holding it</text>
+  <text class="t b" x="60" y="760">C code that opts in</text><text class="s" x="290" y="760">NumPy, hashlib (big inputs), zlib</text>
+  <text class="t b" x="60" y="783">forced every 5 ms</text><text class="s" x="290" y="783">sys.getswitchinterval() → 0.005</text>
+
+  <!-- PANEL 4: GIL is not thread safety + free-threaded -->
+  <rect class="panel" x="615" y="460" width="545" height="330" rx="12"/>
+  <text class="title" x="635" y="493">4 · GIL ≠ thread-safe · free-threaded</text>
+  <text class="mono" x="635" y="525">counter += 1    # really 4 steps:</text>
+  <text class="mono" x="635" y="546">LOAD counter → LOAD 1 → BINARY_OP → STORE</text>
+  <text class="s b red" x="635" y="568">a switch between LOAD and STORE → lost update</text>
+  <text class="s" x="635" y="589">fix: threading.Lock around it, or a Queue / one owner thread</text>
+  <text class="h" x="635" y="621">BUILD</text><text class="h" x="705" y="621">STATUS</text>
+  <line class="rule" x1="635" y1="629" x2="1140" y2="629"/>
+  <text class="mono b" x="635" y="651">3.12</text><text class="s" x="705" y="651">GIL; per-interpreter GIL (PEP 684, C-API only)</text>
+  <text class="mono b" x="635" y="673">3.13t</text><text class="s" x="705" y="673">no-GIL build, experimental (PEP 703); slow single-thread</text>
+  <text class="mono b" x="635" y="695">3.14t</text><text class="s" x="705" y="695">officially supported (PEP 779); ~5–10% single-thread cost</text>
+  <text class="s b amber" x="635" y="720">C ext not marked free-thread-safe → GIL turns back on at import</text>
+  <text class="t b" x="635" y="755">Adopt today? Not for I/O-bound FastAPI: asyncio wins.</text>
+  <text class="s" x="635" y="777">Maybe for CPU-bound threads, once every dependency supports it.</text>
+
+  <!-- FOOTER RULES -->
+  <rect x="40" y="815" width="1120" height="140" rx="12" fill="#1b2540"/>
+  <text x="60" y="849" font-size="19" font-weight="800" fill="#ffffff">Six rules to say out loud</text>
+  <circle cx="72" cy="885" r="13" fill="#2457d6"/><text class="num" x="72" y="890" text-anchor="middle">1</text>
+  <text x="94" y="891" font-size="15" fill="#e6ebf7">Refcount frees now; GC is for cycles</text>
+  <circle cx="440" cy="885" r="13" fill="#2457d6"/><text class="num" x="440" y="890" text-anchor="middle">2</text>
+  <text x="462" y="891" font-size="15" fill="#e6ebf7">del removes a name, not the object</text>
+  <circle cx="790" cy="885" r="13" fill="#2457d6"/><text class="num" x="790" y="890" text-anchor="middle">3</text>
+  <text x="812" y="891" font-size="15" fill="#e6ebf7">Shallow copy shares the insides</text>
+  <circle cx="72" cy="928" r="13" fill="#2457d6"/><text class="num" x="72" y="933" text-anchor="middle">4</text>
+  <text x="94" y="934" font-size="15" fill="#e6ebf7">GIL drops on I/O, sleep, C extensions</text>
+  <circle cx="440" cy="928" r="13" fill="#2457d6"/><text class="num" x="440" y="933" text-anchor="middle">5</text>
+  <text x="462" y="934" font-size="15" fill="#e6ebf7">GIL guards CPython, not your data</text>
+  <circle cx="790" cy="928" r="13" fill="#2457d6"/><text class="num" x="790" y="933" text-anchor="middle">6</text>
+  <text x="812" y="934" font-size="15" fill="#e6ebf7">CPU-bound pure Python → processes</text>
+
+  <text x="600" y="988" font-size="12.5" fill="#8a93a6" text-anchor="middle">interview repo · teach/infographics/cards · regenerate or edit by asking Claude Code</text>
+</svg>

@@ -1,0 +1,154 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="1250" viewBox="0 0 1200 1250" font-family="Segoe UI, Inter, Helvetica, Arial, sans-serif">
+  <style>
+    .bg { fill: #f6f7fb; }
+    .panel { fill: #ffffff; stroke: #d8deea; stroke-width: 1.5; }
+    .title { font-size: 21px; font-weight: 700; fill: #1b2540; }
+    .sub { font-size: 14px; fill: #5b6578; font-style: italic; }
+    .h { font-size: 13px; font-weight: 700; fill: #5b6578; letter-spacing: 0.6px; }
+    .t { font-size: 14.5px; fill: #263048; }
+    .s { font-size: 13px; fill: #263048; }
+    .b { font-weight: 700; }
+    .mono { font-family: Consolas, "Cascadia Mono", Menlo, monospace; font-size: 13.5px; fill: #1b2540; }
+    .blue { fill: #2457d6; } .green { fill: #138a43; } .red { fill: #c62828; } .amber { fill: #b45309; }
+    .rule { stroke: #e6eaf2; stroke-width: 1; }
+    .num { font-size: 15px; font-weight: 800; fill: #ffffff; }
+  </style>
+  <defs>
+    <marker id="arr" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10 z" fill="#5b6578"/>
+    </marker>
+  </defs>
+
+  <rect class="bg" width="1200" height="1250"/>
+
+  <!-- HEADER -->
+  <rect x="0" y="0" width="1200" height="110" fill="#1b2540"/>
+  <text x="40" y="52" font-size="32" font-weight="800" fill="#ffffff">Resilience patterns, on one card</text>
+  <text x="40" y="84" font-size="16" fill="#b9c4dc">W08 · timeouts, retries, breakers, idempotency · R3 Q27/28/44, R2 Q24, R6 Q26, DSA Q11</text>
+  <text x="1160" y="52" font-size="15" fill="#8fa3cc" text-anchor="end">cards/resilience_patterns</text>
+
+  <!-- ROW 1: timeouts + deadline budget -->
+  <rect class="panel" x="40" y="135" width="1120" height="275" rx="12"/>
+  <text class="title" x="60" y="168">1 · Timeouts: every call has one, shorter than its caller's</text>
+  <text class="h" x="60" y="202">TIMEOUT</text><text class="h" x="190" y="202">SET TO</text><text class="h" x="345" y="202">WHY</text>
+  <line class="rule" x1="60" y1="212" x2="570" y2="212"/>
+  <text class="t b" x="60" y="238">connect</text><text class="t" x="190" y="238">100–500 ms</text><text class="s" x="345" y="238">dead host? find out fast</text>
+  <line class="rule" x1="60" y1="252" x2="570" y2="252"/>
+  <text class="t b" x="60" y="278">read / total</text><text class="t" x="190" y="278">≈ p99.9 of call</text><text class="s" x="345" y="278">from data, not a round 30 s</text>
+  <line class="rule" x1="60" y1="292" x2="570" y2="292"/>
+  <text class="t b" x="60" y="318">pool acquire</text><text class="t" x="190" y="318">tens of ms</text><text class="s" x="345" y="318">waiting for a conn hides overload</text>
+  <text class="s" x="60" y="356"><tspan class="b red">Trap:</tspan> <tspan class="mono">requests</tspan> has <tspan class="b red">NO default timeout</tspan> → a hung socket pins</text>
+  <text class="s" x="60" y="376">a worker forever. httpx defaults to 5 s. Always pass one explicitly.</text>
+
+  <!-- deadline budget bar: 300 ms = 500 px -->
+  <text class="h" x="620" y="202">DEADLINE BUDGET · Jio recs, p95 target ≈ 200 ms, hard cap 300 ms</text>
+  <rect x="620" y="218" width="33" height="30" fill="#5b6578"/>
+  <rect x="653" y="218" width="100" height="30" fill="#2457d6"/>
+  <rect x="753" y="218" width="134" height="30" fill="#138a43"/>
+  <rect x="887" y="218" width="166" height="30" fill="#b45309"/>
+  <rect x="1053" y="218" width="67" height="30" fill="#eef1f7" stroke="#9aa5bb" stroke-dasharray="4 3"/>
+  <text x="636" y="238" font-size="11.5" font-weight="700" fill="#fff" text-anchor="middle">20</text>
+  <text x="703" y="238" font-size="12" font-weight="700" fill="#fff" text-anchor="middle">profile 60</text>
+  <text x="820" y="238" font-size="12" font-weight="700" fill="#fff" text-anchor="middle">embedding 80</text>
+  <text x="970" y="238" font-size="12" font-weight="700" fill="#fff" text-anchor="middle">similarity 100</text>
+  <text x="1086" y="238" font-size="12" fill="#5b6578" text-anchor="middle">slack 40</text>
+  <text class="s" x="620" y="266" fill="#5b6578">0 ms</text><text class="s" x="1120" y="266" fill="#5b6578" text-anchor="end">300 ms</text>
+  <text class="s" x="620" y="294"><tspan class="b">Propagate an absolute deadline</tspan> (grpc-timeout, X-Request-Deadline).</text>
+  <text class="s" x="620" y="314">Each hop: <tspan class="mono">timeout = min(own, remaining − margin)</tspan></text>
+  <text class="s" x="620" y="334">remaining &lt; expected work → <tspan class="b">fail fast, don't start the call.</tspan></text>
+  <text class="s" x="620" y="366"><tspan class="b red">Trap:</tspan> inner timeout 5 s under an outer 300 ms → the callee keeps</text>
+  <text class="s" x="620" y="386">working for a client that already gave up. Pure wasted capacity.</text>
+
+  <!-- ROW 2 LEFT: retries -->
+  <rect class="panel" x="40" y="435" width="545" height="345" rx="12"/>
+  <text class="title" x="60" y="468">2 · Retries: backoff + full jitter + budget</text>
+  <text class="mono" x="60" y="500">delay = uniform(0, min(cap, base * 2**n))</text>
+  <text class="s" x="60" y="521">no jitter → every client retries in lockstep → synchronized waves</text>
+  <text class="t b green" x="60" y="553">Retry</text><text class="s" x="140" y="553">connect errors, 502/503/504, 429 (honour Retry-After)</text>
+  <text class="t b red" x="60" y="578">Don't</text><text class="s" x="140" y="578">400/401/403/404/409/422 · POST without an idem. key</text>
+  <text class="t b amber" x="60" y="603">Careful</text><text class="s" x="140" y="603">timeouts: the call may have SUCCEEDED → idempotent only</text>
+  <line class="rule" x1="60" y1="620" x2="565" y2="620"/>
+  <text class="h" x="60" y="644">AMPLIFICATION: 3 tries at each of 3 layers</text>
+  <rect x="60" y="656" width="100" height="36" rx="7" fill="#eef1f7"/><text class="s b" x="110" y="679" text-anchor="middle">edge ×3</text>
+  <text x="166" y="680" font-size="18" fill="#9aa5bb">→</text>
+  <rect x="186" y="656" width="100" height="36" rx="7" fill="#eef1f7"/><text class="s b" x="236" y="679" text-anchor="middle">recs ×3</text>
+  <text x="292" y="680" font-size="18" fill="#9aa5bb">→</text>
+  <rect x="312" y="656" width="100" height="36" rx="7" fill="#eef1f7"/><text class="s b" x="362" y="679" text-anchor="middle">client ×3</text>
+  <text x="418" y="680" font-size="18" fill="#9aa5bb">→</text>
+  <rect x="438" y="656" width="127" height="36" rx="7" fill="#fde8e8"/><text class="s b red" x="501" y="679" text-anchor="middle">DB sees 27×</text>
+  <text class="s" x="60" y="716">33k peak RPS × 27 ≈ <tspan class="b red">890k RPS on an already-sick DB.</tspan></text>
+  <text class="s" x="60" y="742"><tspan class="b">Fix:</tspan> retry at ONE layer · retry budget (retries ≤ 10% of calls)</text>
+  <text class="s" x="60" y="762">· cap attempts (≈3) AND total time (the deadline) · test with fake clocks</text>
+
+  <!-- ROW 2 RIGHT: circuit breaker -->
+  <rect class="panel" x="615" y="435" width="545" height="345" rx="12"/>
+  <text class="title" x="635" y="468">3 · Circuit breaker: stop hitting a sick dep</text>
+  <!-- states -->
+  <rect x="640" y="495" width="130" height="50" rx="25" fill="#e6f4ec" stroke="#138a43" stroke-width="2"/>
+  <text class="t b green" x="705" y="525" text-anchor="middle">CLOSED</text>
+  <rect x="1005" y="495" width="130" height="50" rx="25" fill="#fde8e8" stroke="#c62828" stroke-width="2"/>
+  <text class="t b red" x="1070" y="525" text-anchor="middle">OPEN</text>
+  <rect x="822" y="600" width="130" height="50" rx="25" fill="#fdf1e3" stroke="#b45309" stroke-width="2"/>
+  <text class="t b amber" x="887" y="630" text-anchor="middle">HALF-OPEN</text>
+  <!-- closed -> open -->
+  <line x1="772" y1="512" x2="1001" y2="512" stroke="#5b6578" stroke-width="1.5" marker-end="url(#arr)"/>
+  <text class="s" x="887" y="503" text-anchor="middle">err ≥ 50% over ≥ 20 calls / 10 s</text>
+  <!-- open -> half -->
+  <line x1="1050" y1="547" x2="955" y2="612" stroke="#5b6578" stroke-width="1.5" marker-end="url(#arr)"/>
+  <text class="s" x="1000" y="574" text-anchor="end">cooldown 30 s</text>
+  <!-- half -> closed -->
+  <line x1="820" y1="612" x2="728" y2="547" stroke="#5b6578" stroke-width="1.5" marker-end="url(#arr)"/>
+  <text class="s green" x="640" y="598">probes succeed</text>
+  <!-- half -> open (back) -->
+  <path d="M 952 640 Q 1110 660 1090 549" fill="none" stroke="#c62828" stroke-width="1.5" stroke-dasharray="5 4" marker-end="url(#arr)"/>
+  <text class="s red" x="1040" y="672">a probe fails</text>
+  <text class="s" x="635" y="700"><tspan class="b">OPEN = fail fast + cheap fallback.</tspan> Jio: serve the cached</text>
+  <text class="s" x="635" y="719">trending feed instead of personalised recs.</text>
+  <text class="s" x="635" y="745"><tspan class="b red">Traps:</tspan> no min-volume → 1 of 2 failures trips it · one breaker</text>
+  <text class="s" x="635" y="764"><tspan class="b red">per dependency/host</tspan>, not global · never retry while OPEN</text>
+
+  <!-- ROW 3 LEFT: idempotency -->
+  <rect class="panel" x="40" y="805" width="545" height="290" rx="12"/>
+  <text class="title" x="60" y="838">4 · Idempotency keys: retries become safe</text>
+  <text class="s" x="60" y="866"><tspan class="b">1</tspan> client sends <tspan class="mono">Idempotency-Key: &lt;uuid&gt;</tspan>, same on every retry</text>
+  <text class="s" x="60" y="888"><tspan class="b">2</tspan> server atomically inserts (key, request_hash, in_progress), TTL 24 h</text>
+  <text class="s" x="60" y="910"><tspan class="b">3</tspan> on finish, store status + response body under the key</text>
+  <text class="h" x="60" y="942">SAME KEY ARRIVES AGAIN</text><text class="h" x="345" y="942">RETURN</text>
+  <line class="rule" x1="60" y1="952" x2="565" y2="952"/>
+  <text class="s" x="60" y="974">same hash, done</text><text class="s b green" x="345" y="974">stored response (replay)</text>
+  <text class="s" x="60" y="996">same hash, still in progress</text><text class="s b amber" x="345" y="996">409, retry later</text>
+  <text class="s" x="60" y="1018">different request body</text><text class="s b red" x="345" y="1018">422, key misuse</text>
+  <text class="s" x="60" y="1050"><tspan class="b red">Trap:</tspan> SELECT-then-INSERT races → use SET NX / unique constraint.</text>
+  <text class="s" x="60" y="1072"><tspan class="b">Strongest:</tspan> key row in the SAME DB transaction as the side effect.</text>
+
+  <!-- ROW 3 RIGHT: bulkheads + shedding -->
+  <rect class="panel" x="615" y="805" width="545" height="290" rx="12"/>
+  <text class="title" x="635" y="838">5 · Bulkheads &amp; load shedding</text>
+  <text class="t b" x="635" y="870">Bulkhead</text>
+  <text class="s" x="635" y="890">separate pool / Semaphore per dependency → a slow similarity</text>
+  <text class="s" x="635" y="909">service can't eat every worker the profile calls need.</text>
+  <text class="t b" x="635" y="941">Size it: Little's law</text>
+  <text class="s" x="635" y="961">in-flight = RPS × latency → 33k × 0.2 s ≈ <tspan class="b">6.6k concurrent</tspan> fleet-wide</text>
+  <text class="t b" x="635" y="993">Shed early</text>
+  <text class="s" x="635" y="1013">over the limit → 503 + Retry-After at the edge, before any work ·</text>
+  <text class="s" x="635" y="1032">drop queued requests whose deadline already passed · by priority</text>
+  <text class="s" x="635" y="1066"><tspan class="b red">Trap:</tspan> unbounded queue → latency climbs until EVERY request</text>
+  <text class="s" x="635" y="1085">times out and it stays stuck after load drops (metastable).</text>
+
+  <!-- FOOTER: rules -->
+  <rect x="40" y="1120" width="1120" height="100" rx="12" fill="#1b2540"/>
+  <circle cx="72" cy="1150" r="13" fill="#2457d6"/><text class="num" x="72" y="1155" text-anchor="middle">1</text>
+  <text x="94" y="1156" font-size="15" fill="#e6ebf7">Every call: a timeout below its caller's</text>
+  <circle cx="440" cy="1150" r="13" fill="#2457d6"/><text class="num" x="440" y="1155" text-anchor="middle">2</text>
+  <text x="462" y="1156" font-size="15" fill="#e6ebf7">Retry at one layer, jittered, budgeted</text>
+  <circle cx="800" cy="1150" r="13" fill="#2457d6"/><text class="num" x="800" y="1155" text-anchor="middle">3</text>
+  <text x="822" y="1156" font-size="15" fill="#e6ebf7">Only retry what's idempotent</text>
+  <circle cx="72" cy="1192" r="13" fill="#2457d6"/><text class="num" x="72" y="1197" text-anchor="middle">4</text>
+  <text x="94" y="1198" font-size="15" fill="#e6ebf7">One breaker per dependency + fallback</text>
+  <circle cx="440" cy="1192" r="13" fill="#2457d6"/><text class="num" x="440" y="1197" text-anchor="middle">5</text>
+  <text x="462" y="1198" font-size="15" fill="#e6ebf7">Isolate pools per dependency</text>
+  <circle cx="800" cy="1192" r="13" fill="#2457d6"/><text class="num" x="800" y="1197" text-anchor="middle">6</text>
+  <text x="822" y="1198" font-size="15" fill="#e6ebf7">Shed early; bound every queue</text>
+
+  <text x="600" y="1240" font-size="12.5" fill="#8a93a6" text-anchor="middle">interview repo · teach/infographics/cards · regenerate or edit by asking Claude Code</text>
+</svg>
