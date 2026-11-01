@@ -1,0 +1,346 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="1695" viewBox="0 0 1200 1695" font-family="Segoe UI, Inter, Helvetica, Arial, sans-serif">
+  <style>
+    .bg { fill: #f6f7fb; }
+    .panel { fill: #ffffff; stroke: #d8deea; stroke-width: 1.5; }
+    .title { font-size: 21px; font-weight: 700; fill: #1b2540; }
+    .sub { font-size: 14px; fill: #5b6578; font-style: italic; }
+    .h { font-size: 13px; font-weight: 700; fill: #5b6578; letter-spacing: 0.6px; }
+    .t { font-size: 14.5px; fill: #263048; }
+    .s { font-size: 13px; fill: #263048; }
+    .b { font-weight: 700; }
+    .mono { font-family: Consolas, "Cascadia Mono", Menlo, monospace; font-size: 13.5px; fill: #1b2540; }
+    .blue { fill: #2457d6; } .green { fill: #138a43; } .red { fill: #c62828; } .amber { fill: #b45309; }
+    .rule { stroke: #e6eaf2; stroke-width: 1; }
+    .num { font-size: 15px; font-weight: 800; fill: #ffffff; }
+  </style>
+  <defs>
+    <marker id="arr" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto">
+      <path d="M0,0 L10,5 L0,10 z" fill="#5b6578"/>
+    </marker>
+    <marker id="arrg" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto">
+      <path d="M0,0 L10,5 L0,10 z" fill="#138a43"/>
+    </marker>
+    <marker id="arra" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto">
+      <path d="M0,0 L10,5 L0,10 z" fill="#b45309"/>
+    </marker>
+  </defs>
+
+<rect class="bg" width="1200" height="1695"/>
+<rect x="0" y="0" width="1200" height="110" fill="#1b2540"/>
+<text x="40" y="52" font-size="32" font-weight="800" fill="#ffffff">News feed at 100M req/day</text>
+<text x="40" y="84" font-size="16" fill="#b9c4dc">System design kit 01 · R4 Q11–12 · Jio News anchor · 33k peak RPS · p95 200 ms</text>
+<text x="1160" y="52" font-size="15" fill="#8fa3cc" text-anchor="end">system_design/01_news_feed</text>
+<rect class="panel" x="40" y="135" width="1120" height="493" rx="12"/>
+<text class="title" x="60" y="168">1 · Architecture: request path, feedback loop, ingestion</text>
+<text class="sub" x="60" y="190">the read path answers in ~110 ms; learning and indexing stay off it</text>
+<text class="h amber" x="60" y="222">INGESTION · &lt; 60 s</text>
+<rect x="60" y="232" width="70" height="48" rx="8" fill="#fdf1e3" stroke="#b45309" stroke-width="1.5"/>
+<text x="95.0" y="261.0" font-size="13" font-weight="700" fill="#1b2540" text-anchor="middle">Publisher</text>
+<line x1="130" y1="256" x2="150" y2="256" stroke="#b45309" stroke-width="1.5" marker-end="url(#arra)"/>
+<rect x="150" y="232" width="151" height="48" rx="8" fill="#fdf1e3" stroke="#b45309" stroke-width="1.5"/>
+<text x="225.5" y="254.0" font-size="13" font-weight="700" fill="#1b2540" text-anchor="middle">Ingestion</text>
+<text x="225.5" y="268.0" font-size="10.5" fill="#5b6578" text-anchor="middle">dedupe · classify · embed</text>
+<line x1="301" y1="256" x2="322" y2="256" stroke="#b45309" stroke-width="1.5" marker-end="url(#arra)"/>
+<rect x="322" y="224" width="348" height="64" rx="10" fill="#fef8ef" stroke="#b45309" stroke-width="1.5" stroke-dasharray="6 4"/>
+<rect x="330" y="234" width="104" height="44" rx="8" fill="#fdf1e3" stroke="#b45309" stroke-width="1.5"/>
+<text x="382.0" y="254.0" font-size="13" font-weight="700" fill="#1b2540" text-anchor="middle">Article store</text>
+<text x="382.0" y="268.0" font-size="10.5" fill="#5b6578" text-anchor="middle">metadata</text>
+<rect x="442" y="234" width="106" height="44" rx="8" fill="#fdf1e3" stroke="#b45309" stroke-width="1.5"/>
+<text x="495.0" y="254.0" font-size="13" font-weight="700" fill="#1b2540" text-anchor="middle">ANN index</text>
+<text x="495.0" y="268.0" font-size="10.5" fill="#5b6578" text-anchor="middle">embeddings</text>
+<rect x="556" y="234" width="106" height="44" rx="8" fill="#fdf1e3" stroke="#b45309" stroke-width="1.5"/>
+<text x="609.0" y="254.0" font-size="13" font-weight="700" fill="#1b2540" text-anchor="middle">Fresh list</text>
+<text x="609.0" y="268.0" font-size="10.5" fill="#5b6578" text-anchor="middle">last N minutes</text>
+<line x1="495" y1="278" x2="495" y2="319" stroke="#b45309" stroke-width="1.5" marker-end="url(#arra)"/>
+<line x1="609" y1="278" x2="609" y2="319" stroke="#b45309" stroke-width="1.5" marker-end="url(#arra)"/>
+<text class="h blue" x="60" y="312">REQUEST PATH · GET /feed</text>
+<rect x="60" y="336" width="66" height="60" rx="8" fill="#e8effd" stroke="#2457d6" stroke-width="1.5"/>
+<text x="93.0" y="371.0" font-size="13" font-weight="700" fill="#1b2540" text-anchor="middle">Client</text>
+<rect x="147" y="336" width="52" height="60" rx="8" fill="#e8effd" stroke="#2457d6" stroke-width="1.5"/>
+<text x="173.0" y="371.0" font-size="13" font-weight="700" fill="#1b2540" text-anchor="middle">CDN</text>
+<rect x="220" y="336" width="78" height="60" rx="8" fill="#e8effd" stroke="#2457d6" stroke-width="1.5"/>
+<text x="259.0" y="364.0" font-size="13" font-weight="700" fill="#1b2540" text-anchor="middle">Gateway</text>
+<text x="259.0" y="378.0" font-size="10.5" fill="#5b6578" text-anchor="middle">auth · limits</text>
+<rect x="319" y="336" width="94" height="60" rx="8" fill="#e8effd" stroke="#2457d6" stroke-width="1.5"/>
+<text x="366.0" y="364.0" font-size="13" font-weight="700" fill="#1b2540" text-anchor="middle">Feed service</text>
+<text x="366.0" y="378.0" font-size="10.5" fill="#5b6578" text-anchor="middle">owns deadline</text>
+<rect x="434" y="320" width="236" height="92" rx="10" fill="#f4f7fe" stroke="#2457d6" stroke-width="1.5" stroke-dasharray="6 4"/>
+<rect x="442" y="328" width="106" height="34" rx="8" fill="#e8effd" stroke="#2457d6" stroke-width="1.5"/>
+<text x="495.0" y="343.0" font-size="13" font-weight="700" fill="#1b2540" text-anchor="middle">Personal ANN</text>
+<text x="495.0" y="357.0" font-size="10.5" fill="#5b6578" text-anchor="middle">top ~300</text>
+<rect x="556" y="328" width="106" height="34" rx="8" fill="#e8effd" stroke="#2457d6" stroke-width="1.5"/>
+<text x="609.0" y="343.0" font-size="13" font-weight="700" fill="#1b2540" text-anchor="middle">Fresh</text>
+<text x="609.0" y="357.0" font-size="10.5" fill="#5b6578" text-anchor="middle">~50 · last N min</text>
+<rect x="442" y="370" width="106" height="34" rx="8" fill="#e8effd" stroke="#2457d6" stroke-width="1.5"/>
+<text x="495.0" y="385.0" font-size="13" font-weight="700" fill="#1b2540" text-anchor="middle">Trending</text>
+<text x="495.0" y="399.0" font-size="10.5" fill="#5b6578" text-anchor="middle">~100 · Redis</text>
+<rect x="556" y="370" width="106" height="34" rx="8" fill="#e8effd" stroke="#2457d6" stroke-width="1.5"/>
+<text x="609.0" y="385.0" font-size="13" font-weight="700" fill="#1b2540" text-anchor="middle">Topics</text>
+<text x="609.0" y="399.0" font-size="10.5" fill="#5b6578" text-anchor="middle">~100 · followed</text>
+<rect x="691" y="336" width="60" height="60" rx="8" fill="#e8effd" stroke="#2457d6" stroke-width="1.5"/>
+<text x="721.0" y="364.0" font-size="13" font-weight="700" fill="#1b2540" text-anchor="middle">Filter</text>
+<text x="721.0" y="378.0" font-size="10.5" fill="#5b6578" text-anchor="middle">seen/dupes</text>
+<rect x="772" y="336" width="90" height="60" rx="8" fill="#e8effd" stroke="#2457d6" stroke-width="1.5"/>
+<text x="817.0" y="364.0" font-size="13" font-weight="700" fill="#1b2540" text-anchor="middle">Features</text>
+<text x="817.0" y="378.0" font-size="10.5" fill="#5b6578" text-anchor="middle">Redis · MGET</text>
+<rect x="883" y="336" width="68" height="60" rx="8" fill="#e8effd" stroke="#2457d6" stroke-width="1.5"/>
+<text x="917.0" y="364.0" font-size="13" font-weight="700" fill="#1b2540" text-anchor="middle">Ranker</text>
+<text x="917.0" y="378.0" font-size="10.5" fill="#5b6578" text-anchor="middle">~500 scored</text>
+<rect x="972" y="336" width="74" height="60" rx="8" fill="#e8effd" stroke="#2457d6" stroke-width="1.5"/>
+<text x="1009.0" y="364.0" font-size="13" font-weight="700" fill="#1b2540" text-anchor="middle">Re-rank</text>
+<text x="1009.0" y="378.0" font-size="10.5" fill="#5b6578" text-anchor="middle">diversity</text>
+<rect x="1067" y="336" width="68" height="60" rx="8" fill="#e8effd" stroke="#2457d6" stroke-width="1.5"/>
+<text x="1101.0" y="364.0" font-size="13" font-weight="700" fill="#1b2540" text-anchor="middle">Response</text>
+<text x="1101.0" y="378.0" font-size="10.5" fill="#5b6578" text-anchor="middle">page 1</text>
+<line x1="126" y1="366" x2="147" y2="366" stroke="#5b6578" stroke-width="1.5" marker-end="url(#arr)"/>
+<line x1="199" y1="366" x2="220" y2="366" stroke="#5b6578" stroke-width="1.5" marker-end="url(#arr)"/>
+<line x1="298" y1="366" x2="319" y2="366" stroke="#5b6578" stroke-width="1.5" marker-end="url(#arr)"/>
+<line x1="413" y1="366" x2="434" y2="366" stroke="#5b6578" stroke-width="1.5" marker-end="url(#arr)"/>
+<line x1="670" y1="366" x2="691" y2="366" stroke="#5b6578" stroke-width="1.5" marker-end="url(#arr)"/>
+<line x1="751" y1="366" x2="772" y2="366" stroke="#5b6578" stroke-width="1.5" marker-end="url(#arr)"/>
+<line x1="862" y1="366" x2="883" y2="366" stroke="#5b6578" stroke-width="1.5" marker-end="url(#arr)"/>
+<line x1="951" y1="366" x2="972" y2="366" stroke="#5b6578" stroke-width="1.5" marker-end="url(#arr)"/>
+<line x1="1046" y1="366" x2="1067" y2="366" stroke="#5b6578" stroke-width="1.5" marker-end="url(#arr)"/>
+<text class="s" x="552" y="428" text-anchor="middle" fill="#5b6578" font-size="12">4 sources in parallel · 40 ms timeout each</text>
+<text class="h green" x="110" y="452">FEEDBACK LOOP · SECONDS ONLINE, DAILY OFFLINE</text>
+<rect x="60" y="464" width="100" height="52" rx="8" fill="#e6f5ec" stroke="#138a43" stroke-width="1.5"/>
+<text x="110.0" y="488.0" font-size="13" font-weight="700" fill="#1b2540" text-anchor="middle">Client events</text>
+<text x="110.0" y="502.0" font-size="10.5" fill="#5b6578" text-anchor="middle">batched, gzip</text>
+<rect x="190" y="464" width="120" height="52" rx="8" fill="#e6f5ec" stroke="#138a43" stroke-width="1.5"/>
+<text x="250.0" y="488.0" font-size="13" font-weight="700" fill="#1b2540" text-anchor="middle">Event collector</text>
+<text x="250.0" y="502.0" font-size="10.5" fill="#5b6578" text-anchor="middle">stateless, 202</text>
+<rect x="340" y="464" width="120" height="52" rx="8" fill="#e6f5ec" stroke="#138a43" stroke-width="1.5"/>
+<text x="400.0" y="488.0" font-size="13" font-weight="700" fill="#1b2540" text-anchor="middle">Pub/Sub / Kafka</text>
+<text x="400.0" y="502.0" font-size="10.5" fill="#5b6578" text-anchor="middle">impressions, clicks</text>
+<rect x="490" y="464" width="130" height="52" rx="8" fill="#e6f5ec" stroke="#138a43" stroke-width="1.5"/>
+<text x="555.0" y="488.0" font-size="13" font-weight="700" fill="#1b2540" text-anchor="middle">Stream processor</text>
+<text x="555.0" y="502.0" font-size="10.5" fill="#5b6578" text-anchor="middle">decayed counters</text>
+<rect x="665" y="464" width="197" height="52" rx="8" fill="#e6f5ec" stroke="#138a43" stroke-width="1.5"/>
+<text x="763.5" y="488.0" font-size="13" font-weight="700" fill="#1b2540" text-anchor="middle">Redis</text>
+<text x="763.5" y="502.0" font-size="10.5" fill="#5b6578" text-anchor="middle">trending · seen · features</text>
+<line x1="160" y1="490" x2="190" y2="490" stroke="#138a43" stroke-width="1.5" marker-end="url(#arrg)"/>
+<line x1="310" y1="490" x2="340" y2="490" stroke="#138a43" stroke-width="1.5" marker-end="url(#arrg)"/>
+<line x1="460" y1="490" x2="490" y2="490" stroke="#138a43" stroke-width="1.5" marker-end="url(#arrg)"/>
+<line x1="620" y1="490" x2="665" y2="490" stroke="#138a43" stroke-width="1.5" marker-end="url(#arrg)"/>
+<line x1="93" y1="396" x2="93" y2="463" stroke="#138a43" stroke-width="1.5" stroke-dasharray="5 4" marker-end="url(#arrg)"/>
+<text class="s" x="101" y="424" fill="#5b6578" font-size="12">batched events</text>
+<line x1="817" y1="464" x2="817" y2="397" stroke="#138a43" stroke-width="1.5" marker-end="url(#arrg)"/>
+<text class="s" x="809" y="436" text-anchor="end" fill="#5b6578" font-size="12">reads features</text>
+<line x1="400" y1="516" x2="400" y2="547" stroke="#138a43" stroke-width="1.5" marker-end="url(#arrg)"/>
+<rect x="340" y="548" width="120" height="52" rx="8" fill="#e6f5ec" stroke="#138a43" stroke-width="1.5"/>
+<text x="400.0" y="572.0" font-size="13" font-weight="700" fill="#1b2540" text-anchor="middle">Data lake</text>
+<text x="400.0" y="586.0" font-size="10.5" fill="#5b6578" text-anchor="middle">BigQuery / GCS</text>
+<rect x="500" y="548" width="110" height="52" rx="8" fill="#e6f5ec" stroke="#138a43" stroke-width="1.5"/>
+<text x="555.0" y="572.0" font-size="13" font-weight="700" fill="#1b2540" text-anchor="middle">Training</text>
+<text x="555.0" y="586.0" font-size="10.5" fill="#5b6578" text-anchor="middle">daily jobs</text>
+<rect x="650" y="548" width="150" height="52" rx="8" fill="#e6f5ec" stroke="#138a43" stroke-width="1.5"/>
+<text x="725.0" y="572.0" font-size="13" font-weight="700" fill="#1b2540" text-anchor="middle">Model registry</text>
+<text x="725.0" y="586.0" font-size="10.5" fill="#5b6578" text-anchor="middle">shadow → canary → ramp</text>
+<line x1="460" y1="574" x2="500" y2="574" stroke="#138a43" stroke-width="1.5" marker-end="url(#arrg)"/>
+<line x1="610" y1="574" x2="650" y2="574" stroke="#138a43" stroke-width="1.5" marker-end="url(#arrg)"/>
+<path d="M 800 574 H 917 V 398" fill="none" stroke="#138a43" stroke-width="1.5" marker-end="url(#arrg)"/>
+<text class="s" x="925" y="440" fill="#5b6578" font-size="12">new ranker version</text>
+<text class="s b amber" x="60" y="563">Where data can be lost:</text>
+<text class="s" x="60" y="581" font-size="12.5">client batches → persist on device, retry</text>
+<text class="mono" x="60" y="599" font-size="11">dedupe (feed_request_id, article_id)</text>
+<text class="h" x="1010" y="470">KEY</text>
+<rect x="1010" y="484" width="16" height="14" rx="3" fill="#e8effd" stroke="#2457d6" stroke-width="1.5"/>
+<text class="s" x="1034" y="496">request path</text>
+<rect x="1010" y="508" width="16" height="14" rx="3" fill="#e6f5ec" stroke="#138a43" stroke-width="1.5"/>
+<text class="s" x="1034" y="520">async / feedback</text>
+<rect x="1010" y="532" width="16" height="14" rx="3" fill="#fdf1e3" stroke="#b45309" stroke-width="1.5"/>
+<text class="s" x="1034" y="544">ingestion</text>
+<rect class="panel" x="40" y="648" width="545" height="385" rx="12"/>
+<text class="title" x="60" y="681">2 · Numbers to say out loud</text>
+<text class="sub" x="60" y="703">arithmetic first, then the consequence</text>
+<text class="h" x="60" y="735">QUANTITY</text>
+<text class="h" x="172" y="735">ARITHMETIC</text>
+<text class="h" x="345" y="735">RESULT</text>
+<line class="rule" x1="60" y1="745" x2="565" y2="745"/>
+<text class="t b" x="60" y="769">Average RPS</text>
+<text class="s" x="172" y="769">100M ÷ 86,400</text>
+<text class="s b" x="345" y="769">≈ 1.2k RPS</text>
+<line class="rule" x1="60" y1="780" x2="565" y2="780"/>
+<text class="t b" x="60" y="797">Peak vs avg</text>
+<text class="s" x="172" y="797">33k ÷ 1.16k</text>
+<text class="s b" x="345" y="797">≈ 28× (peak 33k RPS)</text>
+<text class="s" x="60" y="815">typical is 2–3×, so 28× <tspan class="b red">needs the push-notification story</tspan></text>
+<line class="rule" x1="60" y1="825" x2="565" y2="825"/>
+<text class="t b" x="60" y="846">In flight</text>
+<text class="s" x="172" y="846">33k × 0.2 s (Little)</text>
+<text class="s b" x="345" y="846">≈ 6.6k concurrent requests</text>
+<line class="rule" x1="60" y1="857" x2="565" y2="857"/>
+<text class="t b" x="60" y="874">Bandwidth</text>
+<text class="s" x="172" y="874">33k × ~5 KB</text>
+<text class="s b" x="345" y="874">≈ 165 MB/s ≈ 1.3 Gbps</text>
+<line class="rule" x1="60" y1="885" x2="565" y2="885"/>
+<text class="t b" x="60" y="902">Embeddings</text>
+<text class="s" x="172" y="902">500k × 256 dims × 4 B</text>
+<text class="s b green" x="345" y="902">≈ 0.5 GB · fits in RAM</text>
+<line class="rule" x1="60" y1="913" x2="565" y2="913"/>
+<text class="t b" x="60" y="930">User features</text>
+<text class="s" x="172" y="930">~100M users × ~1 KB</text>
+<text class="s b amber" x="345" y="930">≈ 100 GB · Redis cluster</text>
+<line class="rule" x1="60" y1="941" x2="565" y2="941"/>
+<text class="t b" x="60" y="958">Impressions</text>
+<text class="s" x="172" y="958">100M × 20 items</text>
+<text class="s b blue" x="345" y="958">2B/day ≈ 23k/s · batch on client</text>
+<line class="rule" x1="60" y1="970" x2="565" y2="970"/>
+<text class="s" x="60" y="994"><tspan class="b">28× spikes</tspan> → autoscaling too slow: pre-scale and shed load</text>
+<text class="s" x="60" y="1014"><tspan class="b">0.5 GB embeddings</tspan> → retrieval can sit in memory and stay fast</text>
+<rect class="panel" x="615" y="648" width="545" height="385" rx="12"/>
+<text class="title" x="635" y="681">3 · Latency budget for p95 200 ms</text>
+<text class="sub" x="635" y="703">bar uses each range's upper end; pass the remaining deadline downstream</text>
+<rect x="635" y="744" width="12.5" height="30" fill="#5b6578"/>
+<text x="641.25" y="736" text-anchor="middle" font-size="11.5" font-weight="700" fill="#263048">5</text>
+<rect x="647.5" y="744" width="100.0" height="30" fill="#2457d6"/>
+<text x="697.5" y="736" text-anchor="middle" font-size="11.5" font-weight="700" fill="#263048">30–40</text>
+<rect x="747.5" y="744" width="7.5" height="30" fill="#b45309"/>
+<text x="747.25" y="736" text-anchor="middle" font-size="11.5" font-weight="700" fill="#263048">3</text>
+<rect x="755.0" y="744" width="37.5" height="30" fill="#138a43"/>
+<text x="777.75" y="736" text-anchor="middle" font-size="11.5" font-weight="700" fill="#263048">10–15</text>
+<rect x="792.5" y="744" width="100.0" height="30" fill="#1b2540"/>
+<text x="842.5" y="736" text-anchor="middle" font-size="11.5" font-weight="700" fill="#263048">30–40</text>
+<rect x="892.5" y="744" width="12.5" height="30" fill="#9aa5bb"/>
+<text x="898.75" y="736" text-anchor="middle" font-size="11.5" font-weight="700" fill="#263048">5</text>
+<rect x="905.0" y="744" width="230.0" height="30" fill="#eef1f7" stroke="#9aa5bb" stroke-dasharray="4 3"/>
+<text x="1020.0" y="764" text-anchor="middle" font-size="12.5" fill="#5b6578">headroom ≈ 90 ms</text>
+<line x1="905.0" y1="774" x2="905.0" y2="782" stroke="#263048" stroke-width="1.5"/>
+<text class="s" x="635" y="798" fill="#5b6578">0</text>
+<text class="s b" x="905.0" y="800" text-anchor="middle">≈ 110 ms</text>
+<text class="s" x="1135" y="798" text-anchor="end" fill="#5b6578">200 ms p95</text>
+<text class="h" x="655" y="834">STEP</text>
+<text class="h" x="805" y="834">BUDGET</text>
+<text class="h" x="885" y="834">NOTE</text>
+<line class="rule" x1="635" y1="844" x2="1140" y2="844"/>
+<rect x="635" y="852" width="11" height="11" rx="2" fill="#5b6578"/>
+<text class="t b" x="655" y="862">gateway</text>
+<text class="s b" x="805" y="862">5 ms</text>
+<text class="s" x="885" y="862" font-size="12">auth + rate limit</text>
+<line class="rule" x1="635" y1="870" x2="1140" y2="870"/>
+<rect x="635" y="876" width="11" height="11" rx="2" fill="#2457d6"/>
+<text class="t b" x="655" y="886">fan-out ×4</text>
+<text class="s b" x="805" y="886">30–40 ms</text>
+<text class="s" x="885" y="886" font-size="12">40 ms timeout, drop late</text>
+<line class="rule" x1="635" y1="894" x2="1140" y2="894"/>
+<rect x="635" y="900" width="11" height="11" rx="2" fill="#b45309"/>
+<text class="t b" x="655" y="910">filter</text>
+<text class="s b" x="805" y="910">3 ms</text>
+<text class="s" x="885" y="910" font-size="12">seen, language, dupes</text>
+<line class="rule" x1="635" y1="918" x2="1140" y2="918"/>
+<rect x="635" y="924" width="11" height="11" rx="2" fill="#138a43"/>
+<text class="t b" x="655" y="934">features MGET</text>
+<text class="s b" x="805" y="934">10–15 ms</text>
+<text class="s" x="885" y="934" font-size="12">one batch, ~500 keys</text>
+<line class="rule" x1="635" y1="942" x2="1140" y2="942"/>
+<rect x="635" y="948" width="11" height="11" rx="2" fill="#1b2540"/>
+<text class="t b" x="655" y="958">ranker</text>
+<text class="s b" x="805" y="958">30–40 ms</text>
+<text class="s" x="885" y="958" font-size="12">one batch of ~500</text>
+<line class="rule" x1="635" y1="966" x2="1140" y2="966"/>
+<rect x="635" y="972" width="11" height="11" rx="2" fill="#9aa5bb"/>
+<text class="t b" x="655" y="982">re-rank + cache</text>
+<text class="s b" x="805" y="982">5 ms</text>
+<text class="s" x="885" y="982" font-size="12">diversity, cache list 10 min</text>
+<line class="rule" x1="635" y1="995" x2="1140" y2="995"/>
+<text class="t b" x="635" y="1017">Total ≈ 110 ms of 200</text>
+<text class="s b red" x="1140" y="1017" text-anchor="end">500 GETs × 0.5 ms = 250 ms: batch</text>
+<rect class="panel" x="40" y="1053" width="545" height="425" rx="12"/>
+<text class="title" x="60" y="1086">4 · Key decisions: chosen vs against</text>
+<text class="sub" x="60" y="1108">what we picked, what it beat, and why</text>
+<text class="h" x="60" y="1140">CHOSEN  /  OVER</text>
+<text class="h" x="295" y="1140">WHY</text>
+<line class="rule" x1="60" y1="1150" x2="565" y2="1150"/>
+<text class="t b green" x="60" y="1174">Two-stage retrieve → rank</text>
+<text class="s" x="60" y="1192" fill="#5b6578">over one model on all articles</text>
+<text class="s" x="295" y="1174">can't score 500k articles in 40 ms:</text>
+<text class="s" x="295" y="1192">retrieve for recall, rank for precision</text>
+<line class="rule" x1="60" y1="1202" x2="565" y2="1202"/>
+<text class="t b green" x="60" y="1216">Hybrid precompute/online</text>
+<text class="s" x="60" y="1234" fill="#5b6578">over fully precomputed feeds</text>
+<text class="s" x="295" y="1216">freshness wins in news: precompute the</text>
+<text class="s" x="295" y="1234">slow parts, do the cheap parts online</text>
+<line class="rule" x1="60" y1="1244" x2="565" y2="1244"/>
+<text class="t b green" x="60" y="1258">In-memory ANN index</text>
+<text class="s" x="60" y="1276" fill="#5b6578">over a remote vector DB</text>
+<text class="s" x="295" y="1258">0.5 GB fits in RAM and saves a network</text>
+<text class="s" x="295" y="1276">hop; revisit if the corpus grows 20×</text>
+<line class="rule" x1="60" y1="1286" x2="565" y2="1286"/>
+<text class="t b green" x="60" y="1300">Redis feature store</text>
+<text class="s" x="60" y="1318" fill="#5b6578">over Bigtable / Cassandra</text>
+<text class="s" x="295" y="1300">lower latency at this size; cost is memory</text>
+<text class="s" x="295" y="1318">and weaker persistence (lake = truth)</text>
+<line class="rule" x1="60" y1="1328" x2="565" y2="1328"/>
+<text class="t b green" x="60" y="1342">Pull and rank on read</text>
+<text class="s" x="60" y="1360" fill="#5b6578">over fan-out-on-write</text>
+<text class="s" x="295" y="1342">no followers graph to push to, and</text>
+<text class="s" x="295" y="1360">relevance changes by the minute</text>
+<line class="rule" x1="60" y1="1370" x2="565" y2="1370"/>
+<text class="t b green" x="60" y="1384">Eventual consistency</text>
+<text class="s" x="60" y="1402" fill="#5b6578">over strong consistency</text>
+<text class="s" x="295" y="1384">a click shaping the next feed 10–30 s</text>
+<text class="s" x="295" y="1402">later harms nobody; strong buys nothing</text>
+<line class="rule" x1="60" y1="1415" x2="565" y2="1415"/>
+<text class="s" x="60" y="1437"><tspan class="b amber">v1 (2 engineers, 6 weeks):</tspan> trending + topics + category affinity, no ANN.</text>
+<text class="s" x="60" y="1457"><tspan class="b red">Never defer:</tspan> feed_request_id + event logging (no training, no A/B).</text>
+<rect class="panel" x="615" y="1053" width="545" height="425" rx="12"/>
+<text class="title" x="635" y="1086">5 · Degrade, don't fail</text>
+<text class="sub" x="635" y="1108">errors under 0.5%: a stale or generic feed beats an error</text>
+<text class="h" x="635" y="1140">FAILURE</text>
+<text class="h" x="795" y="1140">FALLBACK</text>
+<line class="rule" x1="635" y1="1150" x2="1140" y2="1150"/>
+<text class="s b red" x="635" y="1174">Ranker down / slow</text>
+<text class="s" x="795" y="1174">rank by candidate-source scores (ANN</text>
+<text class="s" x="795" y="1192">similarity, trending score); alert</text>
+<line class="rule" x1="635" y1="1202" x2="1140" y2="1202"/>
+<text class="s b red" x="635" y="1216">ANN index down</text>
+<text class="s" x="795" y="1216">serve trending + topics + fresh: less</text>
+<text class="s" x="795" y="1234">personal, not broken</text>
+<line class="rule" x1="635" y1="1244" x2="1140" y2="1244"/>
+<text class="s b red" x="635" y="1258">Redis features down</text>
+<text class="s" x="795" y="1258">default / global features, still rank;</text>
+<text class="s" x="795" y="1276">or serve the trending feed</text>
+<line class="rule" x1="635" y1="1286" x2="1140" y2="1286"/>
+<text class="s b red" x="635" y="1300">Consumer lag</text>
+<text class="s" x="795" y="1300">stale trending, repeats from a lagging seen</text>
+<text class="s" x="795" y="1318">set: alert on lag, autoscale consumers</text>
+<line class="rule" x1="635" y1="1328" x2="1140" y2="1328"/>
+<text class="s b red" x="635" y="1342">Push spike, 28×</text>
+<text class="s" x="795" y="1342">pre-scale on the push schedule; tiered</text>
+<text class="s" x="795" y="1360">load shedding; CDN fallback</text>
+<line class="rule" x1="635" y1="1370" x2="1140" y2="1370"/>
+<text class="s b red" x="635" y="1384">Bad model deployed</text>
+<text class="s" x="795" y="1384">shadow + 5% canary with CTR / latency</text>
+<text class="s" x="795" y="1402">guardrails; rollback = flip version pointer</text>
+<line class="rule" x1="635" y1="1415" x2="1140" y2="1415"/>
+<text class="h" x="635" y="1433">LOAD-SHED LADDER · NEVER 5xx</text>
+<rect x="635" y="1441" width="170" height="24" rx="12" fill="#fdf1e3" stroke="#b45309" stroke-width="1.5"/>
+<text x="720.0" y="1457" text-anchor="middle" font-size="12" font-weight="700" fill="#b45309">pre-scale on push calendar</text>
+<rect x="834" y="1441" width="120" height="24" rx="12" fill="#fdf1e3" stroke="#b45309" stroke-width="1.5"/>
+<text x="894.0" y="1457" text-anchor="middle" font-size="12" font-weight="700" fill="#b45309">drop personal ANN</text>
+<rect x="983" y="1441" width="120" height="24" rx="12" fill="#fdf1e3" stroke="#b45309" stroke-width="1.5"/>
+<text x="1043.0" y="1457" text-anchor="middle" font-size="12" font-weight="700" fill="#b45309">CDN trending feed</text>
+<line x1="805" y1="1453" x2="833" y2="1453" stroke="#b45309" stroke-width="1.5" marker-end="url(#arra)"/>
+<line x1="954" y1="1453" x2="982" y2="1453" stroke="#b45309" stroke-width="1.5" marker-end="url(#arra)"/>
+<rect x="40" y="1500" width="1120" height="140" rx="12" fill="#1b2540"/>
+<text x="60" y="1534" font-size="19" font-weight="800" fill="#ffffff">Six rules to say out loud</text>
+<circle cx="72" cy="1570" r="13" fill="#2457d6"/>
+<text class="num" x="72" y="1575" text-anchor="middle">1</text>
+<text x="94" y="1576" font-size="15" fill="#e6ebf7">Retrieve for recall, rank for precision</text>
+<circle cx="440" cy="1570" r="13" fill="#2457d6"/>
+<text class="num" x="440" y="1575" text-anchor="middle">2</text>
+<text x="462" y="1576" font-size="15" fill="#e6ebf7">Feed degrades, never returns 5xx</text>
+<circle cx="800" cy="1570" r="13" fill="#2457d6"/>
+<text class="num" x="800" y="1575" text-anchor="middle">3</text>
+<text x="822" y="1576" font-size="15" fill="#e6ebf7">Pre-scale for pushes, then shed in tiers</text>
+<circle cx="72" cy="1613" r="13" fill="#2457d6"/>
+<text class="num" x="72" y="1618" text-anchor="middle">4</text>
+<text x="94" y="1619" font-size="15" fill="#e6ebf7">Batch the MGET: one call, not 500</text>
+<circle cx="440" cy="1613" r="13" fill="#2457d6"/>
+<text class="num" x="440" y="1618" text-anchor="middle">5</text>
+<text x="462" y="1619" font-size="15" fill="#e6ebf7">feed_request_id from day one</text>
+<circle cx="800" cy="1613" r="13" fill="#2457d6"/>
+<text class="num" x="800" y="1618" text-anchor="middle">6</text>
+<text x="822" y="1619" font-size="15" fill="#e6ebf7">Fresh source fixes new-article cold start</text>
+<text x="600" y="1673" font-size="12.5" fill="#8a93a6" text-anchor="middle">interview repo · system_design/01_news_feed · regenerate or edit by asking Claude Code</text>
+</svg>

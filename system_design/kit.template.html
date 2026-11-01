@@ -1,0 +1,275 @@
+<title>/*TITLE*/</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;600&family=IBM+Plex+Sans+Condensed:wght@600;700&family=IBM+Plex+Sans:wght@400;500;600&display=swap">
+<style>
+/* Layout: navy header band; full-width architecture diagram with a detail panel under it; reference sections below. Palette shared with the repo's cheat-sheet cards. */
+:root {
+  --bg: #f4f6fb; --surface: #ffffff; --line: #d8deea; --ink: #1b2540; --muted: #5b6578; --grid: #e9edf5;
+  --navy: #1b2540; --navy-ink: #e6ebf7; --navy-sub: #b9c4dc;
+  --read: #2457d6; --read-soft: #e7eeff; --async: #138a43; --async-soft: #e3f4ea; --ingest: #b45309; --ingest-soft: #fdf0e1;
+  --bad: #c62828; --bad-soft: #fde8e8; --edge: #9aa5bb;
+  --display: "IBM Plex Sans Condensed", "Arial Narrow", system-ui, sans-serif;
+  --body: "IBM Plex Sans", "Segoe UI", system-ui, sans-serif;
+  --mono: "IBM Plex Mono", Consolas, ui-monospace, monospace;
+}
+@media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) {
+  --bg: #0f1424; --surface: #18203a; --line: #2a3556; --ink: #e6ebf7; --muted: #9aa5bb; --grid: #1d2643;
+  --navy: #0a0e1b; --navy-ink: #e6ebf7; --navy-sub: #9aa5bb;
+  --read: #7aa2ff; --read-soft: #1f2c52; --async: #4cc27e; --async-soft: #15301f; --ingest: #f0a24a; --ingest-soft: #3a2a14;
+  --bad: #ff7a7a; --bad-soft: #3d1a1d; --edge: #5d6a89; color-scheme: dark } }
+:root[data-theme="dark"] {
+  --bg: #0f1424; --surface: #18203a; --line: #2a3556; --ink: #e6ebf7; --muted: #9aa5bb; --grid: #1d2643;
+  --navy: #0a0e1b; --navy-ink: #e6ebf7; --navy-sub: #9aa5bb;
+  --read: #7aa2ff; --read-soft: #1f2c52; --async: #4cc27e; --async-soft: #15301f; --ingest: #f0a24a; --ingest-soft: #3a2a14;
+  --bad: #ff7a7a; --bad-soft: #3d1a1d; --edge: #5d6a89; color-scheme: dark }
+* { box-sizing: border-box }
+body { background: var(--bg); color: var(--ink); font: 15px/1.6 var(--body); }
+.wrap { max-width: 1180px; margin: 0 auto; padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px)); }
+.band { background: var(--navy); color: var(--navy-ink); }
+header .wrap { padding-block: 24px 20px; display: grid; gap: 6px; }
+.eyebrow { font: 600 12px var(--mono); letter-spacing: .8px; text-transform: uppercase; color: var(--navy-sub); }
+h1 { font: 700 34px/1.1 var(--display); margin: 0; text-wrap: balance; }
+.sub { color: var(--navy-sub); margin: 0; font-size: 14.5px; }
+nav.toc { display: flex; flex-wrap: wrap; gap: 6px 14px; margin-top: 8px; font-size: 13px; }
+nav.toc a { color: var(--navy-ink); opacity: .85; text-decoration: none; border-bottom: 1px solid transparent; }
+nav.toc a:hover { border-bottom-color: currentColor; }
+main .wrap { padding-block: 22px 56px; display: grid; gap: 26px; }
+section > h2 { font: 700 22px var(--display); margin: 0 0 10px; letter-spacing: .2px; text-wrap: balance; }
+.panel { background: var(--surface); border: 1.5px solid var(--line); border-radius: 14px; padding: 18px 20px; min-width: 0; }
+p { margin: 0 0 10px; max-width: 75ch; }
+code { font: 13.5px var(--mono); background: var(--read-soft); padding: 1px 5px; border-radius: 4px; }
+strong { font-weight: 600; }
+
+/* attempt callout */
+.attempt { border: 2px dashed var(--read); background: var(--read-soft); }
+.attempt .prompt { font: 500 18px/1.5 var(--body); margin-bottom: 12px; }
+.attempt ul { margin: 6px 0 10px; padding-left: 20px; }
+.attempt .timer { font: 600 13px var(--mono); color: var(--read); }
+
+/* diagram */
+.toolbar { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; margin-bottom: 12px; }
+.chip { font: 600 13px var(--body); border: 1.5px solid var(--line); background: var(--surface); color: var(--ink); border-radius: 999px; padding: 6px 13px; cursor: pointer; }
+.chip[aria-pressed="true"] { background: var(--ink); color: var(--surface); border-color: var(--ink); }
+.chip:focus-visible, .node:focus-visible rect, .btn:focus-visible, summary:focus-visible { outline: 3px solid var(--read); outline-offset: 2px; }
+.legend { display: flex; gap: 14px; margin-left: auto; font-size: 12.5px; color: var(--muted); flex-wrap: wrap; }
+.legend i { display: inline-block; width: 11px; height: 11px; border-radius: 3px; margin-right: 5px; vertical-align: -1px; }
+.scroller { overflow-x: auto; border-radius: 10px; background: var(--bg); border: 1px solid var(--line); }
+svg.diagram { display: block; min-width: 760px; width: 100%; height: auto; }
+.lane-label { font: 600 12px var(--mono); letter-spacing: .6px; text-transform: uppercase; }
+.edge { fill: none; stroke: var(--edge); stroke-width: 1.6; transition: opacity .15s, stroke .15s; }
+.edge.dashed { stroke-dasharray: 5 4; }
+.node { cursor: pointer; transition: opacity .15s; }
+.node rect { stroke-width: 1.6; }
+.node .t1 { font: 600 13.5px var(--body); fill: var(--ink); }
+.node .t2 { font: 11px var(--mono); fill: var(--muted); }
+.read rect { fill: var(--read-soft); stroke: var(--read); }
+.async rect { fill: var(--async-soft); stroke: var(--async); }
+.ingest rect { fill: var(--ingest-soft); stroke: var(--ingest); }
+.node.sel rect { stroke-width: 3.2; }
+svg.dim .node:not(.on) { opacity: .22; }
+svg.dim .edge:not(.on) { opacity: .12; }
+svg .edge.on { stroke: var(--ink); stroke-width: 2.6; }
+svg .node.on rect { stroke-width: 3; }
+
+.detail { margin-top: 14px; display: grid; gap: 10px; }
+.detail h3 { font: 700 20px var(--display); margin: 0; display: flex; gap: 10px; align-items: baseline; flex-wrap: wrap; }
+.detail .tech { font: 13px var(--mono); color: var(--muted); }
+.kv { display: grid; grid-template-columns: 130px 1fr; gap: 6px 16px; }
+.kv dt { font: 600 12px var(--mono); letter-spacing: .5px; text-transform: uppercase; color: var(--muted); padding-top: 3px; }
+.kv dd { margin: 0; }
+.kv dd.bad { color: var(--bad); }
+.hint { color: var(--muted); font-size: 14px; margin: 0; }
+.stepper { display: flex; gap: 10px; align-items: center; flex-wrap: wrap; }
+.btn { font: 600 14px var(--body); border-radius: 9px; padding: 8px 14px; cursor: pointer; border: 1.5px solid var(--line); background: var(--surface); color: var(--ink); }
+.btn.primary { background: var(--read); border-color: var(--read); color: #fff; }
+.btn:disabled { opacity: .4; cursor: default; }
+.stepnum { font: 600 13px var(--mono); color: var(--muted); font-variant-numeric: tabular-nums; }
+.steptext { font-size: 16.5px; line-height: 1.55; margin: 0; max-width: 80ch; }
+.budget { display: flex; height: 22px; border-radius: 6px; overflow: hidden; background: var(--grid); }
+.budget span { display: flex; align-items: center; justify-content: center; font: 600 11px var(--mono); color: #fff; background: var(--read); border-right: 1px solid var(--surface); opacity: .35; white-space: nowrap; overflow: hidden; }
+.budget span.done { opacity: .7 } .budget span.cur { opacity: 1 }
+.budget-cap { font: 12px var(--mono); color: var(--muted); }
+
+/* reference sections */
+.tbl { overflow-x: auto; }
+table { border-collapse: collapse; width: 100%; font-size: 14px; }
+th { text-align: left; font: 600 11.5px var(--mono); letter-spacing: .5px; text-transform: uppercase; color: var(--muted); padding: 6px 10px; border-bottom: 1.5px solid var(--line); }
+td { padding: 8px 10px; border-bottom: 1px solid var(--grid); vertical-align: top; }
+td:first-child { font-weight: 600; }
+.cols { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 16px; }
+.cols h3 { font: 700 17px var(--display); margin: 0 0 8px; }
+ul.plain { margin: 0; padding-left: 20px; } ul.plain li { margin-bottom: 6px; max-width: 75ch; }
+details.qa { border-bottom: 1px solid var(--grid); padding: 10px 2px; }
+details.qa summary { cursor: pointer; font-weight: 600; list-style: none; display: flex; gap: 10px; }
+details.qa summary::before { content: "＋"; color: var(--read); font-weight: 700; }
+details.qa[open] summary::before { content: "－"; }
+details.qa p { margin: 8px 0 0 26px; color: var(--ink); }
+.anchor li { margin-bottom: 8px; }
+footer { color: var(--muted); font-size: 12.5px; text-align: center; padding-block: 0 30px; }
+@media (max-width: 640px) { h1 { font-size: 27px } .kv { grid-template-columns: 1fr; } .kv dt { padding-top: 6px } .legend { margin-left: 0 } }
+@media (prefers-reduced-motion: reduce) { .edge, .node { transition: none } }
+</style>
+
+<header class="band"><div class="wrap">
+  <span class="eyebrow" id="eyebrow"></span>
+  <h1 id="title"></h1>
+  <p class="sub" id="subtitle"></p>
+  <nav class="toc" id="toc" aria-label="Sections"></nav>
+</div></header>
+
+<main><div class="wrap">
+  <section id="attempt" class="panel attempt"></section>
+
+  <section id="diagram-sec">
+    <h2>Architecture</h2>
+    <div class="toolbar" id="toolbar"></div>
+    <div class="scroller"><svg class="diagram" id="svg" role="img" aria-label="Architecture diagram"></svg></div>
+    <div class="panel detail" id="detail" aria-live="polite"></div>
+  </section>
+
+  <div id="sections" style="display:grid;gap:26px"></div>
+</div></main>
+<footer><div class="wrap" id="foot"></div></footer>
+
+<script>
+const KIT = /*KIT*/{};
+const CW = 180, CH = 100, BW = 146, BH = 56, PAD = 36;
+const $ = id => document.getElementById(id);
+const esc = s => String(s).replace(/[&<>"]/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]));
+const fmt = s => esc(s).replace(/`([^`]+)`/g, "<code>$1</code>").replace(/\*\*([^*]+)\*\*/g, "<strong>$1</strong>");
+const byId = Object.fromEntries(KIT.components.map(c => [c.id, c]));
+const laneName = Object.fromEntries(KIT.lanes.map(l => [l.id, l.label]));
+let mode = null, step = 0, selected = null;
+
+/* ---------- header ---------- */
+$("eyebrow").textContent = KIT.eyebrow;
+$("title").textContent = KIT.title;
+$("subtitle").textContent = KIT.subtitle;
+$("foot").textContent = KIT.footer;
+const tocItems = [["attempt", "Your attempt"], ["diagram-sec", "Architecture"]].concat(KIT.sections.map(s => [s.id, s.title]));
+$("toc").innerHTML = tocItems.map(([id, t]) => `<a href="#${id}">${esc(t)}</a>`).join("");
+
+/* ---------- attempt ---------- */
+$("attempt").innerHTML = `<h2>Your attempt</h2><p class="prompt">${fmt(KIT.attempt.prompt)}</p>
+  <p><strong>Ask these first:</strong></p><ul>${KIT.attempt.clarify.map(q => `<li>${fmt(q)}</li>`).join("")}</ul>
+  <p class="timer">Design it for 45 minutes before you open anything below. Then grade yourself against the diagram.</p>`;
+
+/* ---------- diagram ---------- */
+function box(id) { const c = byId[id]; const x = PAD + c.col * CW, y = PAD + c.row * CH; return { x, y, cx: x + BW / 2, cy: y + BH / 2 }; }
+function edgePath(a, b) {
+  // Different columns: leave and enter through the sides, so the curve bends inside the gap between columns.
+  // Same column: top/bottom. Lay out kit.json so a long edge's straight run crosses only empty cells.
+  const A = box(a), B = box(b), dx = B.cx - A.cx, dy = B.cy - A.cy;
+  if (byId[a].col !== byId[b].col) {
+    const sx = dx > 0 ? A.x + BW : A.x, tx = dx > 0 ? B.x : B.x + BW, c = (tx - sx) / 2;
+    return `M${sx},${A.cy} C${sx + c},${A.cy} ${tx - c},${B.cy} ${tx},${B.cy}`;
+  }
+  const sy = dy > 0 ? A.y + BH : A.y, ty = dy > 0 ? B.y : B.y + BH, c = (ty - sy) / 2;
+  return `M${A.cx},${sy} C${A.cx},${sy + c} ${B.cx},${ty - c} ${B.cx},${ty}`;
+}
+const edgeKey = (a, b) => a + ">" + b;
+function drawDiagram() {
+  const maxC = Math.max(...KIT.components.map(c => c.col)), maxR = Math.max(...KIT.components.map(c => c.row));
+  const W = PAD * 2 + maxC * CW + BW, H = PAD * 2 + maxR * CH + BH + 10;
+  const svg = $("svg");
+  svg.setAttribute("viewBox", `0 0 ${W} ${H}`);
+  const bands = KIT.lanes.map(l => {
+    const y0 = PAD + l.rows[0] * CH - 28, y1 = PAD + l.rows[1] * CH + BH + 12;
+    return `<rect x="6" y="${y0}" width="${W - 12}" height="${y1 - y0}" rx="10" fill="var(--${l.id}-soft)" opacity=".45"/>
+            <text class="lane-label" x="${W - 16}" y="${y0 + 17}" text-anchor="end" fill="var(--${l.id})">${esc(l.label)}</text>`;
+  }).join("");
+  const edges = KIT.edges.map(e => `<path class="edge${e.dashed ? " dashed" : ""}" data-k="${edgeKey(e.from, e.to)}" d="${edgePath(e.from, e.to)}" marker-end="url(#arrow)"/>`).join("");
+  const nodes = KIT.components.map(c => {
+    const { x, y } = box(c.id);
+    return `<g class="node ${c.lane}" data-id="${c.id}" tabindex="0" role="button" aria-label="${esc(c.name)}">
+      <rect x="${x}" y="${y}" width="${BW}" height="${BH}" rx="10"/>
+      <text class="t1" x="${x + BW / 2}" y="${y + (c.tech ? 24 : 33)}" text-anchor="middle">${esc(c.short || c.name)}</text>
+      ${c.tech ? `<text class="t2" x="${x + BW / 2}" y="${y + 42}" text-anchor="middle">${esc(c.tech)}</text>` : ""}</g>`;
+  }).join("");
+  svg.innerHTML = `<defs><marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="var(--edge)"/></marker></defs>${bands}${edges}${nodes}`;
+}
+
+/* ---------- toolbar + detail ---------- */
+function drawToolbar() {
+  const chips = [`<button type="button" class="chip" data-mode="" aria-pressed="${!mode}">Explore</button>`]
+    .concat(KIT.flows.map(f => `<button type="button" class="chip" data-mode="${f.id}" aria-pressed="${mode === f.id}">${esc(f.id)} · ${esc(f.name)}</button>`));
+  const legend = `<div class="legend">${KIT.lanes.map(l => `<span><i style="background:var(--${l.id})"></i>${esc(l.label)}</span>`).join("")}</div>`;
+  $("toolbar").innerHTML = chips.join("") + legend;
+}
+function highlight(nodes, edges) {
+  const svg = $("svg");
+  svg.classList.toggle("dim", !!nodes);
+  svg.querySelectorAll(".node").forEach(n => { n.classList.toggle("on", !!nodes && nodes.includes(n.dataset.id)); n.classList.toggle("sel", n.dataset.id === selected); });
+  svg.querySelectorAll(".edge").forEach(p => p.classList.toggle("on", !!edges && edges.includes(p.dataset.k)));
+}
+function stepsUsing(id) {
+  const out = [];
+  KIT.flows.forEach(f => f.steps.forEach((s, i) => { if (s.nodes.includes(id)) out.push(`${f.id}${i + 1}`); }));
+  return out;
+}
+function renderDetail() {
+  const d = $("detail");
+  if (mode) {
+    const f = KIT.flows.find(x => x.id === mode), s = f.steps[step];
+    const edges = (s.edges || []).map(([a, b]) => edgeKey(a, b));
+    highlight(s.nodes, edges);
+    const total = f.steps.reduce((t, x) => t + (x.ms || 0), 0);
+    const bar = total ? `<div class="budget" aria-hidden="true">${f.steps.map((x, i) => x.ms ? `<span style="flex:${x.ms}" class="${i < step ? "done" : i === step ? "cur" : ""}">${x.ms}</span>` : "").join("")}</div>
+      <span class="budget-cap">${f.steps.slice(0, step + 1).reduce((t, x) => t + (x.ms || 0), 0)} of ~${total} ms used · ${esc(f.budget || "")}</span>` : "";
+    d.innerHTML = `<h3>${esc(f.id)} · ${esc(f.name)}</h3><p class="hint">${fmt(f.summary)}</p>
+      <div class="stepper"><button type="button" class="btn" data-step="-1" ${step === 0 ? "disabled" : ""}>← Back</button>
+        <span class="stepnum">Step ${step + 1} / ${f.steps.length}</span>
+        <button type="button" class="btn primary" data-step="1" ${step === f.steps.length - 1 ? "disabled" : ""}>Next →</button></div>
+      <p class="steptext">${fmt(s.text)}</p>${bar}`;
+    return;
+  }
+  if (!selected) {
+    highlight(null, null);
+    d.innerHTML = `<h3>Tap any box</h3><p class="hint">Each component shows what it is, why it's there, what breaks without it, and the knob you turn to scale it. Pick a flow above to step through a request end to end. Arrow keys step through flows.</p>`;
+    return;
+  }
+  const c = byId[selected];
+  const related = KIT.edges.filter(e => e.from === c.id || e.to === c.id);
+  highlight([c.id, ...related.map(e => e.from === c.id ? e.to : e.from)], related.map(e => edgeKey(e.from, e.to)));
+  const used = stepsUsing(c.id);
+  d.innerHTML = `<h3>${esc(c.name)} <span class="tech">${esc(c.tech || "")}</span></h3>
+    <dl class="kv"><dt>What</dt><dd>${fmt(c.what)}</dd><dt>Why</dt><dd>${fmt(c.why)}</dd>
+    <dt>Without it</dt><dd class="bad">${fmt(c.without)}</dd><dt>Scaling knob</dt><dd>${fmt(c.knob)}</dd>
+    <dt>Lane</dt><dd>${esc(laneName[c.lane])}${used.length ? ` · in flow steps ${used.join(", ")}` : ""}</dd></dl>`;
+}
+
+/* ---------- reference sections ---------- */
+function renderBlock(b) {
+  if (b.type === "text") return b.body.map(p => `<p>${fmt(p)}</p>`).join("");
+  if (b.type === "list") return `${b.title ? `<h3>${esc(b.title)}</h3>` : ""}<ul class="plain">${b.items.map(i => `<li>${fmt(i)}</li>`).join("")}</ul>`;
+  if (b.type === "table") return `<div class="tbl"><table><thead><tr>${b.head.map(h => `<th>${esc(h)}</th>`).join("")}</tr></thead><tbody>${b.rows.map(r => `<tr>${r.map(c => `<td>${fmt(c)}</td>`).join("")}</tr>`).join("")}</tbody></table></div>`;
+  if (b.type === "qa") return `${b.note ? `<p class="hint">${fmt(b.note)}</p>` : ""}${b.items.map(([q, a]) => `<details class="qa"><summary>${fmt(q)}</summary><p>${fmt(a)}</p></details>`).join("")}`;
+  if (b.type === "cols") return `<div class="cols">${b.cols.map(c => `<div>${renderBlock(c)}</div>`).join("")}</div>`;
+  if (b.type === "deep") return `<h3>${esc(b.title)}</h3>${renderBlock({ type: "list", items: b.items })}`;
+  return "";
+}
+$("sections").innerHTML = KIT.sections.map(s => `<section id="${s.id}"><h2>${esc(s.title)}</h2><div class="panel">${s.blocks.map(renderBlock).join("")}</div></section>`).join("");
+
+/* ---------- events ---------- */
+function setMode(m) { mode = m || null; step = 0; selected = null; drawToolbar(); renderDetail(); }
+document.addEventListener("click", e => {
+  const chip = e.target.closest("[data-mode]");
+  if (chip) return setMode(chip.dataset.mode);
+  const st = e.target.closest("[data-step]");
+  if (st && mode) { const f = KIT.flows.find(x => x.id === mode); step = Math.max(0, Math.min(f.steps.length - 1, step + +st.dataset.step)); return renderDetail(); }
+  const n = e.target.closest(".node");
+  if (n) { if (mode) { mode = null; drawToolbar(); } selected = selected === n.dataset.id ? null : n.dataset.id; renderDetail(); }
+});
+document.addEventListener("keydown", e => {
+  const n = e.target.closest && e.target.closest(".node");
+  if (n && (e.key === "Enter" || e.key === " ")) { e.preventDefault(); n.dispatchEvent(new MouseEvent("click", { bubbles: true })); return; }
+  if (e.key === "Escape") return setMode(null);
+  if (mode && (e.key === "ArrowRight" || e.key === "ArrowLeft") && !e.target.matches("input,textarea")) {
+    const f = KIT.flows.find(x => x.id === mode);
+    step = Math.max(0, Math.min(f.steps.length - 1, step + (e.key === "ArrowRight" ? 1 : -1))); renderDetail();
+  }
+});
+
+drawDiagram(); drawToolbar(); renderDetail();
+</script>

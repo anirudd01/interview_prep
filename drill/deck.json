@@ -1123,5 +1123,77 @@
   "q": "A RAG system gives a wrong answer. How do you debug it?",
   "a": "Bisect: is the right chunk in the corpus? In top-k retrieval (recall)? Did the reranker keep it in the top-5 (ranking)? Then replay generation with the frozen context: does the model still fail? Fix whichever stage broke.",
   "ref": "R5 Q22 · misses.md"
+ },
+ {
+  "id": "sd-01-1",
+  "deck": "sd-01",
+  "title": "SD 01 · News feed",
+  "source": "card",
+  "q": "Why is your peak 28× the average?",
+  "a": "Push notifications fire to millions at once. It's scheduled traffic, so you pre-scale on the push calendar and shed load in tiers.",
+  "ref": "R4 Q11–12 · system_design/01_news_feed"
+ },
+ {
+  "id": "sd-01-2",
+  "deck": "sd-01",
+  "title": "SD 01 · News feed",
+  "source": "card",
+  "q": "How does a brand-new article get recommended with zero clicks?",
+  "a": "The fresh candidate source plus content embeddings computed at ingestion, with an exploration boost for its first N impressions.",
+  "ref": "R4 Q11–12 · system_design/01_news_feed"
+ },
+ {
+  "id": "sd-01-3",
+  "deck": "sd-01",
+  "title": "SD 01 · News feed",
+  "source": "card",
+  "q": "A new user with no history?",
+  "a": "Region/language trending from the CDN, onboarding topic picks, then streaming features personalize within a few clicks.",
+  "ref": "R4 Q11–12 · system_design/01_news_feed"
+ },
+ {
+  "id": "sd-01-4",
+  "deck": "sd-01",
+  "title": "SD 01 · News feed",
+  "source": "card",
+  "q": "How do you A/B test a ranker?",
+  "a": "Hash users into buckets; log `feed_request_id` and the model version with every impression; compare CTR and dwell with guardrails on latency and diversity.",
+  "ref": "R4 Q11–12 · system_design/01_news_feed"
+ },
+ {
+  "id": "sd-01-5",
+  "deck": "sd-01",
+  "title": "SD 01 · News feed",
+  "source": "card",
+  "q": "The ML team ships a model twice a day. How do you deploy it safely?",
+  "a": "Registry → shadow scoring → 5% canary with automatic guardrails → ramp. Rollback is a version-pointer switch.",
+  "ref": "R4 Q11–12 · system_design/01_news_feed"
+ },
+ {
+  "id": "sd-01-6",
+  "deck": "sd-01",
+  "title": "SD 01 · News feed",
+  "source": "card",
+  "q": "What's cached, and what's your hit ratio?",
+  "a": "The CDN trending feed; ranked lists for pagination (page 2+ ≈ 100%); features in Redis. The personalized first page is computed, not cached.",
+  "ref": "R4 Q11–12 · system_design/01_news_feed"
+ },
+ {
+  "id": "sd-01-7",
+  "deck": "sd-01",
+  "title": "SD 01 · News feed",
+  "source": "card",
+  "q": "Why not precompute every user's feed nightly?",
+  "a": "It's stale for breaking news, wasted on users who don't return, and it's 100M × 20 writes a night.",
+  "ref": "R4 Q11–12 · system_design/01_news_feed"
+ },
+ {
+  "id": "sd-01-8",
+  "deck": "sd-01",
+  "title": "SD 01 · News feed",
+  "source": "card",
+  "q": "What happens when Redis is down?",
+  "a": "Default features plus trending: the feed degrades rather than failing, which protects the 0.5% error budget.",
+  "ref": "R4 Q11–12 · system_design/01_news_feed"
  }
 ]
