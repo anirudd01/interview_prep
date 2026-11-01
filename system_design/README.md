@@ -19,7 +19,7 @@ Status: `todo` · `building` · `done`. Build in this order unless the plan week
 
 | # | Design | Source questions | Why it's here / anchor | Plan wk | Status |
 | --- | --- | --- | --- | --- | --- |
-| 01 | News feed / recommendation serving at 100M req/day | R4 Q11–12 | **Pilot.** Your Jio recommender: defend 33k peak RPS, p95 200 ms | W14 | building |
+| 01 | News feed / recommendation serving at 100M req/day | R4 Q11–12 | **Pilot.** Your Jio recommender: defend 33k peak RPS, p95 200 ms | W14 | done |
 | 02 | URL shortener | R4 Q1 | Warm-up classic: ID generation, read-heavy caching, 100k writes/s | W13 | todo |
 | 03 | Rate limiter as a shared service | R4 Q3 | Token bucket at scale, Redis, fail-open vs fail-closed | W13 | todo |
 | 04 | Notification system | R4 Q5 | Fan-out, preferences, dedupe, retries, provider failover | W13 | todo |
