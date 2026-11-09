@@ -295,7 +295,7 @@ Method types:
 
 ## Wednesday lab (60–75 min)
 
-Put this in a scratch folder (or `scripts/python_core/` if you want to keep it; ask Claude to tidy it into the scripts style).
+Put this in a scratch folder (or `PyPractice/py_core/` if you want to keep it; ask Claude to tidy it into the scripts style).
 
 1. **Gotcha file:** write `gotchas.py` with one function per trap (mutable default, late binding, shallow copy of nested lists, `is` on 257 in the REPL vs a file, dict mutation during iteration, float money). Before running each one, **write your predicted output in a comment.** Then run it and score yourself.
 2. **LRU cache by hand:** `OrderedDict` with `get` (`move_to_end`) and `put` (`popitem(last=False)` when over capacity). Then compare with `functools.lru_cache` and `cache_info()`.

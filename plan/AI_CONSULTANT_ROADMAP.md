@@ -517,7 +517,7 @@ Prefer one good source per topic, finished, over five half-read ones. ✅ = star
 - *System Design Interview* vols 1–2, Alex Xu. Interview structure and classic designs.
 - *Kubernetes in Action*, Marko Lukša, or the official docs concepts section.
 - *The Staff Engineer's Path*, Tanya Reilly. Leadership and influence (Round 6 A).
-- Your own `answers/` files plus NotebookLM audio for review, and `scripts/` for hands-on practice.
+- Your own `answers/` files plus NotebookLM audio for review, and the sibling `PyPractice` repo for hands-on practice.
 
 ### AI engineering
 
@@ -637,10 +637,10 @@ interview/
 │   └── PREP_TODO.md               # running to-do: what this week is (daily/weekly)
 ├── teach/                     # NEW (suggested): lesson plans for teacher mode
 │   └── W03_async.md           #   per-week: concepts in order, analogies, checks for understanding,
-│                              #   "explain it back" prompts, links to scripts/ and answers/
+│                              #   "explain it back" prompts, links to PyPractice scripts and answers/
 ├── questions/                 # interview banks (add ROUND_7_ai_consulting_case.txt later)
 ├── answers/                   # reference answers → NotebookLM audio
-├── scripts/                   # runnable refreshers (async, k8s, ... add llm/, rag/ later)
+├── scripts/                   # repo helper tools only (runnable refreshers live in the PyPractice repo)
 ├── labs/ or portfolio links   # NEW (suggested): pointers to P1–P7 repos, eval results
 └── progress/
     ├── knowledge_map.json     # add AI-engineering + consulting skill areas when Phase 1 starts
@@ -656,7 +656,7 @@ Status 2026-10-14: items 1, 2 (via PREP_TODO + teach/), 3, 4 and 6 are done; 5 h
    - the one analogy that makes each one click
    - 3 "explain it back to me" checks
    - common misconceptions
-   - what to run in `scripts/`
+   - what to run in `PyPractice/`
 
    I can generate these a week or two ahead of where you are.
 2. **Split the loop explicitly: learn → explain back → quiz.** PREP_TODO is built around this. The voice agent should never quiz on a topic you haven't been taught in the current cycle; it should teach first.

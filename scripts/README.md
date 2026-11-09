@@ -1,9 +1,14 @@
 # Scripts
 
-These are runnable refreshers: read the docstring or README, run the code, then read the output. Each folder is self-contained.
+This folder only holds this repo's own helper tools. The runnable refresher scripts
+(asyncio series, Kubernetes graceful-shutdown demo, FastAPI, gRPC, SSE, WebSockets...)
+moved to the sibling **PyPractice** repo (`../PyPractice`, GitHub `anirudd01/PyPractice`).
 
 | Folder | Topic | Needs |
 | --- | --- | --- |
-| [async/](async/) | asyncio from the event loop to production patterns (8 scripts) | Python 3.11+ |
-| [k8s_graceful_shutdown/](k8s_graceful_shutdown/) | FastAPI + preStop + request draining on kind, with and without preStop | Docker, kind, kubectl |
-| [tools/](tools/) | Repo helpers: `build_week_pack.py` turns a `teach/` lesson plan into one NotebookLM source file | Python 3.10+ |
+| [tools/](tools/) | `build_drill.py` rebuilds `drill/drill.html`, `build_kit.py` builds a system-design kit page, `build_week_pack.py` turns a `teach/` lesson plan into one NotebookLM source file | Python 3.10+ |
+
+| Moved to | Was |
+| --- | --- |
+| `PyPractice/py_async/` (01–08 plus README) | `scripts/async/` |
+| `PyPractice/pp_k8s/graceful_shutdown/` | `scripts/k8s_graceful_shutdown/` |

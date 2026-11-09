@@ -14,7 +14,7 @@ Pack block format (inside the lesson plan):
     ```pack
     answers/ROUND_2_fundamentals_breadth_answers.md: 1-6, 8, 9
     answers/ROUND_3_python_and_backend_advanced_answers.md: 12
-    scripts/async/README.md: all
+    answers/SQL_answers.md: all
     ```
 
 Answers are found by their "### <n>." headings. A section runs until the next "##"

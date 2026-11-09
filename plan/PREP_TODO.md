@@ -35,7 +35,7 @@ Each week has a topic. Run it like this:
 | --- | --- | --- |
 | **Mon** | 🎓 Learn | Voice agent in **teacher mode** teaches the week's concepts 1–3, using your projects as anchors. You explain each one back. |
 | **Tue** | 🎓 Learn | Concepts 4–6, same pattern. Read the matching `answers/` sections afterwards. |
-| **Wed** | 🔧 Do | Run or modify the matching `scripts/`, or write a small snippet. Hands on keyboard. |
+| **Wed** | 🔧 Do | Run or modify the matching scripts in the sibling `PyPractice` repo, or write a small snippet. Hands on keyboard. |
 | **Thu** | ✍️ Recall | Write a **one-page cheat sheet from memory**, then check it against `answers/` and fix the gaps. Add misses to `progress/misses.md`. |
 | **Fri** | 🎤 Test | Voice agent in **interviewer mode**: 6–10 questions from the week's sections. Graded. Logged. |
 | **Sat** | 🤖 AI track | The week's AI build task (A-items below). |
@@ -152,7 +152,7 @@ That lands M4 around **2027-01-17**. Expect more "partial" grades. Don't go belo
   - [ ] Build a reference cycle, watch `gc.collect()` reclaim it, then fix it with `weakref`
   - [ ] Write a descriptor that validates types (mini-Pydantic); then a `Protocol`-typed function and run mypy on it
   - [ ] Profile a slow function with cProfile + py-spy, and fix the hotspot
-  - [ ] (Suggested) Ask Claude to add `scripts/python_internals/` in the same style as `scripts/async/`
+  - [ ] (Suggested) Ask Claude to add `PyPractice/py_internals/` in the same style as `PyPractice/py_async/`
 - **Listen:** `answers/ROUND_3_python_and_backend_advanced_answers.md` section A; `answers/ROUND_6_J_modern_python_code_reading_answers.md` (rest)
 - **Test (Fri):** [ ] Round 3 A + Round 3 K (modern expectations) + 2 spaced-review questions from W1 misses
 - **Exit:** [ ] Explain the GIL, refcount + GC and descriptors precisely. [ ] knowledge_map python_internals updated honestly.
@@ -165,7 +165,7 @@ That lands M4 around **2027-01-17**. Expect more "partial" grades. Don't go belo
 
 ### Week 3: Async and concurrency (Mon 11-02 → Sun 11-08)
 
-**Goal:** async_concurrency → **solid**. You have `scripts/async/`, so use it.
+**Goal:** async_concurrency → **solid**. You have `PyPractice/py_async/`, so use it.
 
 - **Learn:**
   - [ ] Concurrency vs parallelism; I/O-bound vs CPU-bound; threads vs processes vs asyncio decision table
@@ -179,9 +179,9 @@ That lands M4 around **2027-01-17**. Expect more "partial" grades. Don't go belo
   - [ ] threading + multiprocessing APIs at the interview-answer level; race conditions; deadlocks
   - [ ] How FastAPI runs `def` vs `async def` endpoints (threadpool vs loop)
 - **Do:**
-  - [ ] Run all 8 `scripts/async/` files and read each docstring; modify one parameter in each and predict the output first
+  - [ ] Run all 8 `PyPractice/py_async/` files and read each docstring; modify one parameter in each and predict the output first
   - [ ] Write from scratch (no peeking): a bounded-concurrency fetcher with timeout + retry + cancellation on first fatal error
-- **Listen:** `answers/ROUND_3_..._answers.md` section B + `scripts/async/README.md` recap
+- **Listen:** `answers/ROUND_3_..._answers.md` section B + `PyPractice/py_async/README.md` recap
 - **Test (Fri):** [ ] Round 3 B (all) + one Round 3 J debug scenario involving async
 - **Exit:** [ ] Explain TaskGroup cancellation and blocking-loop detection without notes. [ ] Bounded fetcher written from memory.
 - **AI track, A-03: async LLM pipeline**
@@ -207,7 +207,7 @@ That lands M4 around **2027-01-17**. Expect more "partial" grades. Don't go belo
   - [ ] Webhooks: signing, retries, ordering, replay protection
 - **Do:**
   - [ ] Build a small FastAPI service: cursor pagination + idempotency-key POST (store keys in Redis or Postgres) + problem-details errors + an SSE endpoint
-  - [ ] Add a token-bucket rate-limit middleware; test it with the `scripts/k8s_graceful_shutdown/loadgen.py` pattern
+  - [ ] Add a token-bucket rate-limit middleware; test it with the `PyPractice/pp_k8s/graceful_shutdown/loadgen.py` pattern
 - **Listen:** R2 B, R3 C, R6 D answer sections
 - **Test (Fri):** [ ] Round 2 B + Round 3 C + Round 6 D (API styles half)
 - **Exit:** [ ] Design an idempotent payment-style POST end to end, out loud.
@@ -346,7 +346,7 @@ That lands M4 around **2027-01-17**. Expect more "partial" grades. Don't go belo
   - [ ] RBAC, service accounts, workload identity; PodDisruptionBudgets; node drains
   - [ ] Helm/Kustomize at headline level; debugging: CrashLoopBackOff, ImagePullBackOff, Pending pods
 - **Do:**
-  - [ ] **Run `scripts/k8s_graceful_shutdown/run_demo.sh`** and record the without vs with preStop numbers
+  - [ ] **Run `PyPractice/pp_k8s/graceful_shutdown/run_demo.sh`** and record the without vs with preStop numbers
   - [ ] Try 2 experiments from its README table (shell-form CMD, short grace period)
   - [ ] Break things on purpose: a bad image tag, an OOM-limited pod, a failing readiness probe. Diagnose each with `describe` / `logs` / events.
 - **Listen:** R2 F, R6 E, the k8s demo README
@@ -591,7 +591,7 @@ Main track drops to **3 sessions/week** to keep the base from decaying. The AI t
 ## Parking lot (ideas, not commitments)
 
 - ~~`teach/` folder with per-week lesson plans~~ done 2026-10-14 (W01–W03); keep it 2 weeks ahead
-- `scripts/python_internals/`, `scripts/db_isolation/` (lost update, SKIP LOCKED), `scripts/resilience/` (circuit breaker, retry storm), `scripts/llm/` (structured output, async batch, eval harness)
+- `PyPractice/py_internals/`, `PyPractice/py_db_isolation/` (lost update, SKIP LOCKED), `PyPractice/py_resilience/` (circuit breaker, retry storm), `PyPractice/py_llm/` (structured output, async batch, eval harness)
 - A small `progress/status.py` that prints weak/unrated areas and the current week from this file
 - Mock interviews with real people (peers, paid platforms) once M3 is done; a voice agent can't fully simulate a sceptical human
 

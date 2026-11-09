@@ -94,7 +94,7 @@ answers/ROUND_6_J_modern_python_code_reading_answers.md: 83, 84
   - every few milliseconds (the switch interval, 5 ms by default), so threads take turns
 - **Consequences:**
   - Threads **do** help I/O-bound work.
-  - Threads **don't** speed up pure-Python CPU work; they can even slow it down through contention. Your `scripts/async/05` output showed exactly this: threads 4.06 s vs sequential 2.07 s.
+  - Threads **don't** speed up pure-Python CPU work; they can even slow it down through contention. Your `PyPractice/py_async/05` output showed exactly this: threads 4.06 s vs sequential 2.07 s.
   - For CPU work use processes, a native extension, or a separate service.
 - **The GIL doesn't make your code thread-safe.** `x += 1` is several bytecodes, so a thread switch can happen between them, and you can still race. You still need locks.
 - **Free-threaded Python:**
@@ -263,7 +263,7 @@ class MarineRater(Rater, product="marine"): ...
 - `uv` is the fast modern tool for envs, locking and installs.
 - **Reproducible Docker build:**
   - copy only the lockfile and pyproject first, then install dependencies (a cached layer), then copy the code
-  - multi-stage: build wheels in the builder stage, install with `--no-index` in the runtime stage (exactly what `scripts/k8s_graceful_shutdown/Dockerfile` does)
+  - multi-stage: build wheels in the builder stage, install with `--no-index` in the runtime stage (exactly what `PyPractice/pp_k8s/graceful_shutdown/Dockerfile` does)
   - pin the base image digest
 - Tooling: `ruff` (lint + format), `pre-commit`, and mypy/pyright in CI.
 
@@ -298,7 +298,7 @@ class MarineRater(Rater, product="marine"): ...
 3. **MRO and super:** build the A/B/C/D diamond where each `hello()` prints and calls `super().hello()`. **Predict the output first**, then print `D.__mro__`.
 4. **Descriptor:** implement `Positive` from concept 7 and break it on purpose (assign -5). Then make a `__init_subclass__` registry of 3 raters.
 5. **Profile:** write a deliberately slow function (string concatenation in a loop + an `O(n²)` membership check on a list). Profile it with cProfile, then run `py-spy top` / `py-spy record` against it running in a loop. Fix it and re-measure.
-6. Optional: ask Claude to turn this lab into `scripts/python_internals/` in the async-scripts style.
+6. Optional: ask Claude to turn this lab into `PyPractice/py_internals/` in the async-scripts style.
 
 ## Thursday cheat sheet must include
 

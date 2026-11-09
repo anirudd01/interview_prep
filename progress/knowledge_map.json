@@ -78,7 +78,7 @@
       "trend": "flat",
       "last_reviewed": "2026-10-06",
       "sessions_covered": 1,
-      "notes": "Event loop concept solid. Unknown: gather vs TaskGroup vs as_completed, structured concurrency, detecting loop blocking in prod (asyncio debug mode, py-spy). Mostly worked in sync codebases. Refresher scripts added in scripts/async/ on 2026-10-10 -- retest R3 Q15-22 next."
+      "notes": "Event loop concept solid. Unknown: gather vs TaskGroup vs as_completed, structured concurrency, detecting loop blocking in prod (asyncio debug mode, py-spy). Mostly worked in sync codebases. Refresher scripts added on 2026-10-10 (now in the PyPractice repo: PyPractice/py_async/) -- retest R3 Q15-22 next."
     },
     "web_api_design": {
       "label": "FastAPI/Flask/ASGI, API error models, request-scoped resources",

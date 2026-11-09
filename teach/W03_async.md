@@ -2,7 +2,7 @@
 
 **Dates:** Mon 2026-11-02 → Sun 2026-11-08 · **PREP_TODO:** Week 3 · **Knowledge map:** `async_concurrency` (developing → solid)
 
-**Goal:** turn the R3 B gaps (Q16 and Q17 were `gap`, Q15 was `partial`) into confident answers. Most of the material already exists as runnable code in [scripts/async/](../scripts/async/). This week the voice agent *teaches the ideas*, and the scripts *prove* them.
+**Goal:** turn the R3 B gaps (Q16 and Q17 were `gap`, Q15 was `partial`) into confident answers. Most of the material already exists as runnable code in [PyPractice/py_async/](../../PyPractice/py_async/). This week the voice agent *teaches the ideas*, and the scripts *prove* them. (The scripts live in the sibling PyPractice repo; run the `python PyPractice/py_async/...` commands below from the folder that holds both repos.)
 
 | Day | Mode | Plan |
 | --- | --- | --- |
@@ -21,7 +21,7 @@ answers/ROUND_2_fundamentals_breadth_answers.md: 11-13, 19
 answers/ROUND_3_python_and_backend_advanced_answers.md: 14-23
 ```
 
-Also add `scripts/async/README.md` to the NotebookLM notebook (its 60-second recap is good audio).
+Also add `PyPractice/py_async/README.md` to the NotebookLM notebook (its 60-second recap is good audio).
 
 ## Warm-up diagnostic (Mon, 5 min)
 
@@ -70,7 +70,7 @@ Also add `scripts/async/README.md` to the NotebookLM notebook (its 60-second rec
 
 **Check.** "Difference between `async def`, a coroutine, a Task and a Future?" (R2 Q11.) Then: "Why does `await fetch(a); await fetch(b)` take twice as long as you'd hope?"
 
-**Script.** `python scripts/async/01_event_loop_and_coroutines.py`
+**Script.** `python PyPractice/py_async/01_event_loop_and_coroutines.py`
 
 ### 3. Blocking the loop, and detecting it in prod ⚠️ open miss
 
@@ -122,7 +122,7 @@ Also add `scripts/async/README.md` to the NotebookLM notebook (its 60-second rec
 
 **Traps.** Assuming `gather` cancels siblings on failure (it doesn't, by default). Forgetting that TaskGroup raises an `ExceptionGroup`, so a plain `except ValueError` won't match; use `except* ValueError`.
 
-**Script.** `python scripts/async/02_gather_taskgroup_as_completed.py`
+**Script.** `python PyPractice/py_async/02_gather_taskgroup_as_completed.py`
 
 ### 5. Structured concurrency and the fire-and-forget gotcha ⚠️ open miss
 
@@ -158,7 +158,7 @@ Also add `scripts/async/README.md` to the NotebookLM notebook (its 60-second rec
 
 **Check.** "How do you cancel an in-flight async operation cleanly? Why should you never swallow `CancelledError`?" (R3 Q19.)
 
-**Script.** `python scripts/async/03_cancellation_and_timeouts.py`
+**Script.** `python PyPractice/py_async/03_cancellation_and_timeouts.py`
 
 ### 7. Synchronisation: Lock, Semaphore, Event, Queue
 
@@ -182,7 +182,7 @@ Also add `scripts/async/README.md` to the NotebookLM notebook (its 60-second rec
 
 **Check.** "How do you implement backpressure in an async producer/consumer pipeline?" (R3 Q22.) "Can you have a race condition in single-threaded asyncio? Show me."
 
-**Script.** `python scripts/async/04_locks_semaphores_queues.py`
+**Script.** `python PyPractice/py_async/04_locks_semaphores_queues.py`
 
 ### 8. Threads, processes and mixing sync with async
 
@@ -197,11 +197,11 @@ Also add `scripts/async/README.md` to the NotebookLM notebook (its 60-second rec
   - **rule:** use `async def` only if everything inside awaits. Otherwise use `def`.
 - Thread races in the classic sense: shared mutable state plus non-atomic ops. Find them with stress tests, logging thread IDs, `faulthandler`, or thread-sanitizer-style tooling. The fix is a lock, or avoiding shared state (queues, immutability).
 
-**Your anchor.** The `scripts/async/05` numbers you saw: process pool ≈ parallel speed-up; threads were *slower* than sequential for pure-Python CPU (GIL contention).
+**Your anchor.** The `PyPractice/py_async/05` numbers you saw: process pool ≈ parallel speed-up; threads were *slower* than sequential for pure-Python CPU (GIL contention).
 
 **Check.** "How would you run a CPU-heavy function inside an async service without stalling it? Compare `run_in_executor`, a process pool and a separate worker service." (R3 Q21.) "def vs async def in FastAPI: what does FastAPI do differently?" (R2 Q19.) "Tell me about a race condition you actually debugged." (R3 Q23; prepare a real story.)
 
-**Script.** `python scripts/async/05_blocking_cpu_threads_processes.py`
+**Script.** `python PyPractice/py_async/05_blocking_cpu_threads_processes.py`
 
 ### 9. Async context managers and async generators
 
@@ -215,7 +215,7 @@ Also add `scripts/async/README.md` to the NotebookLM notebook (its 60-second rec
 
 **Check.** "How does a FastAPI dependency with `yield` relate to async context managers? Where does the transaction commit?" (R3 Q25; you covered this, so connect the mechanism.)
 
-**Script.** `python scripts/async/06_async_iterators_and_context_managers.py`
+**Script.** `python PyPractice/py_async/06_async_iterators_and_context_managers.py`
 
 ### 10. contextvars: per-request state in async code
 
@@ -234,7 +234,7 @@ Both live in contextvars.
 
 **Check.** "What are contextvars and why do they exist for async code?" (R3 Q14.)
 
-**Script.** `python scripts/async/07_contextvars.py`
+**Script.** `python PyPractice/py_async/07_contextvars.py`
 
 ### 11. Putting it together: the production patterns
 
@@ -246,7 +246,7 @@ Both live in contextvars.
 
 **Check.** The R3 Q20 whiteboard, out loud: "10,000 URLs, max 50 concurrent, per-host rate limiting, retries with jitter, a global timeout." Talk through the structure before any code.
 
-**Script.** `python scripts/async/08_production_patterns.py`
+**Script.** `python PyPractice/py_async/08_production_patterns.py`
 
 ---
 
@@ -258,7 +258,7 @@ Both live in contextvars.
    - retries with full jitter on simulated transient errors (use `asyncio.sleep` + `random` to fake latency and failures)
    - a `TaskGroup`, so one *fatal* error cancels everything
    - a results dict + an errors dict
-   - Then compare with `scripts/async/08_production_patterns.py` and note what you missed.
+   - Then compare with `PyPractice/py_async/08_production_patterns.py` and note what you missed.
 3. **Blocking detector:** add a `time.sleep(0.3)` inside an async handler in a tiny script; enable debug mode and see the slow-callback warning; then run your loop-lag monitor and watch it spike.
 
 ## Thursday cheat sheet must include

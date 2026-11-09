@@ -1049,7 +1049,7 @@
   "title": "Kubernetes: Request Path, Probes & Resources",
   "source": "miss",
   "q": "How do you do graceful shutdown on Kubernetes so deploys don't drop requests?",
-  "a": "Endpoint removal and SIGTERM race in parallel. A preStop sleep lets routing converge, then the app drains in-flight requests. Grace period must exceed preStop plus drain. Demo: scripts/k8s_graceful_shutdown/.",
+  "a": "Endpoint removal and SIGTERM race in parallel. A preStop sleep lets routing converge, then the app drains in-flight requests. Grace period must exceed preStop plus drain. Demo: PyPractice/pp_k8s/graceful_shutdown/.",
   "ref": "R3 Q29 · misses.md"
  },
  {
